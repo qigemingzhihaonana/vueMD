@@ -9,7 +9,7 @@
    <div class="head">
      <head></head>
    </div>
-   <div class="app">
+   <div class="main-container">
      <app></app>
    </div>
   </div>
