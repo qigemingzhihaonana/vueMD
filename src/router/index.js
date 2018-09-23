@@ -14,7 +14,7 @@ export default new Router({
         {
           path: '',
           name: '菜单配置',
-          component: () => import('@/views/admin/menu/index')
+          component: () => import('@/views/admin/department/index')
         }
       ]
     }
