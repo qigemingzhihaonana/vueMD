@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import NavItem from "./NavItem";
+import NavItem from "./sidebarItem";
 import { mapGetters } from "vuex";
 export default {
   data() {

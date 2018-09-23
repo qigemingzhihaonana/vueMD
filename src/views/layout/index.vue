@@ -1,17 +1,18 @@
 <template>
   <div class="main">
-    <div class="sidebar">
-      <sidebar></sidebar>
+    <header class="header" >
+      <el-row>
+        <el-col :span="25">
+          <sidebar class="sidebar">22</sidebar>
+        </el-col>
+      </el-row>
+    </header>
+
+    <div style="position: relative;height: 60px;width: 100%;"></div>
+
+    <div class="main-container">
+      <app>kk</app>
     </div>
-    <div class="footer">
-      <footer></footer>
-   </div>
-   <div class="head">
-     <head></head>
-   </div>
-   <div class="main-container">
-     <app></app>
-   </div>
   </div>
 </template>
 <script>
@@ -22,9 +23,22 @@ export default {
     head,
     footer,
     app
-  }
+  },
 }
 </script>
-<style scoped>
+<style>
+.main {
+  position: relative;
+  background-color: aqua;
+  height: 20%;
+  width: 100%;
+  float: left;
+}
+.main-container {
+  position: relative;
+  background-color: black;
+  width: 100%;
+  float: left;
+}
 
 </style>
