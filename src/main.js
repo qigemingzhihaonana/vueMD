@@ -8,6 +8,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import Cookies from 'js-cookie'
 import store from './store'
 import './icon'
+import 'element-ui/lib/theme-chalk/display.css'
 // import './mock'
 
 Vue.use(Element)
