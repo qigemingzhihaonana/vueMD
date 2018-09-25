@@ -1,6 +1,12 @@
 <template>
   <div>
     <el-card shadow="always">
+      <div>
+        <span>人员管理</span>
+        <el-button
+        size="mini"
+        @click="insertMore">批量导入</el-button>
+      </div>
       <el-row>
         <el-table
           :data="tableUser"
@@ -71,31 +77,101 @@
           <el-button style="float: right; padding: 3px 0" type="text" @click="quiet" >取消</el-button>
         </div>
         <div>
-          <el-form :model="form" :rules="rules" ref="form" inline="true">
-
+          <el-form :model="form" :rules="rules" ref="form" inlin>
+            <el-form-item label="员工姓名">
+              <el-input></el-input>
+            </el-form-item>
+            <el-form-item label="员工编号">
+              <el-input v-model="form.code"></el-input>
+            </el-form-item>
+            <el-form-item label="登录密码">
+              <el-input :mode="form.password"></el-input>
+            </el-form-item>
+            <el-form-item label="入职时间">
+               <el-date-picker
+                v-model="form.time"
+                type="date"
+                placeholder="选择时间">
+              </el-date-picker>
+            </el-form-item>
+            <el-form-item label="是否在职">
+              <el-select v-model="form.level" placeholder="请选择">
+                <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label=""></el-form-item>
+            <el-form-item label=""></el-form-item>
+            <el-form-item label=""></el-form-item>
+            <el-form-item label=""></el-form-item>
           </el-form>
         </div>
       </el-card>
     </el-dialog>
+    <!-- 分页 -->
+    <div class="block">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage4"
+        :page-sizes="[100, 200, 300, 400]"
+        :page-size="100"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="400">
+      </el-pagination>
+  </div>
   </div>  
 </template>
 <script>
+import { addUser, fetchUser, deleUser} from '@/api/user/index'
 export default {
   data () {
     return {
       tableUser: [],
       dialogStatus: '',
       dialogFormVisible: false,
+      options:[
+        {
+          label: '是',
+          value: 1
+        },
+        {
+          label: '否',
+          value: 0
+        }
+      ]
     }
   },
+  created() {
+    this.fetch()
+  },
   methods: {
+    fetch() {
+      fetchUser(this.listQuery).then( data => {
+        this.tableUser = data
+      })
+    },
     quiet() {
       this.dialogFormVisible = false
+    },
+    insertMore() {
+
+    },
+    git(data) {
+
     }
   }
 }
 </script>
 <style>
+  .el-form-item {
+    margin-right: 0;
+    margin-bottom: 0;
+    width: 50%;
+  }
   .demo-table-expand {
     font-size: 0;
   }

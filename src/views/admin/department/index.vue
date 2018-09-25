@@ -209,24 +209,24 @@ export default {
         name: undefined
       },
 			form: {
-				cName = undefined,
-				zName = undefined,
-				area = 'HB',
-				ocName = undefined,
-				oaName = undefined,
-				sort = undefined,
-				upLeader = undefined,
-				positionZ = undefined,
-				positionF = undefined,
-				show = undefined,
-				state = undefined,
-				show = undefined,
-				level = undefined,
-				province = undefined,
-				department = undefined,
-				departmentNumber = undefined,
-				transceiver = undefined,
-				together = undefined  
+				cName: undefined,
+				zName: undefined,
+				area: 'HB',
+				ocName: undefined,
+				oaName: undefined,
+				sort: undefined,
+				upLeader: undefined,
+				positionZ: undefined,
+				positionF: undefined,
+				show: undefined,
+				state: undefined,
+				show: undefined,
+				level: undefined,
+				province: undefined,
+				department: undefined,
+				departmentNumber: undefined,
+				transceiver: undefined,
+				together: undefined  
 			},
 			currentId: -1
     }
@@ -264,31 +264,31 @@ export default {
       this.formStatus = 'create';
     },
     handleDelete () {
-      if ()
+      //if ()
     },
     handlerEdit () {
 
     },
     restForm(fatherNode) {
       this.form = {
-        cName = undefined,
-				zName = undefined,
-				area = 'HB',
-				ocName = undefined,
-				oaName = undefined,
-				sort = undefined,
-				upLeader = fatherNode.label,
-				positionZ = undefined,
-				positionF = undefined,
-				show = undefined,
-				state = undefined,
-				show = undefined,
-				level = undefined,
-				province = undefined,
-				department = undefined,
-				departmentNumber = undefined,
-				transceiver = undefined,
-				together = undefined  
+        cName: undefined,
+				zName: undefined,
+				area: 'HB',
+				ocName: undefined,
+				oaName: undefined,
+				sort: undefined,
+				upLeader: fatherNode.label,
+				positionZ: undefined,
+				positionF: undefined,
+				show: undefined,
+				state: undefined,
+				show: undefined,
+				level: undefined,
+				province: undefined,
+				department: undefined,
+				departmentNumber: undefined,
+				transceiver: undefined,
+				together: undefined  
       }
     },
     handleClick(row) {
@@ -302,6 +302,6 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style >
 
 </style>

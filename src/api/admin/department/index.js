@@ -1,4 +1,4 @@
-import axios from '@/utils/fectch'
+import axios from '@/utils/fetch'
 
 /**
  * 获取所有的部门信息

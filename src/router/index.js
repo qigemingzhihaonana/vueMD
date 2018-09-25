@@ -17,6 +17,14 @@ export default new Router({
       //     component: () => import('@/views/admin/department/index')
       //   }
       // ]
+    },
+    {
+      path: '/120',
+      component: () => import('@/views/admin/department/index')
+    },
+    {
+      path: '/login',
+      component: () => import('@/views/login/login')
     }
   ]
 })

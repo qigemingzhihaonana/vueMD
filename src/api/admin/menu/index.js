@@ -1,4 +1,4 @@
-import axios from '@utils/fetch'
+import axios from '@/utils/fetch'
 
 export function fetch (query) {
   return axios({
