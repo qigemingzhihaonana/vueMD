@@ -1,55 +1,43 @@
 <template>
-  <div class="main">
-    <el-container>
-      <el-head>
-        <el-row :gutter="10">
-          <el-col :xs="4" :sm="8" :md="8" :lg="9" :xl="30">
-            <sidebar class="sidebar">22</sidebar>
-          </el-col>
-        </el-row>
-      </el-head>
-    </el-container>
+  <el-container class="layout">
+    <el-header class="main-head" :style="{ width: '100%'}">
+      <sidebar></sidebar>
+    </el-header>
+      <div>
+        <el-card shadow="always">
+          <el-main :style="{margin: '88px 20px 0', background: '#fff', minHeight: '500px'}">
+            gggg
+          </el-main>
+        </el-card>
+      </div>
+    <el-footer class="layout-footer-center">
+      Copyright &copy; 2018-2019 <a href="https://fdfdfsfdsfsd">湖北信通</a>. All rights reserved.
+    </el-footer>
+  </el-container>
 
-    <div style="position: relative;height: 60px;width: 100%;"></div>
-
-    <div class="main-container">
-      <app>kk</app>
-    </div>
-  </div>
 </template>
 <script>
-import { sidebar, head, footer, app } from './components'
+import { sidebar } from './components'
 export default {
   components: {
     sidebar,
-    head,
-    footer,
-    app
   },
 }
 </script>
 <style>
- .el-col {
+  .layout{
+    border: 1px solid #bcc6d1;
+    background: #f5f7f9;
+    position: relative;
     border-radius: 4px;
+    overflow: hidden;
   }
- .el-header {
-    background-color: #B3C0D1;
-    color: #333;
+ .main-head {
+    background-color: #afd3fc;
+    height: 50px;
+ }
+ .layout-footer-center{
     text-align: center;
-    line-height: 60px;
+    margin-top: 30px;
   }
-.main {
-  position: relative;
-  background-color: aqua;
-  height: 20%;
-  width: 100%;
-  float: left;
-}
-.main-container {
-  position: relative;
-  background-color: black;
-  width: 100%;
-  float: left;
-}
-
 </style>

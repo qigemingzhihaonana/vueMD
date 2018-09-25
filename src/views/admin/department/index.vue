@@ -181,8 +181,6 @@
   </div>  
 </template>
 <script>
-import MdTree from './components/Tree'
-import MdTable from './components/Table'
 import { getAll, insertDepartment, delectDepartment, updataDepartment } from '@/api/admin/department/index'
 export default {
   components: {
