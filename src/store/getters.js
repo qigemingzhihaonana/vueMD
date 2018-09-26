@@ -1,5 +1,5 @@
 const getters = {
-  navList: state => state.user.navList,
+  menuData: state => state.user.menuData,
   token: state => state.user.token,
   name: state => state.user.name
 }

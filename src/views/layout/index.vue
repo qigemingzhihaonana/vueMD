@@ -1,7 +1,15 @@
 <template>
   <el-container class="layout" direction="verticalc">
     <el-header class="main-head" :style="{ width: '100%'}">
-      <sidebar></sidebar>
+      <el-menu
+        mode="horizontal"
+        router
+        class="el-menu-vertical-demo"
+        background-color="#F0F6F6"
+        text-color="#3C3F41"
+        active-text-color="white">
+        <NavMenu :navMenus="menuData"></NavMenu>
+      </el-menu>
     </el-header>
     <el-main :style="{margin: '88px 20px 0', background: '#fff', minHeight: '500px'}">
       gggg
@@ -13,10 +21,20 @@
 
 </template>
 <script>
-import { sidebar } from './components'
+import NavMenu from './components/NavMenu'
+import { mapGetters } from "vuex"
+
 export default {
+  data () {
+    return {
+      menuData: []
+    }
+  },
+  computer: {
+    ...mapGetters(['menuData']),
+  },
   components: {
-    sidebar,
+    NavMenu,
   },
 }
 </script>

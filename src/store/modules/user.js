@@ -5,30 +5,34 @@ const user = {
   state: {
     token: getToken(),
     name: '',
-    navList: []
+    menuData: []
   },
   mutations: {
-    SET_NAVLIST: (state, navList) => {
-      state.navList = navList
+    SET_NAVLIST: (state, data) => {
+      console.log(data)
+      state.menuData = data.childs
+      console.log(state.menuData)
     },
     SET_TOKEN: (state, token) => {
       state.token = token
     }
   },
-  action: {
+  actions: {
     /**
      * 登录
      * @param {*} param0
      * @param {username,password} userInfo
      */
-    loginBy ({ commit }, userInfo) {
+    Login ({ commit }, userInfo) {
       const username = userInfo.name.trim()
       return new Promise((resolve, reject) => {
         login(username, userInfo.password).then(response => {
+          console.log(response)
           const data = response.data
-          commit('SET_TOKEN', data.token)
-          commit('SET_NAVLIST', data.navlist)
-          setToken(response.data.token)
+          // commit('SET_TOKEN', data.token)
+          commit('SET_NAVLIST', data)
+          // setToken(response.data.token)
+          // console.log(response)
           resolve()
         }).catch(error => {
           reject(error)

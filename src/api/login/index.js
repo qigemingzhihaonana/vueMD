@@ -11,7 +11,7 @@ export function login (username, password) {
   }
   return axios({
     url: '/login',
-    method: 'get',
+    method: 'post',
     params: data
   })
 }

@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<el-submenu	v-if="item.child && item.child.lenth" :index="navIndex">
+		<el-submenu	v-if="item.child && item.child.lenth > 0" :index="navIndex">
 			<template slot="title">{{item.name}}</template>
 				<nav-item v-for="(subItem,i) in item.child" :key="navIndex+'-'+i " :navIndex="navIndex+ '-' + i" :item="subItem" >
 			</nav-item>

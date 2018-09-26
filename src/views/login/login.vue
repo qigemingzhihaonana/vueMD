@@ -1,6 +1,6 @@
 <template>
   <div class="login">
-    <el-form :model="form" ref="loginform" class="login-form">
+    <el-form :model="form" ref="form" class="login-form">
       <el-card shadow="always">
         <el-form-item>
            <h3 class="title">系统登录</h3>
@@ -9,16 +9,16 @@
           <span class="svg-container">
             <svg-icon icon-class="user" />
           </span>
-          <el-input v-model="form.name" ></el-input>
+          <el-input v-model="form.name" @keyup.enter.native="login"></el-input>
         </el-form-item>
         <el-form-item label="密码:">
           <span class="svg-container">
             <svg-icon icon-class="password" />
           </span>
-          <el-input v-model="form.password" type="password"></el-input>
+          <el-input v-model="form.password" type="password" @keyup.enter.native="login"></el-input>
         </el-form-item>
         <el-form-item >
-          <el-button type="primary" @click="login">登录</el-button>
+          <el-button :loading="loading" type="primary" @click.native.prevent="login">登录</el-button>
         </el-form-item>
       </el-card>
     </el-form>
@@ -31,17 +31,20 @@ export default {
       form:{
         name: undefined,
         password: undefined
-      }
+      },
+      loading: false
     }
   },
   methods: {
     login() {
-      this.$refs.loginform.validate(valid => {
+      console.log(this.form)
+      this.$refs.form.validate(valid => {
         if(valid) {
           this.loading = true
-          this.$store.dispatch('loginBy',this.form).then(() => {
+          this.$store.dispatch('Login',this.form).then(() => {
+            console.log('fdfdf')
             this.loading = false
-            this.$router.push({ path: this.redirect || '/123' })
+            this.$router.push('123')
           }).catch( () => {
             this.loading = false
           })
