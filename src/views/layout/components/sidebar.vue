@@ -29,10 +29,12 @@ import NavItem from "./sidebarItem";
 import { mapGetters } from "vuex";
 export default {
   data() {
-    return {};
+    return {
+      navList: []
+    };
   },
   computer: {
-    ...mapGetters(["navList"]),
+    ...mapGetters(['navList']),
     routerGo() {
       return this.$route.path;
     }

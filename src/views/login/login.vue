@@ -41,7 +41,7 @@ export default {
           this.loading = true
           this.$store.dispatch('loginBy',this.form).then(() => {
             this.loading = false
-            this.$router.push({ path: this.redirect || '/' })
+            this.$router.push({ path: this.redirect || '/123' })
           }).catch( () => {
             this.loading = false
           })

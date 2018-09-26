@@ -10,7 +10,7 @@ export function login (username, password) {
     password
   }
   return axios({
-    url: '/123',
+    url: '/login',
     method: 'get',
     params: data
   })
