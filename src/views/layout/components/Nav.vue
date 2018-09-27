@@ -1,7 +1,7 @@
 <template>
   <!--一级导航-->
   <el-menu
-    class="main-head"
+    default-active="0"
     mode="horizontal"
     router
     background-color="#FFFFFF"
@@ -16,6 +16,11 @@
   import { mapGetters } from 'vuex';
   import NavMenu from './NavMenu';
   export default {
+    data () {
+      return {
+        // menuData: []
+      }
+    },
     components: { NavMenu },
     computed: {
       ...mapGetters([

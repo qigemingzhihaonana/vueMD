@@ -1,7 +1,7 @@
 <template>
   <div class="layout" >
     <div class="main-head" >
-      <nav class="nav"></nav>
+      <Nav class="nav"></Nav>
     </div>
     <div class="main" :style="{margin: '88px 20px 0', background: '#fff', minHeight: '500px'}">
       <app-main></app-main>
@@ -15,7 +15,6 @@
 <script>
 import Nav from './components/Nav'
 import AppMain from './components/AppMain'
-import { mapGetters } from "vuex"
 
 export default {
   components: {
