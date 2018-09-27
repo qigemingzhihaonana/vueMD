@@ -42,7 +42,6 @@ export default {
         if(valid) {
           this.loading = true
           this.$store.dispatch('Login',this.form).then(() => {
-            console.log('fdfdf')
             this.loading = false
             this.$router.push('123')
           }).catch( () => {

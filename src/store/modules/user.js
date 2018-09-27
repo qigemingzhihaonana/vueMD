@@ -9,9 +9,7 @@ const user = {
   },
   mutations: {
     SET_NAVLIST: (state, data) => {
-      console.log(data)
-      state.menuData = data.childs
-      console.log(state.menuData)
+      state.menuData = data
     },
     SET_TOKEN: (state, token) => {
       state.token = token
@@ -34,8 +32,10 @@ const user = {
           // setToken(response.data.token)
           // console.log(response)
           resolve()
+          return true
         }).catch(error => {
           reject(error)
+          return false
         })
       })
     },
