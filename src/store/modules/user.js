@@ -26,16 +26,14 @@ const user = {
       return new Promise((resolve, reject) => {
         login(username, userInfo.password).then(response => {
           console.log(response)
-          const data = response.data
+          const data = response
           // commit('SET_TOKEN', data.token)
           commit('SET_NAVLIST', data)
           // setToken(response.data.token)
           // console.log(response)
           resolve()
-          return true
         }).catch(error => {
           reject(error)
-          return false
         })
       })
     },

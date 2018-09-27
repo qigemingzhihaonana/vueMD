@@ -1,6 +1,6 @@
 <template>
   <div >
-  <template v-for="(navMenu) in navMenus" >
+  <label v-for="(navMenu, index) in navMenus" :key="index">
     <el-menu-item v-if="navMenu.childs==null&&navMenu.entity"
                   :key="navMenu.entity.id" 
                   :data="navMenu" 
@@ -19,15 +19,15 @@
         <i :class="navMenu.entity.icon"></i>
         <span> {{navMenu.entity.alias}}</span>
       </template>
-      <nav-menu :navMenus="navMenu.childs"></nav-menu>
+      <NavMenu :navMenus="navMenu.childs"></NavMenu>
     </el-submenu>
-  </template>
+  </label>
   </div>
 </template>
  
 <script>
   export default {
-    name: 'NavMenu',
+     name: 'NavMenu',
     data () {
       return {
 

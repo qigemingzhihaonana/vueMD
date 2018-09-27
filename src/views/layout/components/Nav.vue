@@ -3,7 +3,6 @@
   <el-menu
     default-active="0"
     mode="horizontal"
-    router
     background-color="#FFFFFF"
     text-color="#000000"
     active-text-color="white">
@@ -17,9 +16,7 @@
   import NavMenu from './NavMenu';
   export default {
     data () {
-      return {
-        // menuData: []
-      }
+      return {}
     },
     components: { NavMenu },
     computed: {
