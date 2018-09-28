@@ -3,11 +3,11 @@
     <el-form :model="form" ref="form" class="login-form">
       <el-card shadow="always">
         <el-form-item>
-           <h3 class="title">系统登录</h3>
+          <h3 class="title">系统登录</h3>
         </el-form-item>
         <el-form-item label="用户名:">
           <span class="svg-container">
-            <svg-icon icon-class="user" />
+            <svg-icon icon-class="login" />
           </span>
           <el-input v-model="form.name" @keyup.enter.native="login"></el-input>
         </el-form-item>
