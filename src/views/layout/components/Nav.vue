@@ -4,7 +4,7 @@
     default-active="0"
     mode="horizontal"
     background-color="#FFFFFF"
-    text-color="#000000"
+    text-color="black"
     active-text-color="white">
     <nav-menu :navMenus="menuData"></nav-menu>
   </el-menu>

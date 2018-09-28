@@ -85,7 +85,7 @@
               <el-input v-model="form.code"></el-input>
             </el-form-item>
             <el-form-item label="登录密码">
-              <el-input :mode="form.password"></el-input>
+              <el-input v-mode="form.password"></el-input>
             </el-form-item>
             <el-form-item label="入职时间">
                <el-date-picker

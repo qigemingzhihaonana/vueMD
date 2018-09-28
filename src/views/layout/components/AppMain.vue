@@ -1,10 +1,9 @@
 <template>
-  <section class="app-main">
+  <section class="app-main" >
     <transition name="fade-transform" mode="out-in">
-      <!-- 缓存tag
-      <keep-alive :include="cachedViews">
+      <keep-alive >
         <router-view :key="key"/>
-      </keep-alive> -->
+      </keep-alive> 
     </transition>
   </section>
 </template>
@@ -12,14 +11,14 @@
 <script>
 export default {
   name: 'AppMain',
-  // computed: {
-  //   cachedViews() {
-  //     return this.$store.state.tagsView.cachedViews
-  //   },
-  //   key() {
-  //     return this.$route.fullPath
-  //   }
-  // }
+  computed: {
+    // cachedViews() {
+    //   return this.$store.state.tagsView.cachedViews
+    // },
+    key() {
+      return this.$route.fullPath
+    }
+  }
 }
 </script>
 

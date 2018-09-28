@@ -18,7 +18,6 @@
           :data="treeData"
           node-key="id"
           highlight-current
-          :props="defaultProps"
           :filter-node-method="filterNode"
           ref="menuTree"
           @node-click="getNodeData"
@@ -183,10 +182,6 @@
 <script>
 import { getAll, insertDepartment, delectDepartment, updataDepartment } from '@/api/admin/department/index'
 export default {
-  components: {
-    MdTree,
-    MdTable
-  },
   data () {
     return {
       dialogFormVisible: false,
@@ -231,6 +226,11 @@ export default {
   },
   created() {
     this.getList();
+  },
+  watch: {
+    filterText(val) {
+      this.$refs.tree2.filter(val);
+    }
   },
   methods: {
     create(form) {
