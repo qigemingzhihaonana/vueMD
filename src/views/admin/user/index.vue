@@ -126,7 +126,7 @@
   </div>  
 </template>
 <script>
-import { addUser, fetchUser, deleUser} from '@/api/user/index'
+import { addUser, fetchUser, deleUser} from '@/api/admin/user/index'
 export default {
   data () {
     return {

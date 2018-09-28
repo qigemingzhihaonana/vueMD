@@ -1,13 +1,15 @@
 <template>
   <!--一级导航-->
-  <el-menu
-    default-active="0"
-    mode="horizontal"
-    background-color="#FFFFFF"
-    text-color="black"
-    active-text-color="white">
-    <nav-menu :navMenus="menuData"></nav-menu>
-  </el-menu>
+  <div class="top">
+    <el-menu
+      default-active="0"
+      mode="horizontal"
+      background-color=" #5e5eff"
+      text-color="white"
+      active-text-color="antiquewhite">
+      <nav-menu :navMenus="menuData"></nav-menu>
+    </el-menu>
+  </div>
 </template>
 
 
@@ -26,3 +28,9 @@
     }
   }
 </script>
+<style scoped>
+.top {
+  display: block;
+  background-color: antiquewhite
+}
+</style>

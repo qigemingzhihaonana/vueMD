@@ -68,7 +68,7 @@
               width="120">
             </el-table-column>
             <el-table-column
-              fixed="right"
+              prop="right"
               label="副职领导"
               width="120">
               <!-- <template slot-scope="scope">
@@ -184,6 +184,10 @@ import { getAll, insertDepartment, delectDepartment, updataDepartment } from '@/
 export default {
   data () {
     return {
+      textMap: {
+        update: '编辑',
+        create: '创建'
+      },
       dialogFormVisible: false,
       tableData: [],
       treeData: [],
@@ -221,7 +225,8 @@ export default {
 				transceiver: undefined,
 				together: undefined  
 			},
-			currentId: -1
+      currentId: -1,
+      filterText: ''
     }
   },
   created() {
@@ -229,10 +234,14 @@ export default {
   },
   watch: {
     filterText(val) {
-      this.$refs.tree2.filter(val);
+      this.$refs.menuTree.filter(val);
     }
   },
   methods: {
+    filterNode(value, data) {
+      if (!value) return true;
+      return data.label.indexOf(value) !== -1;
+    },
     create(form) {
       insertDepartment(form).then( () => {
         this.getList();

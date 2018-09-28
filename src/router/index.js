@@ -21,18 +21,18 @@ export default new Router({
       name: '登录',
       component: () => import('@/views/login/login')
     },
-    // {
-    //   path: '/',
-    //   component: Layout,
-    //   redirect: 'dashboard',
-    //   children: [
-    //     {
-    //       path: 'dashboard',
-    //       name: '首页',
-    //       component: () => import('@/views/dashboard/index')
-    //     }
-    //   ]
-    // },
+    {
+      path: '/',
+      component: Layout,
+      redirect: 'dashboard',
+      children: [
+        {
+          path: 'dashboard',
+          name: '首页',
+          component: () => import('@/views/dashboard/index')
+        }
+      ]
+    },
     {
       path: '/456',
       component: Layout,
@@ -46,41 +46,41 @@ export default new Router({
         }
       ]
     },
-    // {
-    //   path: '/789',
-    //   component: Layout,
-    //   redirect: '/789/123',
-    //   children: [
-    //     {
-    //       path: '/789/123',
-    //       name: '用户管理',
-    //       component: () => import('@/views/admin/user/index')
-    //     }
-    //   ]
-    // },
-    // {
-    //   path: '/',
-    //   component: Layout,
-    //   redirect: '/',
-    //   children: [
-    //     {
-    //       path: '/',
-    //       name: '角色管理',
-    //       component: () => import('@/views/admin/role/index')
-    //     }
-    //   ]
-    // },
-    // {
-    //   path: '/',
-    //   component: Layout,
-    //   redirect: '/',
-    //   children: [
-    //     {
-    //       path: '/',
-    //       name: '菜单管理',
-    //       component: () => import('@/views/admin/menu/index')
-    //     }
-    //   ]
-    // }
+    {
+      path: '/789',
+      component: Layout,
+      redirect: '/789/123',
+      children: [
+        {
+          path: '/789/123',
+          name: '用户管理',
+          component: () => import('@/views/admin/user/index')
+        }
+      ]
+    },
+    {
+      path: '/',
+      component: Layout,
+      redirect: '/',
+      children: [
+        {
+          path: '/',
+          name: '角色管理',
+          component: () => import('@/views/admin/role/index')
+        }
+      ]
+    },
+    {
+      path: '/',
+      component: Layout,
+      redirect: '/',
+      children: [
+        {
+          path: '/',
+          name: '菜单管理',
+          component: () => import('@/views/admin/menu/index')
+        }
+      ]
+    }
   ]
 })
