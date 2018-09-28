@@ -193,7 +193,6 @@ export default {
       treeData: [],
       formEdit: true,
       formAdd: true,
-      formStatus: '',
 			options:[{
 				value: "true",
 				label: "是"
@@ -253,9 +252,6 @@ export default {
 			});
     },
     getNodeData(data) {
-      if (!this.formEdit) {
-				this.formStatus = 'update';
-			}
       //通过节点的数据传递给后台向其要求数据
       getObj(data.id).then(response => {
       	this.form = response.data;
@@ -268,7 +264,6 @@ export default {
       const fatherNode = this.$refs.treeData.getCheckedNodes();
       this.restForm(fatherNode);
       this.formEdit = false;
-      this.formStatus = 'create';
     },
     handleDelete () {
       //if ()
@@ -284,7 +279,7 @@ export default {
 				ocName: undefined,
 				oaName: undefined,
 				sort: undefined,
-				upLeader: fatherNode.label,
+				//upLeader: fatherNode.label,
 				positionZ: undefined,
 				positionF: undefined,
 				show: undefined,
@@ -302,8 +297,7 @@ export default {
       this.dialogFormVisible = true,
       this.dialogStatus=='create'
       getMessage(row.id).then( data => {
-        this.form = data,
-        this.formStatus = 'Edit'
+        this.form = data
       })
     }
   }

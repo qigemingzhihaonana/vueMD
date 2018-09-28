@@ -73,17 +73,32 @@
       </el-col>
     </el-row>
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form :model="form" :rules="rules" ref="form" inline="true">
+      <el-form :model="form" ref="form" inline="true">
         <el-form-item label="角色ID">
-          <el-input v-model="form.id" :disabled="formEdit"></el-input>
+          <el-input v-model="form.id" ></el-input>
         </el-form-item>
-        <el-form-item label="角色名称"></el-form-item>
-        <el-form-item label="角色描述"></el-form-item>
-        <el-form-item label="是否系统内置角色"></el-form-item>
-        <el-form-item label="创建时间"></el-form-item>
-        <el-form-item label="更新时间"></el-form-item>
-        <el-form-item label="创建人员"></el-form-item>
-        <el-form-item label="更新人员"></el-form-item>
+        <el-form-item label="角色名称">
+          <el-input v-model="form.name"></el-input>
+        </el-form-item>
+        <el-form-item label="角色描述">
+          <el-input v-model="form.desc"></el-input>
+        </el-form-item>
+        <el-form-item label="是否系统内置角色">
+          <el-radio v-model="radio" label="0">是</el-radio>
+          <el-radio v-model="radio" label="1">否</el-radio>
+        </el-form-item>
+        <el-form-item label="创建时间">
+          <el-input v-model="form.createTime" :disabled="formEdit"></el-input>
+        </el-form-item>
+        <el-form-item label="更新时间">
+          <el-input v-model="form.updateTime" :disabled="formEdit"></el-input>
+        </el-form-item>
+        <el-form-item label="创建人员">
+          <el-input v-model="form.createOper" :disabled="formEdit"></el-input>
+        </el-form-item>
+        <el-form-item label="更新人员">
+          <el-input v-model="form.updateOper" :disabled="formEdit"></el-input>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="cancel('form')">取 消</el-button>
@@ -108,7 +123,15 @@ export default {
         createOper:undefined,
         updateOper:undefined
       },
-
+      textMap: {
+        update: '编辑',
+        create: '创建'
+      },
+      dialogFormVisible: false,
+      tableData: [],
+      treeData: [],
+      formEdit: true,
+      formAdd: true,
     }
   },
   created () {
@@ -119,6 +142,12 @@ export default {
       getTree(this.listQuery).then(data => {
 				this.treeData = data;
 			});
+    },
+    getNodeData(data) {
+      
+		},
+    handlerAdd() {
+
     }
   }
 }
