@@ -39,7 +39,7 @@
                   <span>{{ props.row.desc }}</span>
                 </el-form-item>
                 <el-form-item label="是否系统内置角色">
-                  <span>{{ props.row.build }}</span>
+                  <span>{{ props.row.isbuild }}</span>
                 </el-form-item>
                 <el-form-item label="创建时间">
                   <span>{{ props.row.createTime }}</span>
@@ -84,20 +84,20 @@
           <el-input v-model="form.desc"></el-input>
         </el-form-item>
         <el-form-item label="是否系统内置角色">
-          <el-radio v-model="radio" label="0">是</el-radio>
-          <el-radio v-model="radio" label="1">否</el-radio>
+          <el-radio v-model="isbuild" label="0">是</el-radio>
+          <el-radio v-model="isbuild" label="1">否</el-radio>
         </el-form-item>
         <el-form-item label="创建时间">
-          <el-input v-model="form.createTime" :disabled="formEdit"></el-input>
+          <el-input v-model="form.createTime" disabled></el-input>
         </el-form-item>
-        <el-form-item label="更新时间">
-          <el-input v-model="form.updateTime" :disabled="formEdit"></el-input>
+        <el-form-item label="最后更新时间">
+          <el-input v-model="form.updateTime" disabled></el-input>
         </el-form-item>
         <el-form-item label="创建人员">
-          <el-input v-model="form.createOper" :disabled="formEdit"></el-input>
+          <el-input v-model="form.createOper" disabled></el-input>
         </el-form-item>
-        <el-form-item label="更新人员">
-          <el-input v-model="form.updateOper" :disabled="formEdit"></el-input>
+        <el-form-item label="最后更新人员">
+          <el-input v-model="form.updateOper" disabled></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -110,18 +110,20 @@
 </template>
 <script>
 import { getRole, getTable , addRole, delRole, updateRole } from '@/api/admin/role/index'
+import getNowDate from '@/utils/time'
 export default {
   data () {
     return {
-      tableData: {
+      tableData: [],
+      form: {
         id: undefined,
         name: undefined,
         desc: undefined,
-        build: undefined,
-        createTime:undefined,
+        isbuild: 0,
+        createTime: undefined,
+        createOper: undefined,
         updateTime: undefined,
-        createOper:undefined,
-        updateOper:undefined
+        updateOper: undefined
       },
       textMap: {
         update: '编辑',
@@ -140,14 +142,59 @@ export default {
   methods: {
     getAll() {
       getTree(this.listQuery).then(data => {
-				this.treeData = data;
+				this.treeData = data
 			});
     },
     getNodeData(data) {
       
 		},
     handlerAdd() {
+      this.dialogStatus = 'create'
+      this.restForm()
+      this.dialogFormVisible = true
+    },
+    handlerEdit() {
 
+    },
+    handleDelete() {
+      
+    },
+    update(form) {
+
+    },
+    create(form) {
+      this.$refs[form].validate(valid => {
+        if(valid) {
+          addRole(this.form).then(() => {
+            this.dialogFormVisible = false;
+            this.getList();
+            this.$notify({
+              title: '成功',
+              message: '创建成功',
+              type: 'success',
+              duration: 2000
+            });
+          })
+        } else {
+          return false
+        }
+      })
+    },
+    cancel(form) {
+      this.dialogFormVisible = false;
+      this.$refs[form].resetFields();
+    },
+    restForm() {
+      this.form = {
+        id: undefined,
+        name: undefined,
+        desc: undefined,
+        isbuild: 0,
+        createTime: getNowDate(),
+        createOper: this.$store.user.name,
+        updateTime: undefined,
+        updateOper: undefined
+      }
     }
   }
 }

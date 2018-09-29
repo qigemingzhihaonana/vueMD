@@ -30,7 +30,7 @@
 </script>
 <style scoped>
 .top {
-  display: block;
-  background-color: antiquewhite
+  display: flex;
+  background-color: antiquewhite;
 }
 </style>

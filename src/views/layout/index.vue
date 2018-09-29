@@ -33,6 +33,8 @@ export default {
     overflow: hidden;
   }
  .main-head {
+    display: flex;
+    flex-direction: row;
     position: absolute;
     top: 0;
     width: 100%;

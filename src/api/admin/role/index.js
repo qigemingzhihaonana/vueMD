@@ -14,7 +14,7 @@ export function fetchRole (query) {
 
 /**
  * 添加角色
- * @param {id,name,despriction,,createTime,upDateTime,createOper,updateOper} data
+ * @param {id,name,despriction,createTime,upDateTime,createOper,updateOper} data
  */
 export function addRole (data) {
   return axios({

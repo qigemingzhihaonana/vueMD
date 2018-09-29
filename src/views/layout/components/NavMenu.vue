@@ -9,7 +9,7 @@
                   class="item"
                   >
         <svg-icon :icon-class="navMenu.svg" />
-        <span slot="title">{{navMenu.name}}</span>
+        <span slot="title" style="pandding-left=45px">{{navMenu.name}}</span>
     </el-menu-item>
 
     <el-submenu v-if="navMenu.childs !== null"
@@ -20,7 +20,7 @@
                 >
       <template slot="title">
         <svg-icon :icon-class="navMenu.svg"/>
-        <span> {{navMenu.name}}</span>
+        <span style="pandding-left=45px"> {{navMenu.name}}</span>
       </template>
       <NavMenu :navMenus="navMenu.childs"></NavMenu>
     </el-submenu>
