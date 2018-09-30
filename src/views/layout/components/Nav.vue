@@ -32,6 +32,6 @@
 <style scoped>
 .top {
   display: flex;
-  background-color: rgb(250, 236, 215);
+  background-color: rgb(255, 255, 255);
 }
 </style>

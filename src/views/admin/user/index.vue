@@ -1,196 +1,114 @@
 <template>
-  <div>
-    <el-card shadow="always">
-      <div>
-        <span>人员管理</span>
-        <el-button
-        size="mini"
-        @click="insertMore">批量导入</el-button>
-      </div>
-      <el-row>
-        <el-table
-          :data="tableUser"
-          style="width: 100%">
-          <el-table-column type="expand">
-            <template slot-scope="props">
-              <el-form label-position="left" inline class="demo-table-expand">
-                <el-form-item label="员工入职时间">
-                  <span>{{ props.row.name }}</span>
-                </el-form-item>
-                <el-form-item label="">
-                  <span>{{ props.row.shop }}</span>
-                </el-form-item>
-                <el-form-item label="商品 ID">
-                  <span>{{ props.row.id }}</span>
-                </el-form-item>
-                <el-form-item label="店铺 ID">
-                  <span>{{ props.row.shopId }}</span>
-                </el-form-item>
-                <el-form-item label="商品分类">
-                  <span>{{ props.row.category }}</span>
-                </el-form-item>
-                <el-form-item label="店铺地址">
-                  <span>{{ props.row.address }}</span>
-                </el-form-item>
-                <el-form-item label="商品描述">
-                  <span>{{ props.row.desc }}</span>
-                </el-form-item>
-              </el-form>
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="员工ID"
-            prop="id">
-          </el-table-column>
-          <el-table-column
-            label="员工姓名"
-            prop="name">
-          </el-table-column>
-          <el-table-column
-            label="员工部门"
-            prop="desc">
-          </el-table-column>
-          <el-table-column label="操作">
+  <div class="user">
+    <div class="file-edit">
+      <el-button-group>
+        <el-button type="primary" icon="plus" @click="handlerAdd">添加人员</el-button>
+        <el-button type="primary" icon="plus" @click="handlerAddMore">批量导入</el-button>
+      </el-button-group>
+    </div>
+    <el-row>
+      <el-col class="right" :span="24" style='margin-top:15px;'>
+        <el-card shadow="always">
+          <el-table
+          :data="tableData"
+          style="width: 100%"
+          height="300"
+          border>
+            <el-table-column
+            label="员工账号"
+            prop="user_name"></el-table-column>
+            <el-table-column
+            label="员工密码"
+            prop="user_password"></el-table-column>
+            <el-table-column
+            label="员工真实姓名"
+            prop="real_name"></el-table-column>
+            <el-table-column
+            label=""
+            prop="user_code"></el-table-column>
+            <el-table-column
+            label="是否在职"
+            prop="user_level"></el-table-column>
+            <el-table-column
+            label=""
+            prop="user_position"></el-table-column>
+            <el-table-column
+            label=""
+            prop="dep_id"></el-table-column>
+            <el-table-column
+            label="是否公司领导"
+            prop="is_company_leader"></el-table-column>
+            <el-table-column
+            label=""
+            prop="order_number"></el-table-column>
+            <el-table-column
+            label="员工email"
+            prop="user_email"></el-table-column>
+            <el-table-column
+            label=""
+            prop="status"></el-table-column>
+            <el-table-column
+            fixed="right"
+            label="操作"
+            width="120">
             <template slot-scope="scope">
               <el-button
-                size="mini"
-                @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                @click.native.prevent="handlerEdit(scope.row)"
+                type="text"
+                size="small">
+                编辑
+              </el-button>
               <el-button
-                size="mini"
-                type="danger"
-                @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                @click.native.prevent="handleDelete(scope.row)"
+                type="text"
+                size="small">
+                删除
+              </el-button>
             </template>
           </el-table-column>
-        </el-table>
-      </el-row>
-      <el-row>
-        <div>
-
-        </div>
-      </el-row>
-    </el-card>
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-card class="clearfix">
-        <div slot="header" class="clearfix">
-          <span>人员添加</span>
-          <el-button style="float: right; padding: 3px 0" type="text" @click="git('form')" >确定</el-button>
-          <el-button style="float: right; padding: 3px 0" type="text" @click="quiet" >取消</el-button>
-        </div>
-        <div>
-          <el-form :model="form" :rules="rules" ref="form" inlin>
-            <el-form-item label="员工姓名">
-              <el-input></el-input>
-            </el-form-item>
-            <el-form-item label="员工编号">
-              <el-input v-model="form.code"></el-input>
-            </el-form-item>
-            <el-form-item label="登录密码">
-              <el-input v-mode="form.password"></el-input>
-            </el-form-item>
-            <el-form-item label="入职时间">
-               <el-date-picker
-                v-model="form.time"
-                type="date"
-                placeholder="选择时间">
-              </el-date-picker>
-            </el-form-item>
-            <el-form-item label="是否在职">
-              <el-select v-model="form.level" placeholder="请选择">
-                <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label=""></el-form-item>
-            <el-form-item label=""></el-form-item>
-            <el-form-item label=""></el-form-item>
-            <el-form-item label=""></el-form-item>
-          </el-form>
-        </div>
-      </el-card>
+          </el-table>
+        </el-card>
+      </el-col>
+    </el-row>
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" 
+    :before-close="handleClose">
+      <el-form :model="form" ref="form" :rules="rules">
+        <el-form-item label="菜单名称:" prop="name">
+          <el-input v-model="form.name" ></el-input>
+        </el-form-item>
+        <el-form-item label="菜单英文名称:" prop="eName">
+          <el-input v-model="form.eName" ></el-input>
+        </el-form-item>
+        <el-form-item label="菜单标准路径:" prop="url">
+          <el-select v-model="form.url" placeholder="请选择菜单路径">
+            
+          </el-select>
+        </el-form-item>
+        <el-form-item label="???:">
+          <el-radio v-model="form.isCheck" label="0">是</el-radio>
+          <el-radio v-model="form.isCheck" label="1">否</el-radio>
+        </el-form-item>
+        <el-form-item label="是否显示:">
+          <el-radio v-model="form.isDisplay" label="0">是</el-radio>
+          <el-radio v-model="form.isDisplay" label="1">否</el-radio>
+        </el-form-item>
+        <el-form-item label="上级菜单:" v-show="fatherMenu">
+          <el-input v-model="form.parentId"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="cancel('form')">取 消</el-button>
+        <el-button :loading="loading" v-if="dialogStatus=='create'" type="primary" @click="create('form')">确 定</el-button>
+        <el-button :loading="loading" v-else type="primary" @click="update('form')">确 定</el-button>
+      </div>
     </el-dialog>
-    <!-- 分页 -->
-    <div class="block">
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="currentPage4"
-        :page-sizes="[100, 200, 300, 400]"
-        :page-size="100"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="400">
-      </el-pagination>
   </div>
-  </div>  
 </template>
 <script>
-import { addUser, fetchUser, deleUser} from '@/api/admin/user/index'
 export default {
-  data () {
-    return {
-      tableUser: [],
-      dialogStatus: '',
-      dialogFormVisible: false,
-      options:[
-        {
-          label: '是',
-          value: 1
-        },
-        {
-          label: '否',
-          value: 0
-        }
-      ]
-    }
-  },
-  created() {
-    this.fetch()
-  },
-  methods: {
-    fetch() {
-      fetchUser(this.listQuery).then( data => {
-        this.tableUser = data
-      })
-    },
-    quiet() {
-      this.dialogFormVisible = false
-    },
-    insertMore() {
-
-    },
-    git(data) {
-
-    }
-  }
+  
 }
 </script>
-<style>
-  .el-form-item {
-    margin-right: 0;
-    margin-bottom: 0;
-    width: 50%;
-  }
-  .demo-table-expand {
-    font-size: 0;
-  }
-  .demo-table-expand label {
-    width: 90px;
-    color: #99a9bf;
-  }
-  .demo-table-expand .el-form-item {
-    margin-right: 0;
-    margin-bottom: 0;
-    width: 50%;
-  }
-  .clearfix:before,
-  .clearfix:after {
-    display: table;
-    content: "";
-  }
-  .clearfix:after {
-    clear: both
-  }
-</style>
+<style scoped>
 
+</style>

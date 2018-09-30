@@ -1,69 +1,83 @@
 <template>
-  <div class="menu">
+  <div class="department">
     <div class="file-edit">
       <el-button-group>
-        <el-button type="primary" icon="plus" @click="handlerAdd">添加菜单</el-button>
+        <el-button type="primary" icon="plus" @click="handlerAdd">添加模块</el-button>
       </el-button-group>
     </div>
-    <el-row>
-      <el-col class="left" :span="8" style='margin-top:15px;'>
+    <div>
+      <el-card shadow="always">
+        <el-tree
+          class="filter-tree"
+          :data="treeData"
+          node-key="id"
+          highlight-current
+          ref="moduleTree"
+          @node-click="getNodeData"
+          default-expand-all>
+        </el-tree>
+      </el-card>
+    </div>
+      
+      <el-col class="right" :span="24" style='margin-top:15px;'>
         <el-card shadow="always">
-          <el-tree
-            class="filter-tree"
-            :data="treeData"
-            node-key="id"
-            highlight-current
-            ref="menuTree"
-            @node-click="getNodeData"
-            default-expand-all>
-          </el-tree>
-        </el-card>
-      </el-col>
-      <el-col class="right" :span="16" style='margin-top:15px;'>
-        <el-card shadow="always">
-          <el-table
-          :data="tableData"
-          style="width: 100%"
-          height="300"
-          border>
-            <el-table-column
-            label="菜单名称"
-            prop="name"></el-table-column>
-            <el-table-column
-            label="菜单英文名称"
-            prop="eName"></el-table-column>
-            <el-table-column
-            label="菜单标准路径"
-            prop="url"></el-table-column>
-            <el-table-column
-            label=""
-            prop="isCheck"></el-table-column>
-            <el-table-column
-            label="是否显示"
-            prop="isDisplay"></el-table-column>
-            <el-table-column
-            label="上级菜单"
-            prop="parentId"></el-table-column>
-            <el-table-column
-            fixed="right"
-            label="操作"
-            width="120">
-            <template slot-scope="scope">
-              <el-button
-                @click.native.prevent="handlerEdit(scope.row)"
-                type="text"
-                size="small">
-                编辑
-              </el-button>
-              <el-button
-                @click.native.prevent="handleDelete(scope.row)"
-                type="text"
-                size="small">
-                删除
-              </el-button>
-            </template>
-          </el-table-column>
-          </el-table>
+          <el-row>
+              <el-table
+              :data="tableData"
+              style="width: 100%"
+              height="300"
+              border>
+                <el-table-column type="expand">
+                  <template slot-scope="props">
+                    <el-form label-position="left" inline class="table-expand">
+                      <el-form-item label="模块代码:">
+                        <span>{{ props.row.code }}</span>
+                      </el-form-item>
+                      <el-form-item label="模块名称:">
+                        <span>{{ props.row.name }}</span>
+                      </el-form-item>
+                      <el-form-item label="对应控制菜单:">
+                        <span>{{ props.row.menu }}</span>
+                      </el-form-item>
+                      <el-form-item label="默认查询范围:">
+                        <span>{{ props.row.area }}</span>
+                      </el-form-item>
+                      <el-form-item label="默认权限类型:">
+                        <span>{{ props.row.role }}</span>
+                      </el-form-item>
+                    </el-form>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                label="模块代码"
+                prop="code"></el-table-column>
+                <el-table-column
+                label="模块名称"
+                prop="name">
+                <el-table-column
+                fixed="right"
+                label="操作"
+                width="160">
+                <template slot-scope="scope">
+                  <el-button
+                    @click.native.prevent="handlerEdit(scope.row)"
+                    type="text"
+                    size="small">
+                    编辑
+                  </el-button>
+                  <el-button
+                    @click.native.prevent="handleDelete(scope.row)"
+                    type="text"
+                    size="small">
+                    删除
+                  </el-button>
+                </template>
+              </el-table-column>
+              </el-table>
+            <el-row>
+
+            </el-row>
+          </el-row>
         </el-card>
       </el-col>
     </el-row>
@@ -108,39 +122,11 @@
     </el-dialog>
   </div>
 </template>
-
 <script>
-import { addMenu, delMenu, fetchMenu, updateMenu, getMenuMessage } from '@/api/admin/menu/index'
 export default {
-  data () {
+  data() {
     return {
-      fatherMenu: false,
-      treeData: [],
-      tableData: [],
-      dialogStatus: 'create',
-      textMap: {
-        update: '编辑',
-        create: '创建'
-      },
-      loading: false,
-      dialogFormVisible: false,
-      form: {
-        name: undefined,
-        eName: undefined,
-        url: undefined,
-        isCheck: undefined,
-        isDisplay: undefined,
-        parentId: undefined
-      },
-      currentId: -1,
-      rules: {
-        name: [
-          { required: true, message: '请输入菜单名称，请不要重复', trigger: 'blur' }
-        ],
-        url: [
-          { required: true, message: '请输入菜单详细路径', trigger: 'blur' }
-        ]
-      }
+
     }
   },
   methods: {
@@ -178,26 +164,26 @@ export default {
     },
     /**更新 */
     update(form) {
-      this.$refs[form].validate(valid => {
-        if(valid) {
-          this.loading = true
-          updateMenu(this.form).then(() => {
-            this.loading = false
-            this.dialogFormVisible = false
-            this.getList()
-            this.$notify({
-              title: '成功',
-              message: '创建成功',
-              type: 'success',
-              duration: 2000
+        this.$refs[form].validate(valid => {
+          if(valid) {
+            this.loading = true
+            updateMenu(this.form).then(() => {
+              this.loading = false
+              this.dialogFormVisible = false
+              this.getList()
+              this.$notify({
+                title: '成功',
+                message: '创建成功',
+                type: 'success',
+                duration: 2000
+              })
             })
-          })
-        } else {
-          this.loading = false
-          return false
-        }
-      })
-    },
+          } else {
+            this.loading = false
+            return false
+          }
+        })
+      },
       /**获取菜单详细信息 */
       getNodeData(data) {
         fetchMenu(data.id).then(response => {
@@ -257,6 +243,10 @@ export default {
       handleClose() {
         this.loading = false
         this.dialogFormVisible = false
+      },
+      /**角色配置 */
+      roleEdit(row) {
+
       }
   }
 }

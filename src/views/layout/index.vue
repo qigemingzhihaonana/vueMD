@@ -26,7 +26,7 @@ export default {
 <style>
   .layout{
     border: 1px solid #0e6fd6;
-    background: #f5f7f9;
+    background: #ffffff;
     height: 100%;
     position: relative;
     border-radius: 4px;
@@ -38,7 +38,7 @@ export default {
     position: absolute;
     top: 0;
     width: 100%;
-    background-color: #eafbdf;
+    background-color: #ffffff;
     background-color: #178020 !important;
     color: white !important;
  }

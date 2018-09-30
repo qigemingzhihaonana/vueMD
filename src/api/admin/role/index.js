@@ -82,3 +82,28 @@ export function addUser (data) {
     data
   })
 }
+
+/**
+ * 获取角色对应的用户
+ * @param {*} query
+ */
+export function getRoleUser (query) {
+  return axios({
+    url: '/',
+    method: 'get',
+    params: query
+  })
+}
+
+/**
+ * 角色新增用户
+ * @param {*} query
+ */
+export function addRoleUser (data) {
+  return axios({
+    url: '/',
+    method: 'post',
+    data
+  })
+}
+

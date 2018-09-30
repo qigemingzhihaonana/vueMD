@@ -34,12 +34,12 @@ export default new Router({
       ]
     },
     {
-      path: '/456',
+      path: '/system',
       component: Layout,
-      redirect: '/456/123',
+      redirect: '/system/department',
       children: [
         {
-          path: '123',
+          path: '/system/department',
           name: '部门管理',
           component: () => import('@/views/admin/department/index'),
           meta: {title: 'deparement'}
@@ -47,12 +47,12 @@ export default new Router({
       ]
     },
     {
-      path: '/789',
+      path: '/system',
       component: Layout,
-      redirect: '/789/123',
+      redirect: '/system/user',
       children: [
         {
-          path: '/789/123',
+          path: '/system/user',
           name: '用户管理',
           component: () => import('@/views/admin/user/index')
         }
@@ -71,14 +71,26 @@ export default new Router({
       ]
     },
     {
-      path: '/',
+      path: '/system',
       component: Layout,
-      redirect: '/',
+      redirect: '',
       children: [
         {
-          path: '/',
+          path: '/system/menu',
           name: '菜单管理',
           component: () => import('@/views/admin/menu/index')
+        }
+      ]
+    },
+    {
+      path: '/system',
+      component: Layout,
+      redirect: '',
+      children: [
+        {
+          path: '/system/module',
+          name: '菜单管理',
+          component: () => import('@/views/admin/module/index')
         }
       ]
     }

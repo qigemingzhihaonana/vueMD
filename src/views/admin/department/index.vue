@@ -188,6 +188,7 @@ export default {
         update: '编辑',
         create: '创建'
       },
+      dialogStatus: undefined,
       dialogFormVisible: false,
       tableData: [],
       treeData: [],

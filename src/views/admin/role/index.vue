@@ -45,20 +45,24 @@
           </el-table-column>
           <el-table-column
             label="角色ID"
-            prop="id">
+            prop="id"
+            align="center">
           </el-table-column>
           <el-table-column
             label="角色名称"
-            prop="name">
+            prop="name"
+            align="center">
           </el-table-column>
           <el-table-column
             label="角色描述"
-            prop="desc">
+            prop="desc"
+            align="center">
           </el-table-column>
           <el-table-column
           fixed="right"
           label="操作"
-          width="120">
+          width="180"
+          >
           <template slot-scope="scope">
             <el-button
               @click.native.prevent="handlerEdit(scope.row)"
@@ -72,14 +76,21 @@
               size="small">
               删除
             </el-button>
+            <el-button
+              @click.native.prevent="addUser(scope.row)"
+              type="text"
+              size="small">
+              配置人员
+            </el-button>
           </template>
         </el-table-column>
         </el-table>
         </el-card>
       </el-col>
     </el-row>
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form :model="form" ref="form" inline :rules="rules">
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible"
+    :before-close="handleClose">
+      <el-form :model="form" ref="form" inline :rules="rules" style="height: 50%">
         <el-form-item label="角色ID:" prop="id">
           <el-input v-model="form.id" ></el-input>
         </el-form-item>
@@ -87,23 +98,23 @@
           <el-input v-model="form.name"></el-input>
         </el-form-item>
         <el-form-item label="角色描述:" prop="desc">
-          <el-input v-model="form.desc"></el-input>
+          <el-input type="textarea" v-model="form.desc"></el-input>
         </el-form-item>
         <el-form-item label="是否系统内置角色:">
           <el-radio v-model="form.isbuild" label="0">是</el-radio>
           <el-radio v-model="form.isbuild" label="1">否</el-radio>
         </el-form-item>
-        <el-form-item label="创建时间:">
-          <el-input v-model="form.createTime" v-show="createM" :disabled="true"></el-input>
+        <el-form-item label="创建时间:" v-show="false" >
+          <el-input v-model="form.createTime" ></el-input>
         </el-form-item>
-        <el-form-item label="最后更新时间:">
-          <el-input v-model="form.updateTime" v-show="editM" :disabled="true"></el-input>
+        <el-form-item label="最后更新时间:" v-show="false" >
+          <el-input v-model="form.updateTime" ></el-input>
         </el-form-item>
-        <el-form-item label="创建人员:">
-          <el-input v-model="form.createOper" v-show="createM" :disabled="true"></el-input>
+        <el-form-item label="创建人员:" v-show="false">
+          <el-input v-model="form.createOper" ></el-input>
         </el-form-item>
-        <el-form-item label="最后更新人员:">
-          <el-input v-model="form.updateOper" v-show="editM" :disabled="true"></el-input>
+        <el-form-item label="最后更新人员:" v-show="false">
+          <el-input v-model="form.updateOper" ></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -112,6 +123,7 @@
         <el-button :loading="loading" v-else type="primary" @click="update('form')">确 定</el-button>
       </div>
     </el-dialog>
+    
   </div>
 </template>
 <script>
@@ -165,7 +177,6 @@ export default {
     },
     handlerAdd() {
       this.dialogStatus = 'create'
-      this.createM = true
       this.restForm()
       this.dialogFormVisible = true
     },
@@ -189,8 +200,7 @@ export default {
       })
     },
     handlerEdit(row) {
-      this.editM = true
-      this.form = Object.assign({}, row) // copy obj
+      this.form = Object.assign({}, row)
       this.form.updateTime = new Date()
       this.form.updateOper = '123'
       this.dialogStatus = 'update'
@@ -205,7 +215,6 @@ export default {
           this.loading = true
           updateRole(this.form).then(() => {
             this.loading = false
-            this.editM = false
             this.dialogFormVisible = false
             this.getList()
             this.$notify({
@@ -227,7 +236,6 @@ export default {
           this.loading = true
           addRole(this.form).then(() => {
             this.loading = false
-            this.createM = false
             this.dialogFormVisible = false;
             this.getList()
             this.$notify({
@@ -258,6 +266,11 @@ export default {
         updateTime: undefined,
         updateOper: undefined
       }
+    },
+    /**弹窗关闭时 */
+    handleClose(done) {
+      this.loading = false
+      this.dialogFormVisible = false
     }
   }
 }
