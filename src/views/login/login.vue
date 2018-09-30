@@ -43,7 +43,7 @@ export default {
           this.loading = true
           this.$store.dispatch('Login',this.form).then(() => {
             this.loading = false
-            this.$router.push('/')
+            this.$router.push('/home')
           }).catch( () => {
             this.loading = false
           })
@@ -52,7 +52,7 @@ export default {
           return false
         }
       })
-    }
+    },
   }
 }
 </script>

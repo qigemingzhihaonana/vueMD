@@ -25,7 +25,7 @@ export default {
 </script>
 <style>
   .layout{
-    border: 1px solid #bcc6d1;
+    border: 1px solid #0e6fd6;
     background: #f5f7f9;
     height: 100%;
     position: relative;
@@ -38,7 +38,6 @@ export default {
     position: absolute;
     top: 0;
     width: 100%;
-    height: 60px;
     background-color: #eafbdf;
     background-color: #178020 !important;
     color: white !important;
@@ -47,24 +46,25 @@ export default {
     position: absolute;
     top: 0;
     width: 100%;
-    height: 60px;
+    height: 56px;
     background-color: #eafbdf;
     background-color: #7c817c !important;
     color: white !important;
     
  }
  .footer {
-    background-color: #F2F2F2;
+    background-color: #f4f4f4;
     color: #7F7C7C;
     text-align: center;
     position: absolute;
     bottom: 0px;
-    height: 34px;
-    line-height: 35px;
+    height: 170px;
+    line-height: 150px;
     left: 0;
     right: 0;
     padding: 5px;
-    border-top: 1px solid #A9A9A9;
+    border-top: 1px solid #7d7d7d;
     border-bottom: 5px solid rgb(138, 139, 138);
+    font-size: 150%;
   }
 </style>

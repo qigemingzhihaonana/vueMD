@@ -7,7 +7,7 @@ import departmentAPI from './admin/department'
 Mock.mock(/\/login/, 'post', loginAPI.fetch)
 
 // 角色相关
-Mock.mock(/\/getRoleAll/, 'get', roleAPI.getRole)
+Mock.mock(/\/selectRoleConfigure1/, 'get', roleAPI.getRoleTable)
 Mock.mock(/\/addRole/, 'post', roleAPI.addRole)
 Mock.mock(/\/delRole/, 'post', roleAPI.delRole)
 Mock.mock(/\/uptRole/, 'post', roleAPI.uptRole)

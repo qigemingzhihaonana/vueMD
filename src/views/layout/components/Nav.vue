@@ -2,9 +2,10 @@
   <!--一级导航-->
   <div class="top">
     <el-menu
+      router
       default-active="0"
       mode="horizontal"
-      background-color=" #5e5eff"
+      background-color=" #0e80f1"
       text-color="white"
       active-text-color="antiquewhite">
       <nav-menu :navMenus="menuData"></nav-menu>
@@ -31,6 +32,6 @@
 <style scoped>
 .top {
   display: flex;
-  background-color: antiquewhite;
+  background-color: rgb(250, 236, 215);
 }
 </style>

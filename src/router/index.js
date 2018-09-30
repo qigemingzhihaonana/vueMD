@@ -59,12 +59,12 @@ export default new Router({
       ]
     },
     {
-      path: '/',
+      path: '/system',
       component: Layout,
-      redirect: '/',
+      redirect: '/system/role',
       children: [
         {
-          path: '/',
+          path: '/system/role',
           name: '角色管理',
           component: () => import('@/views/admin/role/index')
         }

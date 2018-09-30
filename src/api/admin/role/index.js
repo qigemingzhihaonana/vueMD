@@ -1,10 +1,10 @@
 import axios from '@/utils/fetch'
 
 /**
- * 查询所有角色信息(仅ID与名称)
+ * 查询所有角色信息
  * @param {query} query
  */
-export function fetchRole (query) {
+export function getRoleTable (query) {
   return axios({
     url: '/selectRoleConfigure1',
     method: 'get',
