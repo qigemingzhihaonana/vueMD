@@ -143,12 +143,12 @@ export default {
         userName: undefined,
         password: undefined,
         realName: undefined,
-        isLevel: undefined,
-        isleader: undefined,
+        isLevel: '1',
+        isleader: '0',
         position: undefined,
         order: undefined,
         email: undefined,
-        isStatus: undefined
+        isStatus: '0'
       },
       rules: {
         username: [
