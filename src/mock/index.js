@@ -2,6 +2,7 @@ import Mock from 'mockjs'
 import loginAPI from './login'
 import roleAPI from './admin/role'
 import departmentAPI from './admin/department'
+import moduleApi from './admin/module'
 
 // 登录相关
 Mock.mock(/\/login/, 'post', loginAPI.fetch)
@@ -20,4 +21,10 @@ Mock.mock(/\/getDepartment/, 'get', departmentAPI.getD)
 Mock.mock(/\/addDepartment/, 'post', departmentAPI.addD)
 Mock.mock(/\/delDepartment/, 'post', departmentAPI.delD)
 Mock.mock(/\/upDepartment/, 'post', departmentAPI.delD)
+
+// 模块相关
+Mock.mock(/\/fetchmodule/, 'get', moduleApi.getModule)
+Mock.mock(/\/fetchData/, 'post', moduleApi.getData)
+Mock.mock(/\/getMenu/, 'post', moduleApi.getMenu)
+
 export default Mock

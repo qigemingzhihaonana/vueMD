@@ -71,16 +71,13 @@
               prop="right"
               label="副职领导"
               width="120">
-              <!-- <template slot-scope="scope">
-                <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-              </template> -->
             </el-table-column>
           </el-table>
         </el-card>
       </el-col>
     </el-row>
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form :model="form" :rules="rules" ref="form" inline="true">
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="60%">
+      <el-form :model="form" :rules="rules" ref="form" inline>
         <el-form-item label="部门名称:">
     			<el-input v-model="form.cName" :disabled="formEdit"  prop="cName"></el-input>
     		</el-form-item>
@@ -91,7 +88,7 @@
     			<el-input v-model="form.area" :disabled="formEdit"  prop="area"></el-input>
     		</el-form-item>
       </el-form>
-      <el-form :model="form" :rules="rules" ref="form" inline="true">
+      <el-form :model="form" :rules="rules" ref="form" inline>
         <el-form-item label="部门别名:">
     		  <el-input v-model="form.ocName" :disabled="formEdit"  ></el-input>
         </el-form-item>
@@ -102,18 +99,23 @@
           <el-input v-model="form.sort" :disabled="formEdit"  ></el-input>
         </el-form-item>
       </el-form>
-      <el-form :model="form" :rules="rules" ref="form" inline="true">
-        <el-form-item label="上级部门:">
-          <el-input v-model="upLeader" :disabled="formEdit" ></el-input>
+      <el-form :model="form" :rules="rules" ref="form" inline>
+        <el-form-item label="上级部门:" label-width="100px">
+          <el-select-tree v-model="form.upLeader"
+                          :treeData="treeData"
+                          clearable
+                          placeholder="请选择上级部门"
+                          :disabled="formEdit">
+          </el-select-tree>
         </el-form-item>
         <el-form-item label="部门正职">
-          <el-input v-model="positionZ" :disabled="formEdit" ></el-input>
+          <el-input v-model="form.positionZ" :disabled="formEdit" ></el-input>
         </el-form-item>
         <el-form-item label="部门副职">
-          <el-input v-model="positionF" :disabled="formEdit" ></el-input>
+          <el-input v-model="form.positionF" :disabled="formEdit" ></el-input>
         </el-form-item>
       </el-form>
-      <el-form :model="form" :rules="rules" ref="form" inline="true">
+      <el-form :model="form" :rules="rules" ref="form" inline>
         <el-form-item label="部门状态:">
           <el-select v-model="form.state" :disabled="formEdit" >
             <el-option
@@ -127,7 +129,7 @@
       <el-form-item label="是否显示:">
         <el-select v-model="form.show" :disabled="formEdit" >
           <el-option
-          v-for="item in option"
+          v-for="item in optionx"
           :key="item.key"
           :label="item.label"
           :value="item.value">
@@ -145,7 +147,7 @@
         </el-select>
       </el-form-item>
       </el-form>
-      <el-form :model="form" :rules="rules" ref="form" inline="true">
+      <el-form :model="form" :rules="rules" ref="form" inline>
         <el-form-item label="省份编码">
           <el-input v-model="form.province" :disabled="formEdit" ></el-input>
         </el-form-item>
@@ -156,14 +158,14 @@
           <el-input v-model="form.departmentNumber" :disabled="formEdit" ></el-input>
         </el-form-item>
       </el-form>
-      <el-form :model="form" :rules="rules" ref="form" inline="true">
+      <el-form :model="form" :rules="rules" ref="form" inline>
         <el-form-item label="部门收发员">
           <el-input v-model="form.transceiver" :disabled="formEdit" ></el-input>
         </el-form-item>
         <el-form-item label="正副职同时传阅">
           <el-select v-model="form.together" :disabled="formEdit" >
             <el-option
-            v-for="item in option"
+            v-for="item in optionx"
             :key="item.key"
             :label="item.label"
             :value="item.value">
@@ -172,18 +174,41 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="cancel('form')">取 消</el-button>
-        <el-button v-if="dialogStatus=='create'" type="primary" @click="create('form')">确 定</el-button>
-        <el-button v-else type="primary" @click="update('form')">确 定</el-button>
+        <el-button @click="cancel('form')">取消</el-button>
+        <el-button v-if="dialogStatus=='create'" type="primary" @click="create('form')">确定</el-button>
+        <el-button v-else type="primary" @click="update('form')">确定</el-button>
       </div>
     </el-dialog>
   </div>  
 </template>
 <script>
+import elTreeselect from 'el-tree-select';
 import { getAll, insertDepartment, delectDepartment, updataDepartment } from '@/api/admin/department/index'
 export default {
+  components: {elTreeselect},
   data () {
     return {
+      loading: false,
+      optionx: [
+        {
+          label: '是',
+          value: '0'
+        },
+        {
+          label: '否',
+          value: '1'
+        }
+      ],
+      option: [
+        {
+          label: '1',
+          value: '1'
+        },
+        {
+          label: '2',
+          value: '2'
+        }
+      ],
       textMap: {
         update: '编辑',
         create: '创建'
@@ -226,7 +251,18 @@ export default {
 				together: undefined  
 			},
       currentId: -1,
-      filterText: ''
+      filterText: '',
+      rules: {
+          zName: [
+            { required: true, message: '请输入部门英文名称', trigger: 'blur' }
+          ],
+          cName: [
+            { required: true, message: '请输入部门中文名称', trigger: 'blur' }
+          ],
+          area: [
+            { required: true, message: '请输入部门所属地区', trigger: 'blur' }
+          ]
+        }
     }
   },
   created() {
@@ -243,8 +279,10 @@ export default {
       return data.label.indexOf(value) !== -1;
     },
     create(form) {
+      this.loading = true
       insertDepartment(form).then( () => {
-        this.getList();
+        this.getList()
+        this.loading = false
       })
     },
     getList() {
@@ -262,17 +300,57 @@ export default {
       this.$refs.menuElement.getList();
     },
     handlerAdd () {
-      const fatherNode = this.$refs.treeData.getCheckedNodes();
-      this.restForm(fatherNode);
-      this.formEdit = false;
+      this.dialogFormVisible = true
+      this.dialogStatus = 'create'
+      this.restForm()
+      this.formEdit = false
     },
     handleDelete () {
-      //if ()
+      const id = this.currentId
+      if(id !== -1) {
+        this.$confirm('此操作将永久删除, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.loading = true
+          delectDepartment(id).then(() => {
+            this.loading = false
+            this.getList()
+            this.$notify({
+              title: '成功',
+              message: '删除成功',
+              type: 'success',
+              duration: 2000
+            })
+          })
+        })
+      }else {
+        this.$notify({
+              title: '错误',
+              message: '请选择删除项',
+              type: 'error',
+              duration: 2000
+            })
+      }
     },
     handlerEdit () {
-
+      const id = this.currentId
+      if(id !== -1) {
+        this.dialogFormVisible = true
+        this.dialogStatus = 'update'
+        this.form = Object.assign({}, id)
+        this.formEdit = true
+      }else {
+        this.$notify({
+              title: '错误',
+              message: '请选择编辑项',
+              type: 'error',
+              duration: 2000
+            })
+      }
     },
-    restForm(fatherNode) {
+    restForm() {
       this.form = {
         cName: undefined,
 				zName: undefined,
@@ -280,7 +358,7 @@ export default {
 				ocName: undefined,
 				oaName: undefined,
 				sort: undefined,
-				//upLeader: fatherNode.label,
+				upLeader: undefined,
 				positionZ: undefined,
 				positionF: undefined,
 				show: undefined,

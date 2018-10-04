@@ -8,7 +8,7 @@
         </el-button-group>
       </div>
       <el-row>
-        <el-col class="right" :span="8" style='margin-top:15px;'>
+        <el-col class="right" :span="3" style='margin-top:15px;'>
           <el-card shadow="always">
             <el-tree
               class="filter-tree"
@@ -21,7 +21,7 @@
             </el-tree>
           </el-card>
         </el-col>
-        <el-col class="right" :span="16" style='margin-top:15px;'>
+        <el-col class="right" :span="16" style='margin-top:15px;' v-show="showTable">
           <el-row>
             <el-card shadow="always">
               <el-table
@@ -147,7 +147,7 @@
             :model='modeMenu'
             filter openAll>
             </tree-transfer>
-          <el-button slot="reference">菜单选择</el-button>
+          <el-button slot="reference">查看</el-button>
         </el-popover>
         </el-form-item>
         <el-form-item label="默认查询范围:">
@@ -182,11 +182,13 @@
 <script>
 import  Role from './components/role'
 import{ fetchRoleModule, delRoleModule, addRoleModule, addUserModule,
- delUserModule, addModule } from '@/api/admin/module/index'
+ delMenuModule, addModule, fetchModule, delModule, fetchUserMessage, ModuleRole,
+ getMenu} from '@/api/admin/module/index'
 import treeTransfer from 'el-tree-transfer'
 export default {
   data() {
     return {
+      showTable: false,
       modeMenu: [],
       loading: false,
       fromData: [],
@@ -199,6 +201,7 @@ export default {
       tableModuleRole: [],
       tableModule: [],
       currentId: -1,
+      moduleName: undefined,
       formData: [],
       model: "transfer",
       toData:[],
@@ -246,14 +249,26 @@ export default {
     this.fetch()
   },
   methods: {
+    /**编辑角色 */
     RoleModuleAdd() {
-      this.show = true
+      if (this.currentId !== -1) {
+        this.show = true
+        ModuleRole(this.moduleName).then( (data) => {
+          this.tableModuleRole = data.data[0]
+          this.tableModule = data.data[1]
+        })
+      } else {
+        this.$notify({
+              title: '错误',
+              message: '请选择模块',
+              type: 'error',
+              duration: 2000
+            })
+      }
     },
     fetch() {
       fetchRoleModule(this.listQuery).then((data) => {
-        this.tableModule = data.tableModuleRole
-        this.tableModuleRole = data.tableModuleRole
-        this.treeData =  data.treeData
+        this.treeData =  data.data
       })
     },
     /**添加模块 */
@@ -264,11 +279,23 @@ export default {
     /**编辑 */
     handlerEdit(row) {
       this.dialogStatus = 'update'
-        this.dialogFormVisible = true
+      const id = row.role
+      if(id === "管理") {
         this.form = Object.assign({}, row)
-        this.$nextTick(() => {
-        this.$refs['form'].clearValidate()
+        this.form.sysRole = '0'
+      } else {
+        this.form.sysRole = '1'
+      }
+      getMenu(this.moduleName).then( (data) => {
+        console.log(data.data.fromData)
+        this.fromData = data.data.fromData
+        this.toData = data.data.toData
+        console.log(this.fromData)
       })
+      this.dialogFormVisible = true
+      this.$nextTick(() => {
+      this.$refs['form'].clearValidate()
+    })
     },
     /**删除 */
     handleDelete(row) {
@@ -278,9 +305,10 @@ export default {
           type: 'warning'
         }).then(() => {
           this.loading = true
-          delMenu(row.id).then(() => {
+          delModule(row.code).then(() => {
             this.loading = false
-            this.fetchMenu()
+            const id = this.currentId
+            this.fetchModule(id)
             this.$notify({
               title: '成功',
               message: '删除成功',
@@ -300,6 +328,27 @@ export default {
       // 树形穿梭框模式transfer时，返回参数为左侧树移动后数据、右侧树移动后数据、移动的{keys,nodes,halfKeys,halfNodes}对象
       // 通讯录模式addressList时，返回参数为右侧收件人列表、右侧抄送人列表、右侧密送人列表
       conlose.log('obj.nodes',obj.nodes);
+      addMenuModule(obj).then((data) => {
+        if (data.code === 200) {
+          getMenu(this.moduleName).then((data) => {
+            this.toData = data.data[1]
+            this.formData = data.data[0]
+            this.$notify({
+              title: '成功',
+              message: '更新成功',
+              type: 'success',
+              duration: 2000
+            })
+          })
+        }else {
+          this.$notify({
+              title: '失败',
+              message: '更新失败，请稍后再试',
+              type: 'error',
+              duration: 2000
+            })
+        }
+      })
       
     },
       // 监听穿梭框组件移除
@@ -307,14 +356,36 @@ export default {
       // 树形穿梭框模式transfer时，返回参数为左侧树移动后数据、右侧树移动后数据、移动的{keys,nodes,halfKeys,halfNodes}对象
       // 通讯录模式addressList时，返回参数为右侧收件人列表、右侧抄送人列表、右侧密送人列表
       conlose.log('obj.nodes',obj.nodes);
-
+      delMenuModule(obj).then((data) => {
+        if(data.code === 200) {
+          getMenu(this.moduleName).then((data) => {
+            this.toData = data.data[1]
+            this.formData = data.data[0]
+            this.$notify({
+              title: '成功',
+              message: '更新成功',
+              type: 'error',
+              duration: 2000
+            })
+          })
+        }else {
+          this.$notify({
+              title: '失败',
+              message: '更新失败，请稍后再试',
+              type: 'success',
+              duration: 2000
+            })
+        }
+      })
     },
     /**获取模块详细信息 */
     getNodeData(data) {
-      fetchModule(data.id).then(response => {
-        this.tableModule = response.data[0]
-        this.tableModuleRole = response.data[1]
+      fetchModule(data.id).then(data => {
+        this.showTable = true
+        this.tableModule = data.data
+        // this.tableModuleRole = response.data[1]
       });
+      this.moduleName = data.label
       this.currentId = data.id;
     },
     /**取消 */

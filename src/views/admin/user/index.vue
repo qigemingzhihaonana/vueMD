@@ -143,12 +143,12 @@ export default {
         userName: undefined,
         password: undefined,
         realName: undefined,
-        isLevel: '1',
-        isleader: '0',
+        isLevel: undefined,
+        isleader: undefined,
         position: undefined,
         order: undefined,
         email: undefined,
-        isStatus: '0'
+        isStatus: undefined
       },
       rules: {
         username: [
@@ -248,12 +248,12 @@ export default {
         userName: undefined,
         password: undefined,
         realName: undefined,
-        isLevel: undefined,
-        isleader: undefined,
+        isLevel: '1',
+        isleader: '1',
         position: undefined,
         order: undefined,
         email: undefined,
-        isStatus: undefined
+        isStatus: '0'
       }
     },
   }

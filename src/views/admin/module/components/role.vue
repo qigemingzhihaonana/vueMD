@@ -158,10 +158,6 @@ export default {
       idsRight.push(item.key)
       })
     },
-    // handleClose() {
-    //   this.loading = false
-    //   this.$emit('show', false)
-    // },
     toggleSelection() {
       this.$refs.multipleTable.clearSelection();
     },

@@ -1,19 +1,19 @@
 import axios from '@/utils/fetch'
 
 /**
- * 获取到模块的角色和菜单
+ * 获取到模块
  * @param {*} query
  */
-export function fetchRoleModule (data) {
+export function fetchRoleModule (query) {
   return axios({
-    url: '/',
-    method: 'post',
-    data
+    url: '/fetchmodule',
+    method: 'get',
+    params: query
   })
 }
 
 /**
- * 删除角色与菜单的关联
+ * 删除角色与模块的关联
  * @param {*} data
  */
 export function delRoleModule (data) {
@@ -25,7 +25,7 @@ export function delRoleModule (data) {
 }
 
 /**
- * 添加模块与菜单的关联
+ * 添加模块与角色的关联
  * @param {*} data
  */
 export function addRoleModule (data) {
@@ -37,24 +37,36 @@ export function addRoleModule (data) {
 }
 
 /**
- * 添加模块与用户的关联
+ * 获取模块对应的角色
  * @param {*} data
  */
-export function addUserModule (data) {
+export function ModuleRole (data) {
   return axios({
-    url: '/',
+    url: '/fetchModuleRole',
     method: 'post',
     data
   })
 }
 
 /**
- * 删除模块与用户的关联
+ * 添加模块与菜单的关联
  * @param {*} data
  */
-export function delUserModule (data) {
+export function addMenuModule (data) {
   return axios({
-    url: '/',
+    url: '/addMenuModule',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 删除模块与菜单的关联
+ * @param {*} data
+ */
+export function delMenuModule (data) {
+  return axios({
+    url: '/delMenuModule',
     method: 'post',
     data
   })
@@ -67,6 +79,41 @@ export function delUserModule (data) {
 export function addModule (data) {
   return axios({
     url: '/',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 获取模块详细信息
+ * @param {*} data
+ */
+export function fetchModule (data) {
+  return axios({
+    url: '/fetchData',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 获取模块关联的菜单
+ * @param {*} data
+ */
+export function getMenu (data) {
+  return axios({
+    url: '/getMenu',
+    method: 'post',
+    data
+  })
+}
+/**
+ * 删除模块
+ * @param {*} data
+ */
+export function delModule (data) {
+  return axios({
+    url: '/delModule',
     method: 'post',
     data
   })
