@@ -76,19 +76,18 @@
       </el-col>
     </el-row>
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" 
-    :before-close="handleClose"
     lock-scroll>
       <el-form :model="form" ref="form" :rules="rules">
-        <el-form-item label="员工账号:" prop="name">
+        <el-form-item label="员工账号:" prop="username">
           <el-input v-model="form.userName" ></el-input>
         </el-form-item>
-        <el-form-item label="员工密码:" prop="eName">
+        <el-form-item label="员工密码:" prop="password">
           <el-input v-model="form.password" ></el-input>
         </el-form-item>
-        <el-form-item label="员工真实姓名:" prop="url">
+        <el-form-item label="员工真实姓名:" prop="realName">
           <el-input v-model="form.realName" ></el-input>
         </el-form-item>
-        <el-form-item label="员工工号:" prop="url">
+        <el-form-item label="员工工号:" prop="code">
           <el-input v-model="form.code" ></el-input>
         </el-form-item>
         <el-form-item label="是否在职:">
@@ -119,13 +118,19 @@
         <el-button :loading="loading" v-else type="primary" @click="update('form')">确 定</el-button>
       </div>
     </el-dialog>
+    <excle :show.sync="show"></excle>
   </div>
 </template>
 <script>
+import excle from "./components/excle"
 import { fetchUser, addUser, updateUser } from '@/api/admin/user/index'
 export default {
+  components: {
+    excle
+  },
   data() {
     return {
+      show: false,
       dialogFormVisible: false,
       loading: false,
       dialogStatus: undefined,
@@ -144,6 +149,20 @@ export default {
         order: undefined,
         email: undefined,
         isStatus: undefined
+      },
+      rules: {
+        username: [
+          { required: true, message: '请输入用户账号', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '请输入用户密码', trigger: 'blur' }
+        ],
+        realName: [
+          { required: true, message: '请输入用户真实姓名', trigger: 'blur' }
+        ],
+        code: [
+          { required: true, message: '请输入用户工号', trigger: 'blur' }
+        ]
       }
     }
   },
@@ -157,7 +176,7 @@ export default {
       })
     },
     handlerAddMore() {
-
+      this.show = true
     },
     cancel(form) {
       this.dialogFormVisible = false;
@@ -237,9 +256,6 @@ export default {
         isStatus: undefined
       }
     },
-    handlerAddMore() {
-      
-    }
   }
  }
 </script>
