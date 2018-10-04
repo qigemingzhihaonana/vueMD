@@ -1,10 +1,8 @@
 <template>
   <el-dialog title="模块角色配置" 
-  :visible.sync="dialogFormVisibleAdd"
-  :before-close="handleClose"
-  :show="show"
+  :visible="dialogFormVisibleAdd"
   width="70%"
-  @close="$emit('update:show', false)">
+  @close="close">
     <el-row>
       <el-col class="left" :span="24" style='margin-top:15px;'>
         <el-card shadow="always">
@@ -91,21 +89,14 @@ export default {
   data () {
     return {
       loading: false,
-      dialogFormVisibleAdd: this.showme,
-      idsRight: [],
       idsLeft: [],
       multipleLeftSelection: [],
       multipleRightSelection: [],
       moduleId: undefined
     }
   },
-  watch: {
-    show () {
-      this.dialogFormVisibleAdd = this.showme;
-    }
-  },
   computed: {
-    showme: function() {
+    dialogFormVisibleAdd: function() {
       return this.show
     },
     moduleid: function() {
@@ -167,14 +158,16 @@ export default {
       idsRight.push(item.key)
       })
     },
-    handleClose() {
-      this.loading = false
-      this.show = false
-      console.log(this.tableData)
-    },
+    // handleClose() {
+    //   this.loading = false
+    //   this.$emit('show', false)
+    // },
     toggleSelection() {
       this.$refs.multipleTable.clearSelection();
     },
+    close() {
+      this.$emit('update:show', false)
+    }
   }
 }
 </script>

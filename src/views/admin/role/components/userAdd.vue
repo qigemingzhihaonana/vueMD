@@ -1,8 +1,6 @@
 <template>
   <el-dialog title="人员分配" 
-  :visible.sync="dialogFormVisibleAdd"
-  :before-close="handleClose"
-  :show="show"
+  :visible="dialogFormVisibleAdd"
   width="70%"
   @close="$emit('update:show', false)">
     <el-row>
@@ -92,27 +90,9 @@
 import { getRoleUser, addRoleUser, removeRoleUser } from '@/api/admin/role/index'
 export default {
   props: ['show','roleId','tableLeft', 'tableRight'],
-    
-    // show: {
-    //   type: Boolean,
-    //   default:false
-    // },
-    // roleId: {
-    //   default: -1
-    // },
-    // tableLeft: {
-    //   type: Array,
-    //   default: [null,null,null,null]
-    // },
-    // tableRight: {
-    //   type: Array,
-    //   default: [null,null,null]
-    // },
-  
   data () {
     return {
       loading: false,
-      dialogFormVisibleAdd: this.show,
       idsRight: [],
       idsLeft: [],
       multipleLeftSelection: [],
@@ -120,21 +100,16 @@ export default {
       roleId: undefined
     }
   },
-  watch: {
-    show () {
-      this.dialogFormVisibleAdd = this.show;
-    }
-  },
   computed: {
+    dialogFormVisibleAdd: function() {
+      return this.show
+    },
     roleid: function() {
       return this.roleId
     },
     tableData: function() {
       return this.tableLeft
     },
-    // tableData: () => {
-    //   this.tableLeft
-    // },
     tableDataAdd: function() {
       return this.tableRight
     }
