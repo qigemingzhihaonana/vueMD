@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="人员分配" 
+  <el-dialog title="模块角色配置" 
   :visible.sync="dialogFormVisibleAdd"
   :before-close="handleClose"
   :show="show"
@@ -9,7 +9,7 @@
       <el-col class="left" :span="24" style='margin-top:15px;'>
         <el-card shadow="always">
           <div slot="header" class="clearfix">
-            <span>角色成员</span>
+            <span>已分配角色信息</span>
           </div>
           <el-table
           ref="multipleTable"
@@ -24,20 +24,16 @@
               width="55">
             </el-table-column>
             <el-table-column
-            label="用户ID"
+            label="角色名称"
             prop="id"
             align="center"></el-table-column>
             <el-table-column
-            label="用户名称"
+            label="角色描述"
             prop="name"
             align="center"></el-table-column>
             <el-table-column
-            label="部门"
+            label="角色编号"
             prop="department"
-            align="center"></el-table-column>
-            <el-table-column
-            label="所属地区"
-            prop="area"
             align="center"></el-table-column>
           </el-table>
           <div style="margin-top: 20px">
@@ -50,7 +46,7 @@
       <el-row class="right" :span="24" style='margin-top:15px;'>
         <el-card shadow="always">
           <div slot="header" class="clearfix">
-            <span>待分配成员</span>
+            <span>未分配角色信息</span>
           </div>
         <el-table
           ref="multipleTable"
@@ -66,17 +62,17 @@
             </el-table-column>
             <el-table-column
               prop="name"
-              label="员工姓名"
+              label="角色名称"
               align="center">
             </el-table-column>
             <el-table-column
               prop="code"
-              label="员工工号"
+              label="角色描述"
               align="center">
             </el-table-column>
             <el-table-column
               prop="position"
-              label="所属部门"
+              label="角色编号"
               align="center">
             </el-table-column>
         </el-table>
@@ -91,50 +87,33 @@
 <script>
 import { getRoleUser, addRoleUser, removeRoleUser } from '@/api/admin/role/index'
 export default {
-  props: ['show','roleId','tableLeft', 'tableRight'],
-    
-    // show: {
-    //   type: Boolean,
-    //   default:false
-    // },
-    // roleId: {
-    //   default: -1
-    // },
-    // tableLeft: {
-    //   type: Array,
-    //   default: [null,null,null,null]
-    // },
-    // tableRight: {
-    //   type: Array,
-    //   default: [null,null,null]
-    // },
-  
+  props: ['show','moduleId','tableLeft', 'tableRight'],
   data () {
     return {
       loading: false,
-      dialogFormVisibleAdd: this.show,
+      dialogFormVisibleAdd: this.showme,
       idsRight: [],
       idsLeft: [],
       multipleLeftSelection: [],
       multipleRightSelection: [],
-      roleId: undefined
+      moduleId: undefined
     }
   },
   watch: {
     show () {
-      this.dialogFormVisibleAdd = this.show;
+      this.dialogFormVisibleAdd = this.showme;
     }
   },
   computed: {
-    roleid: function() {
-      return this.roleId
+    showme: function() {
+      return this.show
+    },
+    moduleid: function() {
+      return this.moduleId
     },
     tableData: function() {
       return this.tableLeft
     },
-    // tableData: () => {
-    //   this.tableLeft
-    // },
     tableDataAdd: function() {
       return this.tableRight
     }
@@ -142,7 +121,7 @@ export default {
   methods: {
     /**提交新增人员 */
     toggleAdd() {
-      this.idsRight.push(this.roleid)
+      this.idsRight.push(this.moduleid)
       this.loading = true
       addRoleUser(this.idsRight).then( () => {
         this.loading = false
@@ -157,7 +136,7 @@ export default {
     },
     /**取消人员角色 */
     Selection() {
-      this.idsLeft.push(this.roleid)
+      this.idsLeft.push(this.moduleid)
       this.loading = true
       removeRoleUser(this.idsLeft).then( () => {
         this.loading = false

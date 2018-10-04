@@ -89,7 +89,7 @@ export default new Router({
       children: [
         {
           path: '/system/module',
-          name: '菜单管理',
+          name: '模块配置',
           component: () => import('@/views/admin/module/index')
         }
       ]

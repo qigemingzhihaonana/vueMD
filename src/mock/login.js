@@ -34,6 +34,12 @@ const userMap =
         'svg': 'department',
         'url': '/system/department',
         'childs': null
+      },
+      {
+        'name': '模块管理',
+        'svg': 'department',
+        'url': '/system/module',
+        'childs': null
       }
     ]
   }

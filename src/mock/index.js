@@ -11,6 +11,9 @@ Mock.mock(/\/selectRoleConfigure1/, 'get', roleAPI.getRoleTable)
 Mock.mock(/\/addRole/, 'post', roleAPI.addRole)
 Mock.mock(/\/delRole/, 'post', roleAPI.delRole)
 Mock.mock(/\/uptRole/, 'post', roleAPI.uptRole)
+Mock.mock(/\/selectUserRole/, 'post', roleAPI.getRoleUser)
+Mock.mock(/\/updateUserRole/, 'post', roleAPI.addRoleUser)
+Mock.mock(/\/removeRoleUser/, 'post', roleAPI.removeRoleUser)
 
 // 部门相关
 Mock.mock(/\/getDepartment/, 'get', departmentAPI.getD)

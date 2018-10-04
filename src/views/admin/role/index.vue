@@ -123,18 +123,33 @@
         <el-button :loading="loading" v-else type="primary" @click="update('form')">确 定</el-button>
       </div>
     </el-dialog>
-    
+
+    <div class="roleuser">
+      <role-user 
+      :show.sync="show" 
+      :roleId="roleId" 
+      :tableLeft="tableDataRole"
+      :tableRight="tableDataAddRole"></role-user>
+    </div>
   </div>
 </template>
 <script>
-import { getRole, getRoleTable , addRole, delRole, updateRole } from '@/api/admin/role/index'
+import { getRole, getRoleTable , addRole, delRole, updateRole, getRoleUser } from '@/api/admin/role/index'
+import RoleUser from './components/userAdd'
 export default {
+  components: {
+    RoleUser
+  },
   data () {
     return {
+      tableDataRole: [],
+      tableDataAddRole: [],
       loading: false,
       editM: false,
       createM: false,
       tableData: [],
+      show: false,
+      roleId: -1,
       form: {
         id: '',
         name: '',
@@ -170,6 +185,18 @@ export default {
     this.getTableList()
   },
   methods: {
+    addUser(row) {
+      console.log(row.id)
+      this.show = true
+      this.roleId = row.id
+      const id = row.id
+      getRoleUser(id).then(data => {
+        console.log(data.data[0])
+        this.tableDataRole = data.data[0]
+        this.tableDataAddRole = data.data[1]
+        console.log(this.tableDataRole)
+      })
+    },
     getTableList() {
       getRoleTable(this.listQuery).then(data => {
 				this.tableData = data.data

@@ -1,76 +1,125 @@
 <template>
   <div class="flex">
-    <div class="left">
-      <div class="file-edit">
-      <el-button-group>
-        <el-button type="primary" icon="plus" @click="handlerAdd">添加模块</el-button>
-      </el-button-group>
-    </div>
     <div>
-      <el-card shadow="always">
-        <el-tree
-          class="filter-tree"
-          :data="treeData"
-          node-key="id"
-          highlight-current
-          ref="moduleTree"
-          @node-click="getNodeData"
-          default-expand-all>
-        </el-tree>
-      </el-card>
-    </div>
-    <div class="right">
-      <div class="top">
-        <el-card shadow="always">
-          <el-table
-          :data="tableData"
-          style="width: 100%"
-          height="200"
-          border>
-            <el-table-column
-            label="模块代码"
-            prop="code"></el-table-column>
-            <el-table-column
-            label="模块名称"
-            prop="name">
-            </el-table-column>
-            <el-table-column
-            label="对应控制菜单"
-            prop="menu">
-            </el-table-column>
-            <el-table-column
-            label="默认查询范围"
-            prop="area">
-            </el-table-column>
-            <el-table-column
-            label="默认权限类型"
-            prop="role">
-            </el-table-column>
-            <el-table-column
-            fixed="right"
-            label="操作"
-            width="160">
-            <template slot-scope="scope">
-              <el-button
-                @click.native.prevent="handlerEdit(scope.row)"
-                type="text"
-                size="small">
-                编辑
-              </el-button>
-              <el-button
-                @click.native.prevent="handleDelete(scope.row)"
-                type="text"
-                size="small">
-                删除
-              </el-button>
-            </template>
-          </el-table-column>
-          </el-table>
-        </el-card>
+      <div class="file-edit">
+        <el-button-group>
+          <el-button type="primary" icon="plus" @click="ModuleAdd">添加模块</el-button>
+          <el-button type="primary" icon="plus" @click="RoleModuleAdd">分配角色</el-button>
+        </el-button-group>
       </div>
-      <div class="down">
-tththt
-      </div>
+      <el-row>
+        <el-col class="right" :span="8" style='margin-top:15px;'>
+          <el-card shadow="always">
+            <el-tree
+              class="filter-tree"
+              :data="treeData"
+              node-key="id"
+              highlight-current
+              ref="moduleTree"
+              @node-click="getNodeData"
+              default-expand-all>
+            </el-tree>
+          </el-card>
+        </el-col>
+        <el-col class="right" :span="16" style='margin-top:15px;'>
+          <el-row>
+            <el-card shadow="always">
+              <el-table
+              :data="tableModule"
+              style="width: 100%"
+              height="200"
+              border>
+                <el-table-column
+                label="模块代码"
+                prop="code"></el-table-column>
+                <el-table-column
+                label="模块名称"
+                prop="name">
+                </el-table-column>
+                <el-table-column
+                label="对应控制菜单"
+                prop="menu">
+                </el-table-column>
+                <el-table-column
+                label="默认查询范围"
+                prop="area">
+                </el-table-column>
+                <el-table-column
+                label="默认权限类型"
+                prop="role">
+                </el-table-column>
+                <el-table-column
+                fixed="right"
+                label="操作"
+                width="160">
+                <template slot-scope="scope">
+                  <el-button
+                    @click.native.prevent="handlerEdit(scope.row)"
+                    type="text"
+                    size="small">
+                    编辑
+                  </el-button>
+                  <el-button
+                    @click.native.prevent="handleDelete(scope.row)"
+                    type="text"
+                    size="small">
+                    删除
+                  </el-button>
+                </template>
+              </el-table-column>
+              </el-table>
+            </el-card>
+          </el-row>
+          <el-row>
+            <el-card shadow="always">
+              <el-table
+              :data="tableModuleRole"
+              style="width: 100%"
+              height="200"
+              border>
+                <el-table-column
+                label="角色编码"
+                prop="code"></el-table-column>
+                <el-table-column
+                label="角色名称"
+                prop="name">
+                </el-table-column>
+                <el-table-column
+                label="角色描述"
+                prop="menu">
+                </el-table-column>
+                <el-table-column
+                label="权限模块"
+                prop="area">
+                </el-table-column>
+                <el-table-column
+                label="查询范围"
+                prop="role">
+                </el-table-column>
+                <el-table-column
+                fixed="right"
+                label="操作"
+                width="160">
+                <template slot-scope="scope">
+                  <el-button
+                    @click.native.prevent="handlerEdit(scope.row)"
+                    type="text"
+                    size="small">
+                    编辑
+                  </el-button>
+                  <el-button
+                    @click.native.prevent="handleDelete(scope.row)"
+                    type="text"
+                    size="small">
+                    删除
+                  </el-button>
+                </template>
+              </el-table-column>
+              </el-table>
+            </el-card>
+          </el-row>
+        </el-col>
+        </el-row>
     </div>
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" 
     :before-close="handleClose">
@@ -81,23 +130,28 @@ tththt
         <el-form-item label="模块代码:" prop="code">
           <el-input v-model="form.code" ></el-input>
         </el-form-item>
-        <el-form-item label="对应控制菜单:" prop="url">
+        <el-form-item label="对应控制菜单:">
           <el-popover
           placement="right"
-          width="400"
+          width="800px"
+          height="500px"
           trigger="click">
-            <el-transfer
-              filterable
-              :filter-method="filterMethod"
-              filter-placeholder="请输入城市拼音"
-              v-model="value"
-              :data="data">
-            </el-transfer>
+            <tree-transfer 
+            :title="title"
+            :from_data='fromData'
+            :to_data='toData'
+            width="800px"
+            height="400px"
+            @addBtn='add'
+            @removeBtn='remove'
+            :model='modeMenu'
+            filter openAll>
+            </tree-transfer>
           <el-button slot="reference">菜单选择</el-button>
         </el-popover>
         </el-form-item>
         <el-form-item label="默认查询范围:">
-          <el-select v-model="value" placeholder="请选择">
+          <el-select v-model="form.sysArea" placeholder="请选择">
             <el-option
               v-for="item in options"
               :key="item.value"
@@ -117,13 +171,37 @@ tththt
         <el-button :loading="loading" v-else type="primary" @click="update('form')">确 定</el-button>
       </div>
     </el-dialog>
+    <role
+    :show.sync="show" 
+    :moduleId="moduleId" 
+    :tableLeft="tableDataRole"
+    :tableRight="tableDataAddRole"></role>
   </div>
 </template>
 
 <script>
+import  Role from './components/role'
+import{ fetchRoleModule, delRoleModule, addRoleModule, addUserModule,
+ delUserModule, addModule } from '@/api/admin/module/index'
+import treeTransfer from 'el-tree-transfer'
 export default {
   data() {
     return {
+      modeMenu: [],
+      loading: false,
+      fromData: [],
+      treeData: [],
+      show: false,
+      moduleId: undefined,
+      tableDataRole: [],
+      tableDataAddRole: [],
+      title: ["待分配", "已分配"],
+      tableModuleRole: [],
+      tableModule: [],
+      currentId: -1,
+      formData: [],
+      model: "transfer",
+      toData:[],
       options: [{
           value: '全省(全区)',
           label: '全省(全区)'
@@ -146,10 +224,43 @@ export default {
         update: '更新'
       },
       dialogStatus: undefined,
-      dialogFormVisible: false
+      dialogFormVisible: false,
+      form: {
+        name: undefined,
+        code: undefined,
+        menu: undefined,
+        sysArea: undefined,
+        sysRole: '0'
+      },
+      rules: {
+          code: [
+            { required: true, message: '请输入模块代码，模块代码不能重复', trigger: 'blur' }
+          ],
+          name: [
+            { required: true, message: '请输入模块名称，模块名称不能重复', trigger: 'blur' }
+          ],
+        }
     }
   },
+  created() {
+    this.fetch()
+  },
   methods: {
+    RoleModuleAdd() {
+      this.show = true
+    },
+    fetch() {
+      fetchRoleModule(this.listQuery).then((data) => {
+        this.tableModule = data.tableModuleRole
+        this.tableModuleRole = data.tableModuleRole
+        this.treeData =  data.treeData
+      })
+    },
+    /**添加模块 */
+    ModuleAdd() {
+      this.dialogFormVisible = true
+      this.dialogStatus = 'create'
+    },
     /**编辑 */
     handlerEdit(row) {
       this.dialogStatus = 'update'
@@ -183,18 +294,60 @@ export default {
     handleClose() {
       this.loading = false
       this.dialogFormVisible = false
-    }
-  }
+    },
+    // 监听穿梭框组件添加
+    add(fromData,toData,obj){
+      // 树形穿梭框模式transfer时，返回参数为左侧树移动后数据、右侧树移动后数据、移动的{keys,nodes,halfKeys,halfNodes}对象
+      // 通讯录模式addressList时，返回参数为右侧收件人列表、右侧抄送人列表、右侧密送人列表
+      conlose.log('obj.nodes',obj.nodes);
+      
+    },
+      // 监听穿梭框组件移除
+    remove(fromData,toData,obj){
+      // 树形穿梭框模式transfer时，返回参数为左侧树移动后数据、右侧树移动后数据、移动的{keys,nodes,halfKeys,halfNodes}对象
+      // 通讯录模式addressList时，返回参数为右侧收件人列表、右侧抄送人列表、右侧密送人列表
+      conlose.log('obj.nodes',obj.nodes);
+
+    },
+    /**获取模块详细信息 */
+    getNodeData(data) {
+      fetchModule(data.id).then(response => {
+        this.tableModule = response.data[0]
+        this.tableModuleRole = response.data[1]
+      });
+      this.currentId = data.id;
+    },
+    /**取消 */
+    cancel(form) {
+      this.dialogFormVisible = false;
+      this.$refs[form].resetFields();
+    },
+    /**创建新的模块 */
+    create(form) {
+      this.$refs[form].validate(valid => {
+        if(valid) {
+          this.loading = true
+          addModule(this.form).then(() => {
+            this.loading = false
+            this.dialogFormVisible = false;
+            this.getList()
+            this.$notify({
+              title: '成功',
+              message: '创建成功',
+              type: 'success',
+              duration: 2000
+            })
+          })
+        } else {
+          this.loading = false
+          return false
+        }
+      })
+    },
+  },
+  components:{ treeTransfer,Role }
 }
 </script>
 <style scoped>
-.flex {
-  display: flex;
-  flex-direction: row;
-}
-.right {
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-}
+
 </style>

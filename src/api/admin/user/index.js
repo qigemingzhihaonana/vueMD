@@ -18,19 +18,19 @@ export function addUser (data) {
  */
 export function fetchUser (query) {
   return axios({
-    utl: '',
+    utl: '/selectAllUser',
     method: 'get',
     params: query
   })
 }
 
 /**
- * 删除用户
- * @param {id} data
+ * 更新用户
+ * @param {*} data
  */
-export function deleUser (data) {
+export function updateUser (data) {
   return axios({
-    url: '/deleteUser',
+    url: '/updateUser',
     method: 'post',
     data
   })

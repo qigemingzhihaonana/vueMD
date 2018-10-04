@@ -72,12 +72,12 @@ export function fetchUser (data) {
 }
 
 /**
- * 将角色与用户关联起来
+ * 删除角色中的用户
  * @param {id,sysUser} data
  */
-export function addUser (data) {
+export function removeRoleUser (data) {
   return axios({
-    url: '/insertRoleUser',
+    url: '/removeRoleUser',
     method: 'post',
     data
   })
@@ -87,11 +87,11 @@ export function addUser (data) {
  * 获取角色对应的用户
  * @param {*} query
  */
-export function getRoleUser (query) {
+export function getRoleUser (id) {
   return axios({
-    url: '/',
-    method: 'get',
-    params: query
+    url: '/selectUserRole',
+    method: 'post',
+    id
   })
 }
 
@@ -101,9 +101,8 @@ export function getRoleUser (query) {
  */
 export function addRoleUser (data) {
   return axios({
-    url: '/',
+    url: '/updateUserRole',
     method: 'post',
     data
   })
 }
-

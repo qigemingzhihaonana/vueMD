@@ -80,7 +80,6 @@
           </el-row>
         </el-card>
       </el-col>
-    </el-row>
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" 
     :before-close="handleClose">
       <el-form :model="form" ref="form" :rules="rules">
