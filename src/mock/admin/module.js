@@ -59,16 +59,13 @@ const menu = {
 }
 
 const message = []
-
-for (let i = 0; i < 10; i++) {
-  message.push(Mock.mock({
-    'code': '@id',
-    'name': '@ctitle(4)',
-    'menu': '@csentence(5)',
-    'area': ':::[po',
-    'role': '管理'
-  }))
-}
+message.push(Mock.mock({
+  'code': '@id',
+  'name': '@ctitle(4)',
+  'menu': '@csentence(5)',
+  'area': ':::[po',
+  'role': '管理'
+}))
 
 export default {
   getModule: function () {

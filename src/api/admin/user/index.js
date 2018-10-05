@@ -14,11 +14,11 @@ export function addUser (data) {
 
 /**
  * 查询用户信息
- * @param {null} query
+ * @param {*} query
  */
 export function fetchUser (query) {
   return axios({
-    utl: '/selectAllUser',
+    url: '/selectAllUser',
     method: 'get',
     params: query
   })

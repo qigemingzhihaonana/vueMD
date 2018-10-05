@@ -34,43 +34,43 @@
             row-click="handleClick(scope.row)">
             <el-table-column
             type="selection"
-            width="55">
+            align="center">
             </el-table-column>
             <el-table-column
               fixed
               prop="date"
               label="部门名称"
-              width="120">
+              align="center">
             </el-table-column>
             <el-table-column
               prop="name"
               label="部门id"
-              width="150">
+              align="center">
             </el-table-column>
             <el-table-column
               prop="province"
               label="统一部门编号"
-              width="120">
+              align="center">
             </el-table-column>
             <el-table-column
               prop="city"
               label="部门描述"
-              width="150">
+              align="center">
             </el-table-column>
             <el-table-column
               prop="address"
               label="部门状态"
-              width="120">
+              align="center">
             </el-table-column>
             <el-table-column
               prop="zip"
               label="正职领导"
-              width="120">
+              align="center">
             </el-table-column>
             <el-table-column
               prop="right"
               label="副职领导"
-              width="120">
+              align="center">
             </el-table-column>
           </el-table>
         </el-card>
@@ -100,7 +100,7 @@
         </el-form-item>
       </el-form>
       <el-form :model="form" :rules="rules" ref="form" inline>
-        <el-form-item label="上级部门:" label-width="100px">
+        <el-form-item label="上级部门:" >
           <el-select-tree v-model="form.upLeader"
                           :treeData="treeData"
                           clearable
@@ -182,10 +182,10 @@
   </div>  
 </template>
 <script>
-import elTreeselect from 'el-tree-select';
+import ElSelectTree from 'el-tree-select';
 import { getAll, insertDepartment, delectDepartment, updataDepartment } from '@/api/admin/department/index'
 export default {
-  components: {elTreeselect},
+  components: {ElSelectTree},
   data () {
     return {
       loading: false,

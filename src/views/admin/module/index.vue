@@ -27,26 +27,30 @@
               <el-table
               :data="tableModule"
               style="width: 100%"
-              height="200"
               border>
                 <el-table-column
                 label="模块代码"
-                prop="code"></el-table-column>
+                prop="code"
+                align="center"></el-table-column>
                 <el-table-column
                 label="模块名称"
-                prop="name">
+                prop="name"
+                align="center">
                 </el-table-column>
                 <el-table-column
                 label="对应控制菜单"
-                prop="menu">
+                prop="menu"
+                align="center">
                 </el-table-column>
                 <el-table-column
                 label="默认查询范围"
-                prop="area">
+                prop="area"
+                align="center">
                 </el-table-column>
                 <el-table-column
                 label="默认权限类型"
-                prop="role">
+                prop="role"
+                align="center">
                 </el-table-column>
                 <el-table-column
                 fixed="right"
@@ -75,7 +79,6 @@
               <el-table
               :data="tableModuleRole"
               style="width: 100%"
-              height="200"
               border>
                 <el-table-column
                 label="角色编码"
@@ -96,25 +99,25 @@
                 label="查询范围"
                 prop="role">
                 </el-table-column>
-                <el-table-column
+                <!-- <el-table-column
                 fixed="right"
                 label="操作"
                 width="160">
                 <template slot-scope="scope">
                   <el-button
-                    @click.native.prevent="handlerEdit(scope.row)"
+                    @click.native.prevent="handlerEditRole(scope.row)"
                     type="text"
                     size="small">
                     编辑
                   </el-button>
                   <el-button
-                    @click.native.prevent="handleDelete(scope.row)"
+                    @click.native.prevent="handleDeleteRole(scope.row)"
                     type="text"
                     size="small">
                     删除
                   </el-button>
                 </template>
-              </el-table-column>
+              </el-table-column> -->
               </el-table>
             </el-card>
           </el-row>
@@ -183,7 +186,7 @@
 import  Role from './components/role'
 import{ fetchRoleModule, delRoleModule, addRoleModule, addUserModule,
  delMenuModule, addModule, fetchModule, delModule, fetchUserMessage, ModuleRole,
- getMenu} from '@/api/admin/module/index'
+ getMenu, addMenuModule} from '@/api/admin/module/index'
 import treeTransfer from 'el-tree-transfer'
 export default {
   data() {
@@ -201,7 +204,6 @@ export default {
       tableModuleRole: [],
       tableModule: [],
       currentId: -1,
-      moduleName: undefined,
       formData: [],
       model: "transfer",
       toData:[],
@@ -253,7 +255,7 @@ export default {
     RoleModuleAdd() {
       if (this.currentId !== -1) {
         this.show = true
-        ModuleRole(this.moduleName).then( (data) => {
+        ModuleRole(this.moduleId).then( (data) => {
           this.tableModuleRole = data.data[0]
           this.tableModule = data.data[1]
         })
@@ -271,9 +273,22 @@ export default {
         this.treeData =  data.data
       })
     },
+    restform() {
+      this.from = {
+        name: undefined,
+        code: undefined,
+        menu: undefined,
+        sysArea: undefined,
+        sysRole: '0'
+      }
+    },
     /**添加模块 */
     ModuleAdd() {
       this.dialogFormVisible = true
+      this.restform()
+      getMenu(this.moduleId).then( data => {
+        this.fromData = data.data.fromData
+      })
       this.dialogStatus = 'create'
     },
     /**编辑 */
@@ -286,11 +301,9 @@ export default {
       } else {
         this.form.sysRole = '1'
       }
-      getMenu(this.moduleName).then( (data) => {
-        console.log(data.data.fromData)
+      getMenu(this.moduleId).then( (data) => {
         this.fromData = data.data.fromData
         this.toData = data.data.toData
-        console.log(this.fromData)
       })
       this.dialogFormVisible = true
       this.$nextTick(() => {
@@ -327,10 +340,10 @@ export default {
     add(fromData,toData,obj){
       // 树形穿梭框模式transfer时，返回参数为左侧树移动后数据、右侧树移动后数据、移动的{keys,nodes,halfKeys,halfNodes}对象
       // 通讯录模式addressList时，返回参数为右侧收件人列表、右侧抄送人列表、右侧密送人列表
-      conlose.log('obj.nodes',obj.nodes);
+      console.log('obj.nodes',obj.nodes);
       addMenuModule(obj).then((data) => {
         if (data.code === 200) {
-          getMenu(this.moduleName).then((data) => {
+          getMenu(this.moduleId).then((data) => {
             this.toData = data.data[1]
             this.formData = data.data[0]
             this.$notify({
@@ -355,10 +368,10 @@ export default {
     remove(fromData,toData,obj){
       // 树形穿梭框模式transfer时，返回参数为左侧树移动后数据、右侧树移动后数据、移动的{keys,nodes,halfKeys,halfNodes}对象
       // 通讯录模式addressList时，返回参数为右侧收件人列表、右侧抄送人列表、右侧密送人列表
-      conlose.log('obj.nodes',obj.nodes);
+      console.log('obj.nodes',obj.nodes);
       delMenuModule(obj).then((data) => {
         if(data.code === 200) {
-          getMenu(this.moduleName).then((data) => {
+          getMenu(this.moduleId).then((data) => {
             this.toData = data.data[1]
             this.formData = data.data[0]
             this.$notify({
@@ -383,10 +396,13 @@ export default {
       fetchModule(data.id).then(data => {
         this.showTable = true
         this.tableModule = data.data
-        // this.tableModuleRole = response.data[1]
+        this.moduleId = this.tableModule.code
+        
+        this.currentId = data.id;
       });
-      this.moduleName = data.label
-      this.currentId = data.id;
+      // this.moduleId = this.tableModule.code
+      // console.log(this.tableModule)
+      // this.currentId = data.id;
     },
     /**取消 */
     cancel(form) {

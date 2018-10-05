@@ -1,19 +1,26 @@
 <template>
   <div class="user">
     <div class="file-edit">
+      <el-input placeholder="请输入员工工号或姓名" 
+      v-model="searchUser" 
+      style="width: 200px;" 
+      @keyup.enter.native="handleFilter"/>
       <el-button-group>
-        <el-button type="primary" icon="plus" @click="handlerAdd">添加人员</el-button>
-        <el-button type="primary" icon="plus" @click="handlerAddMore">批量导入</el-button>
+        <el-button v-waves type="primary" icon="el-icon-search" @click="handleFilter">人员搜索</el-button>
+        <el-button v-waves type="primary" icon="plus" @click="handlerAdd">添加人员</el-button>
+        <el-button v-waves type="primary" icon="plus" @click="handlerAddMore">批量导入</el-button>
       </el-button-group>
     </div>
     <el-row>
       <el-col class="right" :span="24" style='margin-top:15px;'>
         <el-card shadow="always">
           <el-table
-          :data="tableData"
+          :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
           style="width: 100%"
-          height="300"
-          border>
+          height="390px"
+          border
+          v-loading="loading"
+          stripe>
             <el-table-column
             label="员工账号"
             prop="user_name"
@@ -64,6 +71,7 @@
             width="120">
             <template slot-scope="scope">
               <el-button
+                v-waves
                 @click.native.prevent="handlerEdit(scope.row)"
                 type="text"
                 size="small">
@@ -75,47 +83,59 @@
         </el-card>
       </el-col>
     </el-row>
+    <div>
+      <el-pagination
+      v-show="tableData.length > 0"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="currentPage"
+      :page-sizes="[10, 20, 50, 100]"
+      :page-size="pagesize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="tableData.length">
+      </el-pagination>
+    </div>
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" 
-    lock-scroll>
+    lock-scroll @close="close">
       <el-form :model="form" ref="form" :rules="rules">
-        <el-form-item label="员工账号:" prop="username">
-          <el-input v-model="form.userName" ></el-input>
+        <el-form-item label="员工账号:" prop="user_name">
+          <el-input v-model="form.user_name" ></el-input>
         </el-form-item>
-        <el-form-item label="员工密码:" prop="password">
-          <el-input v-model="form.password" ></el-input>
+        <el-form-item label="员工密码:" prop="user_password">
+          <el-input v-model="form.user_password" ></el-input>
         </el-form-item>
-        <el-form-item label="员工真实姓名:" prop="realName">
-          <el-input v-model="form.realName" ></el-input>
+        <el-form-item label="员工真实姓名:" prop="real_name">
+          <el-input v-model="form.real_name" ></el-input>
         </el-form-item>
-        <el-form-item label="员工工号:" prop="code">
-          <el-input v-model="form.code" ></el-input>
+        <el-form-item label="员工工号:" prop="user_code">
+          <el-input v-model="form.user_code" ></el-input>
         </el-form-item>
         <el-form-item label="是否在职:">
-          <el-radio v-model="form.isLevel" label="0">是</el-radio>
-          <el-radio v-model="form.isLevel" label="1">否</el-radio>
+          <el-radio v-model="form.user_level" label="0">是</el-radio>
+          <el-radio v-model="form.user_level" label="1">否</el-radio>
         </el-form-item>
         <el-form-item label="是否公司领导:">
-          <el-radio v-model="form.isleader" label="0">是</el-radio>
-          <el-radio v-model="form.isleader" label="1">否</el-radio>
+          <el-radio v-model="form.is_company_leader" label="0">是</el-radio>
+          <el-radio v-model="form.is_company_leader" label="1">否</el-radio>
         </el-form-item>
         <el-form-item label="员工职位:">
-          <el-input v-model="form.position"></el-input>
+          <el-input v-model="form.user_position"></el-input>
         </el-form-item>
         <el-form-item label="排序:" >
-          <el-input v-model="form.order"></el-input>
+          <el-input v-model="form.order_number"></el-input>
         </el-form-item>
         <el-form-item label="员工email:" >
-          <el-input v-model="form.email"></el-input>
+          <el-input v-model="form.user_email"></el-input>
         </el-form-item>
         <el-form-item label="是否有效:">
-          <el-radio v-model="form.isStatus" label="0">是</el-radio>
-          <el-radio v-model="form.isStatus" label="1">否</el-radio>
+          <el-radio v-model="form.status" label="0">是</el-radio>
+          <el-radio v-model="form.status" label="1">否</el-radio>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="cancel('form')">取 消</el-button>
-        <el-button :loading="loading" v-if="dialogStatus=='create'" type="primary" @click="create('form')">确 定</el-button>
-        <el-button :loading="loading" v-else type="primary" @click="update('form')">确 定</el-button>
+        <el-button v-waves v-loading="loading" v-if="dialogStatus=='create'" type="primary" @click="create('form')">确 定</el-button>
+        <el-button v-waves v-loading="loading" v-else type="primary" @click="update('form')">确 定</el-button>
       </div>
     </el-dialog>
     <excle :show.sync="show"></excle>
@@ -124,15 +144,22 @@
 <script>
 import excle from "./components/excle"
 import { fetchUser, addUser, updateUser } from '@/api/admin/user/index'
+import waves from '@/directive/waves' // 水波纹指令
 export default {
+  directives: {
+    waves
+  },
   components: {
     excle
   },
   data() {
     return {
+      searchUser: undefined,
+      loading: true,
+      currentPage: 1,
+      pagesize: 20,
       show: false,
       dialogFormVisible: false,
-      loading: false,
       dialogStatus: undefined,
       textMap: {
         create: '新建',
@@ -140,28 +167,29 @@ export default {
       },
       tableData: [],
       form: {
-        userName: undefined,
-        password: undefined,
-        realName: undefined,
-        isLevel: undefined,
-        isleader: undefined,
-        position: undefined,
-        order: undefined,
-        email: undefined,
-        isStatus: undefined
+        user_name: undefined,
+        user_password: undefined,
+        user_code: undefined,
+        real_name: undefined,
+        user_level: '1',
+        is_company_leader: '1',
+        user_position: undefined,
+        order_number: undefined,
+        user_email: undefined,
+        status: '0'
       },
       rules: {
-        username: [
-          { required: true, message: '请输入用户账号', trigger: 'blur' }
+        user_name: [
+          { required: true, message: '请输入员工账号', trigger: 'blur' }
         ],
-        password: [
-          { required: true, message: '请输入用户密码', trigger: 'blur' }
+        user_password: [
+          { required: true, message: '请输入员工密码', trigger: 'blur' }
         ],
-        realName: [
-          { required: true, message: '请输入用户真实姓名', trigger: 'blur' }
+        real_name: [
+          { required: true, message: '请输入员工真实姓名', trigger: 'blur' }
         ],
-        code: [
-          { required: true, message: '请输入用户工号', trigger: 'blur' }
+        user_code: [
+          { required: true, message: '请输入员工工号', trigger: 'blur' }
         ]
       }
     }
@@ -170,9 +198,24 @@ export default {
     this.fetch()
   },
   methods: {
+    close() {
+      this.loading = false
+    },
+    handleFilter() {
+      this.fetch()
+    },
+    handleSizeChange(size) {
+        this.pagesize = size;
+    },
+    handleCurrentChange(currentPage){
+        this.currentPage = currentPage;
+    },
     fetch() {
-      fetchUser(this.listQuery).then( (data) => {
-        this.tableData = data
+      fetchUser(this.listQuery).then(data => {
+        this.tableData = data.data
+        setTimeout(() => {
+          this.loading = false
+        }, 1.5 * 1000)
       })
     },
     handlerAddMore() {
@@ -189,8 +232,8 @@ export default {
     },
     handlerEdit(row) {
       this.form = Object.assign({}, row)
-      this.form.updateTime = new Date()
-      this.form.updateOper = '123'
+      // this.form.updateTime = new Date()
+      // this.form.updateOper = '123'
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
       this.$nextTick(() => {
@@ -232,6 +275,9 @@ export default {
               type: 'success',
               duration: 2000
             })
+            setTimeout(() => {
+              this.loading = false
+            }, 1.5 * 1000)
           })
         } else {
           this.loading = false
@@ -245,15 +291,16 @@ export default {
     },
     restForm() {
       this.form = {
-        userName: undefined,
-        password: undefined,
-        realName: undefined,
-        isLevel: '1',
-        isleader: '1',
-        position: undefined,
-        order: undefined,
-        email: undefined,
-        isStatus: '0'
+        user_name: undefined,
+        user_password: undefined,
+        user_code: undefined,
+        real_name: undefined,
+        user_level: '1',
+        is_company_leader: '1',
+        user_position: undefined,
+        order_number: undefined,
+        user_email: undefined,
+        status: '0'
       }
     },
   }

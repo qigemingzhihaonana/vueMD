@@ -3,6 +3,7 @@ import loginAPI from './login'
 import roleAPI from './admin/role'
 import departmentAPI from './admin/department'
 import moduleApi from './admin/module'
+import userApi from './admin/user'
 
 // 登录相关
 Mock.mock(/\/login/, 'post', loginAPI.fetch)
@@ -26,5 +27,9 @@ Mock.mock(/\/upDepartment/, 'post', departmentAPI.delD)
 Mock.mock(/\/fetchmodule/, 'get', moduleApi.getModule)
 Mock.mock(/\/fetchData/, 'post', moduleApi.getData)
 Mock.mock(/\/getMenu/, 'post', moduleApi.getMenu)
+
+// 用户相关
+Mock.mock(/\/selectAllUser/, 'get', userApi.fetchUser)
+Mock.mock(/\/addUser/, 'post', userApi.adduser)
 
 export default Mock
