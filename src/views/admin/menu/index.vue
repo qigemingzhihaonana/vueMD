@@ -171,11 +171,6 @@ export default {
         }
       })
     },
-    /**添加菜单 */
-    handlerAdd() {
-      console.log('12');
-      
-    },
     /**更新 */
     update(form) {
       this.$refs[form].validate(valid => {

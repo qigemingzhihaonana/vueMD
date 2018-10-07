@@ -11,7 +11,7 @@ import './icon'
 import NProgress from 'nprogress' // Progress 进度条
 import 'nprogress/nprogress.css'// Progress 进度条 样式
 import 'element-ui/lib/theme-chalk/display.css'
-import './mock'
+// import './mock'
 
 Vue.use(Element)
 

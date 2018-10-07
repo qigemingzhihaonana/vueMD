@@ -19,7 +19,6 @@
           style="width: 100%"
           height="390px"
           border
-          v-loading="loading"
           stripe>
             <el-table-column
             label="员工账号"
