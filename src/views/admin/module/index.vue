@@ -251,6 +251,27 @@ export default {
     this.fetch()
   },
   methods: {
+    update(form) {
+      this.$refs[form].validate(valid => {
+        if(valid) {
+          this.loading = true
+          updateModule(this.form).then(() => {
+            this.loading = false
+            this.dialogFormVisible = false
+            this.getList()
+            this.$notify({
+              title: '成功',
+              message: '创建成功',
+              type: 'success',
+              duration: 2000
+            })
+          })
+        } else {
+          this.loading = false
+          return false
+        }
+      })
+    },
     /**编辑角色 */
     RoleModuleAdd() {
       if (this.currentId !== -1) {

@@ -23,19 +23,19 @@
             </el-table-column>
             <el-table-column
             label="用户ID"
-            prop="id"
+            prop="user_name"
             align="center"></el-table-column>
             <el-table-column
             label="用户名称"
-            prop="name"
+            prop="real_name"
             align="center"></el-table-column>
             <el-table-column
             label="部门"
-            prop="department"
+            prop="dep_name"
             align="center"></el-table-column>
             <el-table-column
             label="所属地区"
-            prop="area"
+            prop="dep_area"
             align="center"></el-table-column>
           </el-table>
           <div style="margin-top: 20px">
@@ -63,17 +63,17 @@
               width="55">
             </el-table-column>
             <el-table-column
-              prop="name"
+              prop="real_name"
               label="员工姓名"
               align="center">
             </el-table-column>
             <el-table-column
-              prop="code"
-              label="员工工号"
+              prop="user_name"
+              label="员工账户"
               align="center">
             </el-table-column>
             <el-table-column
-              prop="position"
+              prop="dep_name"
               label="所属部门"
               align="center">
             </el-table-column>

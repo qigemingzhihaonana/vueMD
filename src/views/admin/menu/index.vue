@@ -28,22 +28,22 @@
           border>
             <el-table-column
             label="菜单名称"
-            prop="name"></el-table-column>
+            prop="menu_name"></el-table-column>
             <el-table-column
             label="菜单英文名称"
-            prop="eName"></el-table-column>
+            prop="menu_english_name"></el-table-column>
             <el-table-column
             label="菜单标准路径"
-            prop="url"></el-table-column>
+            prop="menu_url"></el-table-column>
             <el-table-column
             label=""
-            prop="isCheck"></el-table-column>
+            prop="is_auth_check"></el-table-column>
             <el-table-column
             label="是否显示"
-            prop="isDisplay"></el-table-column>
+            prop="is_display"></el-table-column>
             <el-table-column
             label="上级菜单"
-            prop="parentId"></el-table-column>
+            prop="menu_parent_id"></el-table-column>
             <el-table-column
             fixed="right"
             label="操作"
@@ -70,14 +70,14 @@
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" 
     :before-close="handleClose">
       <el-form :model="form" ref="form" :rules="rules">
-        <el-form-item label="菜单名称:" prop="name">
-          <el-input v-model="form.name" ></el-input>
+        <el-form-item label="菜单名称:" prop="menu_name">
+          <el-input v-model="form.menu_name" ></el-input>
         </el-form-item>
-        <el-form-item label="菜单英文名称:" prop="eName">
-          <el-input v-model="form.eName" ></el-input>
+        <el-form-item label="菜单英文名称:" prop="menu_english_name">
+          <el-input v-model="form.menu_english_name" ></el-input>
         </el-form-item>
-        <el-form-item label="菜单标准路径:" prop="url">
-          <el-select v-model="form.url" placeholder="请选择菜单路径">
+        <el-form-item label="菜单标准路径:" prop="menu_url">
+          <el-select v-model="form.menu_url" placeholder="请选择菜单路径">
             <el-option label="/123" value="/123"></el-option>
             <el-option label="/456" value="/456"></el-option>
             <el-option label="/789" value="/789"></el-option>
@@ -89,15 +89,15 @@
           </el-select>
         </el-form-item>
         <el-form-item label="???:">
-          <el-radio v-model="form.isCheck" label="0">是</el-radio>
-          <el-radio v-model="form.isCheck" label="1">否</el-radio>
+          <el-radio v-model="form.is_auth_check" label="0">是</el-radio>
+          <el-radio v-model="form.is_auth_check" label="1">否</el-radio>
         </el-form-item>
         <el-form-item label="是否显示:">
-          <el-radio v-model="form.isDisplay" label="0">是</el-radio>
-          <el-radio v-model="form.isDisplay" label="1">否</el-radio>
+          <el-radio v-model="form.is_display" label="0">是</el-radio>
+          <el-radio v-model="form.is_display" label="1">否</el-radio>
         </el-form-item>
         <el-form-item label="上级菜单:" v-show="fatherMenu">
-          <el-input v-model="form.parentId"></el-input>
+          <el-input v-model="form.menu_parent_id"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -125,19 +125,19 @@ export default {
       loading: false,
       dialogFormVisible: false,
       form: {
-        name: undefined,
-        eName: undefined,
-        url: undefined,
-        isCheck: undefined,
-        isDisplay: undefined,
-        parentId: undefined
+        menu_name: undefined,
+        menu_english_name: undefined,
+        menu_url: undefined,
+        is_auth_check: undefined,
+        is_display: undefined,
+        menu_parent_id: undefined
       },
       currentId: -1,
       rules: {
-        name: [
+        menu_name: [
           { required: true, message: '请输入菜单名称，请不要重复', trigger: 'blur' }
         ],
-        url: [
+        menu_url: [
           { required: true, message: '请输入菜单详细路径', trigger: 'blur' }
         ]
       }
@@ -237,14 +237,13 @@ export default {
       /**初始化菜单 */
       restform() {
         this.form = {
-          parentId: this.currentId,
-          name: undefined,
-          eName: undefined,
-          name: undefined,
-          eName: undefined,
-          url: undefined,
-          isCheck: '0',
-          isDisplay: '0',
+          menu_parent_id: this.currentId,
+          menu_name: undefined,
+          menu_english_name: undefined,
+          menu_parent_id: undefined,
+          menu_url: undefined,
+          is_auth_check: '0',
+          is_display: '0',
         }
       },
       /**添加菜单 */

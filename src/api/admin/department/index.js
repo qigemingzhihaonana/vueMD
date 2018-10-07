@@ -13,6 +13,18 @@ export function getAll (query) {
 }
 
 /**
+ * 获取部门详细信息
+ * @param {*} data
+ */
+export function fetchMessage (data) {
+  return axios({
+    url: '/getMessage',
+    method: 'post',
+    data
+  })
+}
+
+/**
  * 添加部门（必须添加部门级别的字段）
  * @param {data} data
  */
@@ -42,6 +54,14 @@ export function delectDepartment (data) {
 export function updataDepartment (data) {
   return axios({
     url: '/',
+    method: 'post',
+    data
+  })
+}
+
+export function getMessage (data) {
+  return axios({
+    url: '/getmeMessage',
     method: 'post',
     data
   })

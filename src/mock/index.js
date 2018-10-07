@@ -18,9 +18,9 @@ Mock.mock(/\/updateUserRole/, 'post', roleAPI.addRoleUser)
 Mock.mock(/\/removeRoleUser/, 'post', roleAPI.removeRoleUser)
 
 // 部门相关
-Mock.mock(/\/getDepartment/, 'get', departmentAPI.getD)
-Mock.mock(/\/addDepartment/, 'post', departmentAPI.addD)
-Mock.mock(/\/delDepartment/, 'post', departmentAPI.delD)
+Mock.mock(/\/selectDepartmentAllld/, 'get', departmentAPI.getTree)
+Mock.mock(/\/getMessage/, 'post', departmentAPI.fetchDepartment)
+Mock.mock(/\/getmeMessage/, 'post', departmentAPI.getMessage)
 Mock.mock(/\/upDepartment/, 'post', departmentAPI.delD)
 
 // 模块相关

@@ -58,7 +58,7 @@ export default {
     text-align: center;
     position: absolute;
     bottom: 0px;
-    height: 170px;
+    height: 100px;
     line-height: 150px;
     left: 0;
     right: 0;

@@ -17,16 +17,16 @@
             <template slot-scope="props">
               <el-form label-position="left" inline class="table-expand">
                 <el-form-item label="角色ID:">
-                  <span>{{ props.row.id }}</span>
+                  <span>{{ props.row.role_code }}</span>
                 </el-form-item>
                 <el-form-item label="角色名称:">
-                  <span>{{ props.row.name }}</span>
+                  <span>{{ props.row.role_name }}</span>
                 </el-form-item>
                 <el-form-item label="角色描述:">
-                  <span>{{ props.row.desc }}</span>
+                  <span>{{ props.row.role_desc }}</span>
                 </el-form-item>
                 <el-form-item label="是否系统内置角色:">
-                  <span>{{ props.row.isbuild }}</span>
+                  <span>{{ props.row.is_build }}</span>
                 </el-form-item>
                 <el-form-item label="创建时间:">
                   <span>{{ props.row.createTime }}</span>
@@ -45,17 +45,17 @@
           </el-table-column>
           <el-table-column
             label="角色ID"
-            prop="id"
+            prop="role_code"
             align="center">
           </el-table-column>
           <el-table-column
             label="角色名称"
-            prop="name"
+            prop="role_name"
             align="center">
           </el-table-column>
           <el-table-column
             label="角色描述"
-            prop="desc"
+            prop="role_desc"
             align="center">
           </el-table-column>
           <el-table-column
@@ -92,17 +92,17 @@
     :before-close="handleClose">
       <el-form :model="form" ref="form" inline :rules="rules" style="height: 50%">
         <el-form-item label="角色ID:" prop="id">
-          <el-input v-model="form.id" ></el-input>
+          <el-input v-model="form.role_code" ></el-input>
         </el-form-item>
         <el-form-item label="角色名称:" prop="name">
-          <el-input v-model="form.name"></el-input>
+          <el-input v-model="form.role_name"></el-input>
         </el-form-item>
         <el-form-item label="角色描述:" prop="desc">
-          <el-input type="textarea" v-model="form.desc"></el-input>
+          <el-input type="textarea" v-model="form.role_desc"></el-input>
         </el-form-item>
         <el-form-item label="是否系统内置角色:">
-          <el-radio v-model="form.isbuild" label="0">是</el-radio>
-          <el-radio v-model="form.isbuild" label="1">否</el-radio>
+          <el-radio v-model="form.is_build" label="0">是</el-radio>
+          <el-radio v-model="form.is_build" label="1">否</el-radio>
         </el-form-item>
         <el-form-item label="创建时间:" v-show="false" >
           <el-input v-model="form.createTime" ></el-input>
@@ -151,10 +151,10 @@ export default {
       show: false,
       roleId: -1,
       form: {
-        id: '',
-        name: '',
-        desc: '',
-        isbuild: '1',
+        role_code: '',
+        role_name: '',
+        role_desc: '',
+        is_build: '1',
         createTime: '',
         createOper: '',
         updateTime: '',
