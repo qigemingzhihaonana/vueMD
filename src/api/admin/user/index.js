@@ -16,11 +16,10 @@ export function addUser (data) {
  * 查询用户信息
  * @param {*} query
  */
-export function fetchUser (query) {
+export function fetchUser () {
   return axios({
     url: '/selectAllUser',
-    method: 'get',
-    params: query
+    method: 'get'
   })
 }
 
@@ -31,6 +30,17 @@ export function fetchUser (query) {
 export function updateUser (data) {
   return axios({
     url: '/updateUser',
+    method: 'post',
+    data
+  })
+}
+/**
+ * 批量导入
+ * @param {*} data
+ */
+export function up (data) {
+  return axios({
+    url: '/MangImportUser',
     method: 'post',
     data
   })

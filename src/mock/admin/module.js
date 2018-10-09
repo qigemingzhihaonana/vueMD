@@ -2,28 +2,15 @@ import Mock from 'mockjs'
 
 const treeData = [
   {
-    label: '模块1',
-    id: 0
-  },
-  {
-    label: '模块2',
-    id: 1
-  },
-  {
-    label: '模块3',
-    id: 2
-  },
-  {
-    label: '模块4',
-    id: 3
-  },
-  {
-    label: '模块5',
-    id: 4
-  },
-  {
-    label: '模块6',
-    id: 5
+    'id': 1,
+    'module_code': 'USR_XT',
+    'module_name': '系统管理业务',
+    'default_query_scope': '1',
+    'default_auth_type': 0,
+    'create_time': '2018-09-23T05:33:46.000+0000',
+    'update_time': null,
+    'create_oper': null,
+    'update_oper': null
   }
 ]
 

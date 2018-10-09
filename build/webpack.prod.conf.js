@@ -36,12 +36,12 @@ const webpackConfig = merge(baseWebpackConfig, {
       uglifyOptions: {
         compress: {
           warnings: false,
-          drop_debugger: true,
-          drop_console: true
+          drop_debugger: false,
+          drop_console: false
         }
       },
       sourceMap: true,
-      // parallel: true
+      parallel: true
     }),
     // extract css into its own file
     new ExtractTextPlugin({

@@ -6,26 +6,25 @@
       </el-button-group>
     </div>
     <el-row>
-      <el-col class="left" :span="8" style='margin-top:15px;'>
-        <el-card shadow="always">
-          <el-tree
-            class="filter-tree"
-            :data="treeData"
-            node-key="id"
-            highlight-current
-            ref="menuTree"
-            @node-click="getNodeData"
-            default-expand-all>
-          </el-tree>
-        </el-card>
+      <el-col class="left" :span="4" style='margin-top:15px;'>
+        <el-tree
+          class="filter-tree"
+          :data="treeData"
+          :props="props"
+          node-key="id"
+          highlight-current
+          ref="menuTree"
+          @node-click="getNodeData"
+          default-expand-all>
+        </el-tree>
       </el-col>
-      <el-col class="right" :span="16" style='margin-top:15px;'>
+      <el-col class="right" :span="20" style='margin-top:15px;' v-show="showTable">
         <el-card shadow="always">
           <el-table
           :data="tableData"
           style="width: 100%"
           height="300"
-          border>
+          >
             <el-table-column
             label="菜单名称"
             prop="menu_name"></el-table-column>
@@ -36,8 +35,23 @@
             label="菜单标准路径"
             prop="menu_url"></el-table-column>
             <el-table-column
-            label=""
+            label="v"
             prop="is_auth_check"></el-table-column>
+            <el-table-column
+            label="v"
+            prop="create_time"></el-table-column>
+            <el-table-column
+            label="v"
+            prop="create_oper"></el-table-column>
+            <el-table-column
+            label="v"
+            prop="menu_icon"></el-table-column>
+            <el-table-column
+            label="v"
+            prop="update_oper"></el-table-column>
+            <el-table-column
+            label="v"
+            prop="update_time"></el-table-column>
             <el-table-column
             label="是否显示"
             prop="is_display"></el-table-column>
@@ -114,6 +128,12 @@ import { addMenu, delMenu, fetchMenu, updateMenu, getMenuMessage } from '@/api/a
 export default {
   data () {
     return {
+      props: {
+        label: 'name',
+        id: 'id',
+        children: 'children'
+      },
+      showTable: false,
       fatherMenu: false,
       treeData: [],
       tableData: [],
@@ -143,7 +163,16 @@ export default {
       }
     }
   },
+  created() {
+    this.getList();
+  },
   methods: {
+    getList() {
+      fetchMenu().then(data => {
+        console.log(data.data.data)
+        this.treeData = data.data.data
+      })
+    },
     /**取消 */
     cancel(form) {
         this.dialogFormVisible = false;
@@ -154,16 +183,32 @@ export default {
       this.$refs[form].validate(valid => {
         if(valid) {
           this.loading = true
-          addMenu(this.form).then(() => {
-            this.loading = false
-            this.dialogFormVisible = false;
-            this.getList()
-            this.$notify({
-              title: '成功',
-              message: '创建成功',
-              type: 'success',
-              duration: 2000
-            })
+          if(this.currentId === -1) {
+            let i = 0
+            this.form.menu_parent_id = i
+          }
+          const SysMenu = this.form
+          addMenu(SysMenu).then( response => {
+            if(response.data.code === 200) {
+              this.loading = false
+              this.dialogFormVisible = false;
+              this.getList()
+              this.$notify({
+                title: '成功',
+                message: '创建成功',
+                type: 'success',
+                duration: 2000
+              })
+              this.loading = false
+            } else {
+              this.$notify({
+                title: '失败',
+                message: '创建失败',
+                type: 'error',
+                duration: 2000
+              })
+              this.loading = false
+            }
           })
         } else {
           this.loading = false
@@ -176,16 +221,28 @@ export default {
       this.$refs[form].validate(valid => {
         if(valid) {
           this.loading = true
-          updateMenu(this.form).then(() => {
-            this.loading = false
-            this.dialogFormVisible = false
-            this.getList()
-            this.$notify({
-              title: '成功',
-              message: '创建成功',
-              type: 'success',
-              duration: 2000
-            })
+          updateMenu(this.form).then(response => {
+
+            if(response.data.code === 200) {
+              this.loading = false
+              this.dialogFormVisible = false;
+              this.getList()
+              this.$notify({
+                title: '成功',
+                message: '创建成功',
+                type: 'success',
+                duration: 2000
+              })
+              this.loading = false
+            } else {
+              this.$notify({
+                title: '失败',
+                message: '创建失败',
+                type: 'error',
+                duration: 2000
+              })
+              this.loading = false
+            }
           })
         } else {
           this.loading = false
@@ -195,8 +252,14 @@ export default {
     },
       /**获取菜单详细信息 */
       getNodeData(data) {
-        fetchMenu(data.id).then(response => {
-          this.tableData = response.data;
+        console.log(data.id)
+        getMenuMessage(data.id).then(response => {
+          this.showTable = true
+          console.log(response)
+          const table = []
+          table.push(response.data.data)
+          this.tableData = table
+          console.log(this.tableData)
         });
         this.currentId = data.id;
       },
@@ -219,7 +282,7 @@ export default {
           this.loading = true
           delMenu(row.id).then(() => {
             this.loading = false
-            this.fetchMenu()
+            this.getList()
             this.$notify({
               title: '成功',
               message: '删除成功',

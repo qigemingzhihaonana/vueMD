@@ -4,11 +4,10 @@ import axios from '@/utils/fetch'
  * 获取到模块
  * @param {*} query
  */
-export function fetchRoleModule (query) {
+export function fetchRoleModule () {
   return axios({
-    url: '/fetchmodule',
-    method: 'get',
-    params: query
+    url: '/selectModule',
+    method: 'get'
   })
 }
 

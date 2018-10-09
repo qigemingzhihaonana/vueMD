@@ -22,10 +22,12 @@ const user = {
      * @param {username,password} userInfo
      */
     Login ({ commit }, userInfo) {
-      const username = userInfo.name.trim()
+      const uid = userInfo.name.trim()
+      const pwd = userInfo.password
       return new Promise((resolve, reject) => {
-        login(username, userInfo.password).then(response => {
-          const data = response.data
+        login(uid, pwd).then(response => {
+          const data = response.data.data.menu
+          console.log(data)
           // commit('SET_TOKEN', data.token)
           commit('SET_NAVLIST', data)
           // setToken(response.data.token)

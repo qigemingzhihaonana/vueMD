@@ -4,13 +4,13 @@ import axios from '@/utils/fetch'
  * 登录
  * @param {*} query
  */
-export function login (username, password) {
+export function login (uid, pwd) {
   const data = {
-    username,
-    password
+    uid,
+    pwd
   }
   return axios({
-    url: '/login',
+    url: '/selectUserMenuList',
     method: 'post',
     params: data
   })

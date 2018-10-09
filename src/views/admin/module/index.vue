@@ -9,17 +9,16 @@
       </div>
       <el-row>
         <el-col class="right" :span="3" style='margin-top:15px;'>
-          <el-card shadow="always">
-            <el-tree
-              class="filter-tree"
-              :data="treeData"
-              node-key="id"
-              highlight-current
-              ref="moduleTree"
-              @node-click="getNodeData"
-              default-expand-all>
-            </el-tree>
-          </el-card>
+          <el-tree
+            class="filter-tree"
+            :props="props"
+            :data="treeData"
+            node-key="id"
+            highlight-current
+            ref="moduleTree"
+            @node-click="getNodeData"
+            default-expand-all>
+          </el-tree>
         </el-col>
         <el-col class="right" :span="16" style='margin-top:15px;' v-show="showTable">
           <el-row>
@@ -128,10 +127,10 @@
     :before-close="handleClose">
       <el-form :model="form" ref="form" :rules="rules">
         <el-form-item label="模块名称:" prop="name">
-          <el-input v-model="form.name" ></el-input>
+          <el-input v-model="form.module_name" ></el-input>
         </el-form-item>
         <el-form-item label="模块代码:" prop="code">
-          <el-input v-model="form.code" ></el-input>
+          <el-input v-model="form.module_code" ></el-input>
         </el-form-item>
         <el-form-item label="对应控制菜单:">
           <el-popover
@@ -154,7 +153,7 @@
         </el-popover>
         </el-form-item>
         <el-form-item label="默认查询范围:">
-          <el-select v-model="form.sysArea" placeholder="请选择">
+          <el-select v-model="form.default_query_scope" placeholder="请选择">
             <el-option
               v-for="item in options"
               :key="item.value"
@@ -164,8 +163,8 @@
           </el-select>
         </el-form-item>
         <el-form-item label="默认权限类型:">
-          <el-radio v-model="form.sysRole" label="0">管理</el-radio>
-          <el-radio v-model="form.sysRole" label="1">查询</el-radio>
+          <el-radio v-model="form.default_auth_type" label="0">管理</el-radio>
+          <el-radio v-model="form.default_auth_type" label="1">查询</el-radio>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -191,6 +190,10 @@ import treeTransfer from 'el-tree-transfer'
 export default {
   data() {
     return {
+      props: {
+        label: 'module_name',
+        id: 'id'
+      },
       showTable: false,
       modeMenu: [],
       loading: false,
@@ -231,17 +234,17 @@ export default {
       dialogStatus: undefined,
       dialogFormVisible: false,
       form: {
-        name: undefined,
-        code: undefined,
+        module_name: undefined,
+        module_code: undefined,
         menu: undefined,
-        sysArea: undefined,
-        sysRole: '0'
+        default_query_scope: undefined,
+        default_auth_type: '0'
       },
       rules: {
-          code: [
+          module_code: [
             { required: true, message: '请输入模块代码，模块代码不能重复', trigger: 'blur' }
           ],
-          name: [
+          module_name: [
             { required: true, message: '请输入模块名称，模块名称不能重复', trigger: 'blur' }
           ],
         }
@@ -290,7 +293,8 @@ export default {
       }
     },
     fetch() {
-      fetchRoleModule(this.listQuery).then((data) => {
+      fetchRoleModule().then((data) => {
+        console.log(data.data)
         this.treeData =  data.data
       })
     },

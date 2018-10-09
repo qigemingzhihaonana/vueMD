@@ -133,8 +133,8 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="cancel('form')">取 消</el-button>
-        <el-button v-waves v-loading="loading" v-if="dialogStatus=='create'" type="primary" @click="create('form')">确 定</el-button>
-        <el-button v-waves v-loading="loading" v-else type="primary" @click="update('form')">确 定</el-button>
+        <el-button v-waves  v-if="dialogStatus=='create'" type="primary" @click="create('form')">确 定</el-button>
+        <el-button v-waves  v-else type="primary" @click="update('form')">确 定</el-button>
       </div>
     </el-dialog>
     <excle :show.sync="show"></excle>
@@ -210,7 +210,7 @@ export default {
         this.currentPage = currentPage;
     },
     fetch() {
-      fetchUser(this.listQuery).then(data => {
+      fetchUser().then(data => {
         this.tableData = data.data
         setTimeout(() => {
           this.loading = false

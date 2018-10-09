@@ -4,11 +4,10 @@ import axios from '@/utils/fetch'
  * 获取所有的部门信息
  * @param {query}
  */
-export function getAll (query) {
+export function getAll () {
   return axios({
-    url: '/selectDepartmentAllld',
-    method: 'get',
-    params: query
+    url: '/selectDepartmentAllId',
+    method: 'get'
   })
 }
 
@@ -18,7 +17,7 @@ export function getAll (query) {
  */
 export function fetchMessage (data) {
   return axios({
-    url: '/getMessage',
+    url: '/selectDepartmentInformation',
     method: 'post',
     data
   })
@@ -41,7 +40,7 @@ export function insertDepartment (data) {
  */
 export function delectDepartment (data) {
   return axios({
-    url: '/delectDepartment',
+    url: '/deleteDepart',
     method: 'post',
     data
   })

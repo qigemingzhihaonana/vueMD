@@ -77,9 +77,8 @@ export function fetchUser (data) {
  */
 export function removeRoleUser (data) {
   return axios({
-    url: '/removeRoleUser',
-    method: 'post',
-    data
+    url: '/deleteRole/' + data,
+    method: 'post'
   })
 }
 

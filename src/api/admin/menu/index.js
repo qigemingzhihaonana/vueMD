@@ -4,11 +4,10 @@ import axios from '@/utils/fetch'
  * 查询菜单
  * @param {*} query
  */
-export function fetchMenu (query) {
+export function fetchMenu () {
   return axios({
-    url: '/',
-    method: 'get',
-    params: query
+    url: '/selectAllMenu',
+    method: 'get'
   })
 }
 
@@ -17,6 +16,7 @@ export function fetchMenu (query) {
  * @param {*} data
  */
 export function addMenu (data) {
+  console.log(data)
   return axios({
     url: '/insertMenu',
     method: 'post',
@@ -30,9 +30,8 @@ export function addMenu (data) {
  */
 export function delMenu (data) {
   return axios({
-    url: '/delectMenu',
-    method: 'post',
-    data
+    url: '/deleteMenu2/' + data,
+    method: 'post'
   })
 }
 
@@ -42,7 +41,7 @@ export function delMenu (data) {
  */
 export function updateMenu (data) {
   return axios({
-    url: '/ss',
+    url: '/',
     method: 'post',
     data
   })
@@ -54,8 +53,7 @@ export function updateMenu (data) {
  */
 export function getMenuMessage (data) {
   return axios({
-    url: '/selectAllMenu',
-    method: 'post',
-    data
+    url: '/selectMenuDetail/' + data,
+    method: 'post'
   })
 }

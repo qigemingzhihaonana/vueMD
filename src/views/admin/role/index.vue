@@ -16,6 +16,9 @@
           <el-table-column type="expand">
             <template slot-scope="props">
               <el-form label-position="left" inline class="table-expand">
+                <el-form-item label="ID:" v-show="false">
+                  <span>{{ props.row.role_id }}</span>
+                </el-form-item>
                 <el-form-item label="角色ID:">
                   <span>{{ props.row.role_code }}</span>
                 </el-form-item>
@@ -91,13 +94,13 @@
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible"
     :before-close="handleClose">
       <el-form :model="form" ref="form" inline :rules="rules" style="height: 50%">
-        <el-form-item label="角色ID:" prop="id">
+        <el-form-item label="角色ID:" prop="role_code">
           <el-input v-model="form.role_code" ></el-input>
         </el-form-item>
-        <el-form-item label="角色名称:" prop="name">
+        <el-form-item label="角色名称:" prop="role_name">
           <el-input v-model="form.role_name"></el-input>
         </el-form-item>
-        <el-form-item label="角色描述:" prop="desc">
+        <el-form-item label="角色描述:" prop="role_desc">
           <el-input type="textarea" v-model="form.role_desc"></el-input>
         </el-form-item>
         <el-form-item label="是否系统内置角色:">
@@ -169,13 +172,13 @@ export default {
       formEdit: true,
       formAdd: true,
       rules: {
-        id: [
+        role_code: [
           { required: true, message: '请输入角色ID，ID不能重复', trigger: 'blur' }
         ],
-        name: [
+        role_name: [
           { required: true, message: '请输入角色名称，角色名称不能重复', trigger: 'blur' }
         ],
-        desc: [
+        role_desc: [
           { required: true, message: '请输入角色详细信息', trigger: 'blur' }
         ]
       }
@@ -198,8 +201,11 @@ export default {
       })
     },
     getTableList() {
-      getRoleTable(this.listQuery).then(data => {
-				this.tableData = data.data
+      getRoleTable().then(data => {
+        console.log(data)
+        this.tableData = data.data.data
+
+        console.log(this.tableData)
 			});
     },
     handlerAdd() {
@@ -213,9 +219,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.loading = true
-        delRole(row.id).then(() => {
-          this.loading = false
+        delRole(row.role_id).then(() => {
           this.getTableList()
           this.$notify({
             title: '成功',
@@ -228,8 +232,8 @@ export default {
     },
     handlerEdit(row) {
       this.form = Object.assign({}, row)
-      this.form.updateTime = new Date()
-      this.form.updateOper = '123'
+      //this.form.updateTime = new Date()
+      //this.form.updateOper = '123'
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
       this.$nextTick(() => {
@@ -240,16 +244,27 @@ export default {
       this.$refs[form].validate(valid => {
         if(valid) {
           this.loading = true
-          updateRole(this.form).then(() => {
-            this.loading = false
-            this.dialogFormVisible = false
-            this.getList()
-            this.$notify({
-              title: '成功',
-              message: '创建成功',
-              type: 'success',
-              duration: 2000
-            })
+          updateRole(this.form).then(response => {
+            if(response.data.code === 200) {
+              this.loading = false
+              this.dialogFormVisible = false
+              this.getTableList()
+              this.$notify({
+                title: '成功',
+                message: '创建成功',
+                type: 'success',
+                duration: 2000
+              })
+              this.loading = false
+            } else {
+              this.$notify({
+                title: '失败',
+                message: '创建失败',
+                type: 'error',
+                duration: 2000
+              })
+              this.loading = false
+            }
           })
         } else {
           this.loading = false
@@ -262,15 +277,26 @@ export default {
         if(valid) {
           this.loading = true
           addRole(this.form).then(() => {
-            this.loading = false
-            this.dialogFormVisible = false;
-            this.getList()
-            this.$notify({
-              title: '成功',
-              message: '创建成功',
-              type: 'success',
-              duration: 2000
-            })
+            if(response.data.code === 200) {
+              this.loading = false
+              this.dialogFormVisible = false
+              this.getTableList()
+              this.$notify({
+                title: '成功',
+                message: '创建成功',
+                type: 'success',
+                duration: 2000
+              })
+              this.loading = false
+            } else {
+              this.$notify({
+                title: '失败',
+                message: '创建失败',
+                type: 'error',
+                duration: 2000
+              })
+              this.loading = false
+            }
           })
         } else {
           this.loading = false

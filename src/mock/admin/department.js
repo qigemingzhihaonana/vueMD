@@ -3,25 +3,9 @@ import Mock from 'mockjs'
 const department = []
 const tree = [
   {
-    'id': '4654',
-    'label': '湖北信通通信',
-    'children': [
-      {
-        'id': '1',
-        'label': 'jsjd',
-        'children': []
-      },
-      {
-        'id': '456',
-        'label': 'dgfg',
-        'children': []
-      },
-      {
-        'id': '7465',
-        'label': 'tjsdysyts',
-        'children': []
-      }
-    ]
+    'display': '1',
+    'name': '主任部门',
+    'id': '1'
   }
 ]
 

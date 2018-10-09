@@ -15,6 +15,7 @@
         </el-input>
         <el-tree
           class="filter-tree"
+          :props="props"
           :data="treeData"
           node-key="id"
           highlight-current
@@ -24,7 +25,7 @@
           >
         </el-tree>
       </el-col>
-      <el-col :span="16" style='margin-top:15px;'>
+      <el-col :span="16" style='margin-top:15px;' v-show="showTable">
         <el-card class="box-card">
           <el-table
             :data="tableData"
@@ -37,37 +38,37 @@
             </el-table-column>
             <el-table-column
               fixed
-              prop="name"
+              prop="dep_name"
               label="部门名称"
               align="center">
             </el-table-column>
             <el-table-column
-              prop="id"
+              prop="dep_number"
               label="部门id"
               align="center">
             </el-table-column>
             <el-table-column
-              prop="province"
+              prop="dep_unity_code"
               label="统一部门编号"
               align="center">
             </el-table-column>
             <el-table-column
-              prop="desc"
+              prop="dep_description"
               label="部门描述"
               align="center">
             </el-table-column>
             <el-table-column
-              prop="state"
+              prop="dep_status"
               label="部门状态"
               align="center">
             </el-table-column>
             <el-table-column
-              prop="pz"
+              prop="dep_principal"
               label="正职领导"
               align="center">
             </el-table-column>
             <el-table-column
-              prop="pf"
+              prop="dep_deputy"
               label="副职领导"
               align="center">
             </el-table-column>
@@ -78,38 +79,39 @@
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="60%">
       <el-form :model="form" :rules="rules" ref="form" >
         <el-form-item label="部门名称:">
-    			<el-input v-model="form.cName"  prop="cName"></el-input>
+    			<el-input v-model="form.dep_name"  prop="dep_name"></el-input>
     		</el-form-item>
     		<el-form-item label="部门名称(英文):">
-    			<el-input v-model="form.zName"  prop="zName"></el-input>
+    			<el-input v-model="form.dep_english_name"  prop="dep_english_name"></el-input>
     		</el-form-item>
     		<el-form-item label="所属地区:">
-    			<el-input v-model="form.area"  prop="area"></el-input>
+    			<el-input v-model="form.dep_area"  prop="dep_area"></el-input>
     		</el-form-item>
         <el-form-item label="部门别名:">
-    		  <el-input v-model="form.ocName"  ></el-input>
+    		  <el-input v-model="form.dep_alias"  ></el-input>
         </el-form-item>
         <el-form-item label="部门别名(英文):">
-          <el-input v-model="form.ozName"  ></el-input>
+          <el-input v-model="form.dep_english_alias"  ></el-input>
         </el-form-item>
         <el-form-item label="排序:">
-          <el-input v-model="form.sort" ></el-input>
+          <el-input v-model="form.dep_number" ></el-input>
         </el-form-item>
         <el-form-item label="上级部门:" >
+          <el-input v-model="form.parent_dep_id" ></el-input>
           <!-- <el-select-tree
-                          :treeData="treeData"
+                          :treeData="parent_dep_id"
                           clearable
                           placeholder="请选择上级部门">
           </el-select-tree> -->
         </el-form-item>
         <el-form-item label="部门正职">
-          <el-input v-model="form.positionZ" ></el-input>
+          <el-input v-model="form.dep_principal" ></el-input>
         </el-form-item>
         <el-form-item label="部门副职">
-          <el-input v-model="form.positionF" ></el-input>
+          <el-input v-model="form.dep_deputy" ></el-input>
         </el-form-item>
         <el-form-item label="部门状态:">
-          <el-select v-model="form.state" >
+          <el-select v-model="form.dep_status" >
             <el-option
             v-for="item in option"
             :key="item.key"
@@ -119,7 +121,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="是否显示:">
-        <el-select v-model="form.isshow" >
+        <el-select v-model="form.is_display" >
           <el-option
           v-for="item in optionx"
           :key="item.key"
@@ -129,7 +131,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="部门级别:">
-        <el-select v-model="form.level" prop="level" >
+        <el-select v-model="form.dep_type" prop="dep_type" >
           <el-option
           v-for="item in option"
           :key="item.key"
@@ -145,13 +147,13 @@
           <el-input v-model="form.department" ></el-input>
         </el-form-item>
         <el-form-item label="部门编号">
-          <el-input v-model="form.departmentNumber" ></el-input>
+          <el-input v-model="form.dep_number" ></el-input>
         </el-form-item>
         <el-form-item label="部门收发员">
-          <el-input v-model="form.transceiver" ></el-input>
+          <el-input v-model="form.dep_transceiver" ></el-input>
         </el-form-item>
         <el-form-item label="正副职同时传阅">
-          <el-select v-model="form.together" >
+          <el-select v-model="form.is_same_look" >
             <el-option
             v-for="item in optionx"
             :key="item.key"
@@ -176,6 +178,11 @@ export default {
   components: {ElSelectTree},
   data () {
     return {
+      showTable: false,
+      props: {
+        label: 'name',
+        id: 'id'
+      },
       loading: false,
       optionx: [
         {
@@ -219,34 +226,34 @@ export default {
         name: undefined
       },
 			form: {
-				cName: undefined,
-				zName: undefined,
-				area: 'HB',
-				ocName: undefined,
-				oaName: undefined,
-				sort: undefined,
-				upLeader: undefined,
-				positionZ: undefined,
-				positionF: undefined,
-				state: undefined,
-				isshow: undefined,
-				level: undefined,
+				dep_name: undefined,
+				dep_english_name: undefined,
+				dep_area: 'HB',
+				dep_alias: undefined,
+				dep_english_alias: undefined,
+				dep_number: undefined,
+				parent_dep_id: undefined,
+				dep_principal: undefined,
+				dep_deputy: undefined,
+				dep_status: undefined,
+				is_display: undefined,
+				dep_type: undefined,
 				province: undefined,
 				department: undefined,
-				departmentNumber: undefined,
-				transceiver: undefined,
-				together: undefined  
+				dep_number: undefined,
+				dep_transceiver: undefined,
+				is_same_look: undefined  
 			},
       currentId: -1,
       filterText: '',
       rules: {
-          zName: [
+          dep_name: [
             { required: true, message: '请输入部门英文名称', trigger: 'blur' }
           ],
-          cName: [
+          dep_english_name: [
             { required: true, message: '请输入部门中文名称', trigger: 'blur' }
           ],
-          area: [
+          dep_area: [
             { required: true, message: '请输入部门所属地区', trigger: 'blur' }
           ]
         }
@@ -268,6 +275,12 @@ export default {
     },
     create(form) {
       this.loading = true
+      if (form.dep_principal !== null || form.dep_principal !== '') {
+        form.dep_principal === 0
+      }
+      if (form.dep_deputy !== null || form.dep_deputy !== '') {
+        form.dep_deputy === []
+      }
       insertDepartment(form).then( () => {
         this.getList()
         this.loading = false
@@ -276,7 +289,13 @@ export default {
     getList() {
 			getAll().then(data => {
         console.log(data)
-        this.treeData = data.data
+        // const tree = []
+        // if(data.data.length !== 0) {
+
+        // }
+         this.treeData = data.data
+        // this.treeData.id = data.data.id
+        console.log(data.data)
         console.log(this.treeData)
 			});
     },
@@ -284,7 +303,8 @@ export default {
       //通过节点的数据传递给后台向其要求数据
       console.log(data.id)
       console.log(data)
-      fetchMessage(data.id).then(response => {
+      fetchMessage(data.name).then(response => {
+        this.showTable = true
         console.log(response)
         this.tableData = response.data;
         console.log(this.tableData)
@@ -373,29 +393,29 @@ export default {
     },
     restForm() {
       this.form = {
-        cName: undefined,
-				zName: undefined,
-				area: 'HB',
-				ocName: undefined,
-				oaName: undefined,
-				sort: undefined,
-				upLeader: undefined,
-				positionZ: undefined,
-				positionF: undefined,
-				isshow: undefined,
-				state: undefined,
-				level: undefined,
+        dep_name: undefined,
+				dep_english_name: undefined,
+				dep_area: 'HB',
+				dep_alias: undefined,
+				dep_english_alias: undefined,
+				dep_number: undefined,
+				parent_dep_id: undefined,
+				dep_principal: undefined,
+				dep_deputy: undefined,
+				dep_status: undefined,
+				is_display: undefined,
+				dep_type: undefined,
 				province: undefined,
 				department: undefined,
-				departmentNumber: undefined,
-				transceiver: undefined,
-				together: undefined  
+				dep_number: undefined,
+				dep_transceiver: undefined,
+				is_same_look: undefined 
       }
     },
     handleClick(row) {
       this.dialogFormVisible = true,
       this.dialogStatus=='update'
-      getMessage(row.id).then( data => {
+      getMessage(row.name).then( data => {
         this.form = data.data
       })
     }
