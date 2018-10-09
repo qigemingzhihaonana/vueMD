@@ -18,7 +18,7 @@ export function addUser (data) {
  */
 export function fetchUser () {
   return axios({
-    url: '/selectAllUser',
+    url: '/selectUserNameId',
     method: 'get'
   })
 }

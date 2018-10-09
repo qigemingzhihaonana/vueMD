@@ -41,7 +41,7 @@ export function delMenu (data) {
  */
 export function updateMenu (data) {
   return axios({
-    url: '/',
+    url: '/updateMenu',
     method: 'post',
     data
   })

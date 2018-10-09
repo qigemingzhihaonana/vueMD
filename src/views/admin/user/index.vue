@@ -16,7 +16,6 @@
         <el-card shadow="always">
           <el-table
           :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
-          style="width: 100%"
           height="390px"
           border
           stripe>
@@ -31,7 +30,7 @@
             <el-table-column
             label="员工真实姓名"
             prop="real_name"
-            align='center'></el-table-column>
+            align='center'>是</el-table-column>
             <el-table-column
             label="员工工号"
             prop="user_code"
@@ -110,12 +109,24 @@
           <el-input v-model="form.user_code" ></el-input>
         </el-form-item>
         <el-form-item label="是否在职:">
-          <el-radio v-model="form.user_level" label="0">是</el-radio>
-          <el-radio v-model="form.user_level" label="1">否</el-radio>
+          <el-select v-model="form.user_level" placeholder="请选择">
+            <el-option
+              v-for="item in optionLevel"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="是否公司领导:">
-          <el-radio v-model="form.is_company_leader" label="0">是</el-radio>
-          <el-radio v-model="form.is_company_leader" label="1">否</el-radio>
+          <el-select v-model="form.is_company_leader" placeholder="请选择">
+            <el-option
+              v-for="item in optionLeader"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="员工职位:">
           <el-input v-model="form.user_position"></el-input>
@@ -127,8 +138,14 @@
           <el-input v-model="form.user_email"></el-input>
         </el-form-item>
         <el-form-item label="是否有效:">
-          <el-radio v-model="form.status" label="0">是</el-radio>
-          <el-radio v-model="form.status" label="1">否</el-radio>
+          <el-select v-model="form.status" placeholder="请选择">
+            <el-option
+              v-for="item in optionStatus"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -153,6 +170,27 @@ export default {
   },
   data() {
     return {
+      optionStatus: [{
+          value: '0',
+          label: '是'
+        }, {
+          value: '1',
+          label: '否'
+        }],
+      optionLeader: [{
+          value: '0',
+          label: '是'
+        }, {
+          value: '1',
+          label: '否'
+        }],
+      optionLevel: [{
+          value: '0',
+          label: '是'
+        }, {
+          value: '1',
+          label: '否'
+        }],
       searchUser: undefined,
       loading: true,
       currentPage: 1,
@@ -211,7 +249,8 @@ export default {
     },
     fetch() {
       fetchUser().then(data => {
-        this.tableData = data.data
+        this.tableData = data.data.data
+        console.info(this.tableData)
         setTimeout(() => {
           this.loading = false
         }, 1.5 * 1000)
@@ -244,6 +283,7 @@ export default {
         if(valid) {
           this.loading = true
           updateUser(this.form).then(() => {
+            console.info("成功")
             this.loading = false
             this.dialogFormVisible = false
             this.fetch()
@@ -265,6 +305,7 @@ export default {
         if(valid) {
           this.loading = true
           addUser(this.form).then(() => {
+            console.info("成功")
             this.loading = false
             this.dialogFormVisible = false;
             this.fetch()

@@ -17,7 +17,7 @@
             <template slot-scope="props">
               <el-form label-position="left" inline class="table-expand">
                 <el-form-item label="ID:" v-show="false">
-                  <span>{{ props.row.role_id }}</span>
+                  <span>{{ props.row.id }}</span>
                 </el-form-item>
                 <el-form-item label="角色ID:">
                   <span>{{ props.row.role_code }}</span>
@@ -29,7 +29,8 @@
                   <span>{{ props.row.role_desc }}</span>
                 </el-form-item>
                 <el-form-item label="是否系统内置角色:">
-                  <span>{{ props.row.is_build }}</span>
+                  <span v-if="props.row.is_builtin === 0">是</span>
+                  <span v-else>否</span>
                 </el-form-item>
                 <el-form-item label="创建时间:">
                   <span>{{ props.row.createTime }}</span>
@@ -104,8 +105,14 @@
           <el-input type="textarea" v-model="form.role_desc"></el-input>
         </el-form-item>
         <el-form-item label="是否系统内置角色:">
-          <el-radio v-model="form.is_build" label="0">是</el-radio>
-          <el-radio v-model="form.is_build" label="1">否</el-radio>
+          <el-select v-model="form.is_builtin" placeholder="请选择">
+            <el-option
+              v-for="item in optionBuild"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="创建时间:" v-show="false" >
           <el-input v-model="form.createTime" ></el-input>
@@ -137,7 +144,7 @@
   </div>
 </template>
 <script>
-import { getRole, getRoleTable , addRole, delRole, updateRole, getRoleUser } from '@/api/admin/role/index'
+import { getRole, getRoleTable , addRole, delRole, updateRole, fetchUser } from '@/api/admin/role/index'
 import RoleUser from './components/userAdd'
 export default {
   components: {
@@ -145,6 +152,13 @@ export default {
   },
   data () {
     return {
+      optionBuild: [{
+          value: '0',
+          label: '是'
+        }, {
+          value: '1',
+          label: '否'
+        }],
       tableDataRole: [],
       tableDataAddRole: [],
       loading: false,
@@ -157,7 +171,7 @@ export default {
         role_code: '',
         role_name: '',
         role_desc: '',
-        is_build: '1',
+        is_builtin: '1',
         createTime: '',
         createOper: '',
         updateTime: '',
@@ -193,10 +207,9 @@ export default {
       this.show = true
       this.roleId = row.id
       const id = row.id
-      getRoleUser(id).then(data => {
-        console.log(data.data[0])
-        this.tableDataRole = data.data[0]
-        this.tableDataAddRole = data.data[1]
+      fetchUser(id).then(data => {
+        console.log(data.data)
+        this.tableDataAddRole = data.data.data
         console.log(this.tableDataRole)
       })
     },
@@ -204,7 +217,6 @@ export default {
       getRoleTable().then(data => {
         console.log(data)
         this.tableData = data.data.data
-
         console.log(this.tableData)
 			});
     },
@@ -219,7 +231,8 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        delRole(row.role_id).then(() => {
+        console.log(row)
+        delRole(row.id).then(() => {
           this.getTableList()
           this.$notify({
             title: '成功',
@@ -232,8 +245,6 @@ export default {
     },
     handlerEdit(row) {
       this.form = Object.assign({}, row)
-      //this.form.updateTime = new Date()
-      //this.form.updateOper = '123'
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
       this.$nextTick(() => {
@@ -245,6 +256,7 @@ export default {
         if(valid) {
           this.loading = true
           updateRole(this.form).then(response => {
+            console.log(response)
             if(response.data.code === 200) {
               this.loading = false
               this.dialogFormVisible = false
@@ -276,7 +288,7 @@ export default {
       this.$refs[form].validate(valid => {
         if(valid) {
           this.loading = true
-          addRole(this.form).then(() => {
+          addRole(this.form).then(response => {
             if(response.data.code === 200) {
               this.loading = false
               this.dialogFormVisible = false
@@ -314,8 +326,6 @@ export default {
         name: undefined,
         desc: undefined,
         isbuild: '1',
-        createTime: new Date(),
-        createOper: 'lll',
         updateTime: undefined,
         updateOper: undefined
       }

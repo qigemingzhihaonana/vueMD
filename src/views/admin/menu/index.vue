@@ -38,19 +38,19 @@
             label="v"
             prop="is_auth_check"></el-table-column>
             <el-table-column
-            label="v"
+            label="创建时间"
             prop="create_time"></el-table-column>
             <el-table-column
-            label="v"
+            label="创建人员"
             prop="create_oper"></el-table-column>
             <el-table-column
-            label="v"
+            label="菜单图标"
             prop="menu_icon"></el-table-column>
             <el-table-column
-            label="v"
+            label="更新人员"
             prop="update_oper"></el-table-column>
             <el-table-column
-            label="v"
+            label="更新时间"
             prop="update_time"></el-table-column>
             <el-table-column
             label="是否显示"

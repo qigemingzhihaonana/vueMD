@@ -30,9 +30,8 @@ export function addRole (data) {
  */
 export function delRole (data) {
   return axios({
-    url: '/delectRole',
-    method: 'post',
-    data
+    url: '/deleteRole/' + data,
+    method: 'post'
   })
 }
 /**
@@ -63,11 +62,10 @@ export function updateRole (data) {
  * 查询所有在职但是没有关联的用户
  * @param {id} data
  */
-export function fetchUser (data) {
+export function fetchUser (id) {
   return axios({
-    url: '/selectAllUser',
-    method: 'post',
-    data
+    url: '/selectAllUser/' + id,
+    method: 'post'
   })
 }
 
@@ -75,10 +73,11 @@ export function fetchUser (data) {
  * 删除角色中的用户
  * @param {id,sysUser} data
  */
-export function removeRoleUser (data) {
+export function removeRoleUser (id, data) {
   return axios({
-    url: '/deleteRole/' + data,
-    method: 'post'
+    url: '/delectRoleUser/' + id,
+    method: 'post',
+    data
   })
 }
 
@@ -98,9 +97,9 @@ export function getRoleUser (id) {
  * 角色新增用户
  * @param {*} query
  */
-export function addRoleUser (data) {
+export function addRoleUser (id, data) {
   return axios({
-    url: '/updateUserRole',
+    url: '/insertRoleUser2/' + id,
     method: 'post',
     data
   })
