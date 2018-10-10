@@ -307,28 +307,6 @@ export default {
         this.$refs['form'].clearValidate()
       })
     },
-    // update(form) {
-    //   this.$refs[form].validate(valid => {
-    //     if(valid) {
-    //       this.loading = true
-    //       updateUser(this.form).then(() => {
-    //         console.info("成功")
-    //         this.loading = false
-    //         this.dialogFormVisible = false
-    //         this.fetch()
-    //         this.$notify({
-    //           title: '成功',
-    //           message: '创建成功',
-    //           type: 'success',
-    //           duration: 2000
-    //         })
-    //       })
-    //     } else {
-    //       this.loading = false
-    //       return false
-    //     }
-    //   })
-    // },
     update(form) {
       const level = form.user_level
       deleteUser(level).then(() => {

@@ -117,9 +117,8 @@ export default {
   methods: {
     /**提交新增人员 */
     toggleAdd() {
-      this.idsRight.push(this.roleid)
       this.loading = true
-      addRoleUser(this.idsRight).then( () => {
+      addRoleUser(this.roleid, this.idsRight).then( () => {
         this.loading = false
         this.fetchUser()
         this.$notify({
@@ -132,9 +131,8 @@ export default {
     },
     /**取消人员角色 */
     Selection() {
-      this.idsLeft.push(this.roleid)
       this.loading = true
-      removeRoleUser(this.idsLeft).then( () => {
+      removeRoleUser(this.roleid, this.idsLeft).then( () => {
         this.loading = false
         this.fetchUser()
         this.$notify({
@@ -153,14 +151,14 @@ export default {
     handleLeftSelectionChange(val) {
       this.multipleLeftSelection = val;
       this.multipleLeftSelection.map((item)=> {
-      idsLeft.push(item.key)
+      this.idsLeft.push(item.key)
       })
     },
     /**当table选项改变时触发 */
     handleRightSelectionChange(val) {
       this.multipleRightSelection = val;
       this.multipleRightSelection.map((item)=> {
-      idsRight.push(item.key)
+      this.idsRight.push(item.key)
       })
     },
     handleClose() {
