@@ -21,6 +21,7 @@
       <el-col class="right" :span="20" style='margin-top:15px;' v-show="showTable">
         <el-card shadow="always">
           <el-table
+          fit
           :data="tableData"
           style="width: 100%"
           height="300"
@@ -83,7 +84,7 @@
     </el-row>
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" 
     :before-close="handleClose">
-      <el-form :model="form" ref="form" :rules="rules">
+      <el-form label-position=left :model="form" ref="form" :rules="rules">
         <el-form-item label="菜单名称:" prop="menu_name">
           <el-input v-model="form.menu_name" ></el-input>
         </el-form-item>
@@ -107,8 +108,14 @@
           <el-radio v-model="form.is_auth_check" label="1">否</el-radio>
         </el-form-item>
         <el-form-item label="是否显示:">
-          <el-radio v-model="form.is_display" label="0">是</el-radio>
-          <el-radio v-model="form.is_display" label="1">否</el-radio>
+          <el-select v-model="form.is_display" placeholder="请选择">
+            <el-option
+              v-for="item in is_display"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="上级菜单:" v-show="fatherMenu">
           <el-input v-model="form.menu_parent_id"></el-input>
@@ -128,6 +135,16 @@ import { addMenu, delMenu, fetchMenu, updateMenu, getMenuMessage } from '@/api/a
 export default {
   data () {
     return {
+      is_display: [
+        {
+          value: '0',
+          label: '是'
+        },
+        {
+          value: '1',
+          label: '否'
+        }
+      ],
       props: {
         label: 'name',
         id: 'id',
@@ -257,8 +274,12 @@ export default {
           this.showTable = true
           console.log(response)
           const table = []
-          table.push(response.data.data)
-          this.tableData = table
+          if(response.data.data.length === 1 || response.data.data.length === undefined) {
+            table.push(response.data.data)
+            this.tableData = table
+          } else {
+            this.tableData = response.data
+          }
           console.log(this.tableData)
         });
         this.currentId = data.id;

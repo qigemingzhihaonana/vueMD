@@ -5,8 +5,22 @@
   :before-close="handleClose"
  >
     <upload-excel-component :on-success="handleSuccess" :before-upload="beforeUpload"/>
-    <el-table :data="tableData" border highlight-current-row style="width: 100%;margin-top:20px;">
-      <el-table-column v-for="item of tableHeader" :prop="item" :label="item" :key="item"/>
+    <p>以下模板中员工账号，员工真实姓名，员工工号，是否有效为必填选项</p>
+    <el-table style="width: 100%;margin-top:20px;">
+      <el-table-column label="员工账号"/>
+      <el-table-column label="员工初始密码"/>
+      <el-table-column label="员工真实姓名"/>
+      <el-table-column label="员工工号"/>
+      <el-table-column label="是否在职"/>
+      <el-table-column label="员工职位"/>
+      <el-table-column label="所属部门"/>
+      <el-table-column label="是否公司领导"/>
+      <el-table-column label="排序"/>
+      <el-table-column label="员工email"/>
+      <el-table-column label="是否有效"/>
+    </el-table>
+    <el-table  :data="tableData" border highlight-current-row style="width: 100%;margin-top:20px;">
+      <el-table-column show-header="false" v-for="item of tableHeader" :prop="item" :label="item" :key="item"/>
     </el-table>
     <el-button @click="update" type="primary">确定</el-button>
   </el-dialog>

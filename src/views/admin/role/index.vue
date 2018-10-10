@@ -10,6 +10,7 @@
         <el-card shadow="always">
           <el-table
           border
+          fit
           :data="tableData"
           style="width: 100%"
           height="300">
@@ -107,7 +108,7 @@
         <el-form-item label="是否系统内置角色:">
           <el-select v-model="form.is_builtin" placeholder="请选择">
             <el-option
-              v-for="item in optionBuild"
+              v-for="item in is_builtin"
               :key="item.value"
               :label="item.label"
               :value="item.value">

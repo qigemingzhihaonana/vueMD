@@ -27,9 +27,9 @@ export function delRoleModule (data) {
  * 添加模块与角色的关联
  * @param {*} data
  */
-export function addRoleModule (data) {
+export function addRoleModule (id, data) {
   return axios({
-    url: '/',
+    url: '/insertModuleRole/' + id,
     method: 'post',
     data
   })
@@ -77,7 +77,7 @@ export function delMenuModule (data) {
  */
 export function addModule (data) {
   return axios({
-    url: '/',
+    url: '/insertModule',
     method: 'post',
     data
   })

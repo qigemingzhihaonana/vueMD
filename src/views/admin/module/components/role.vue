@@ -3,7 +3,7 @@
   :visible="dialogFormVisibleAdd"
   width="70%"
   @close="close">
-    <el-row>
+    <el-row class="role_menu">
       <el-col class="left" :span="24" style='margin-top:15px;'>
         <el-card shadow="always">
           <div slot="header" class="clearfix">
@@ -168,6 +168,8 @@ export default {
 }
 </script>
 <style scoped>
-
+.role_menu {
+  display: flex;
+  justify-content: space-around
+}
 </style>
-

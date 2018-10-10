@@ -28,6 +28,7 @@
       <el-col :span="16" style='margin-top:15px;' v-show="showTable">
         <el-card class="box-card">
           <el-table
+            fit
             :data="tableData"
             border
             style="width: 100%"
@@ -77,15 +78,15 @@
       </el-col>
     </el-row>
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="60%">
-      <el-form :model="form" :rules="rules" ref="form" >
-        <el-form-item label="部门名称:">
-    			<el-input v-model="form.dep_name"  prop="dep_name"></el-input>
+      <el-form label-position=left :model="form" :rules="rules" ref="form" >
+        <el-form-item label="部门名称:" prop="dep_name">
+    			<el-input v-model="form.dep_name"></el-input>
     		</el-form-item>
-    		<el-form-item label="部门名称(英文):">
-    			<el-input v-model="form.dep_english_name"  prop="dep_english_name"></el-input>
+    		<el-form-item label="部门名称(英文):" prop="dep_english_name">
+    			<el-input v-model="form.dep_english_name"></el-input>
     		</el-form-item>
-    		<el-form-item label="所属地区:">
-    			<el-input v-model="form.dep_area"  prop="dep_area"></el-input>
+    		<el-form-item label="所属地区:" prop="dep_area">
+    			<el-input v-model="form.dep_area"></el-input>
     		</el-form-item>
         <el-form-item label="部门别名:">
     		  <el-input v-model="form.dep_alias"  ></el-input>
@@ -98,11 +99,6 @@
         </el-form-item>
         <el-form-item label="上级部门:" >
           <el-input v-model="form.parent_dep_id" ></el-input>
-          <!-- <el-select-tree
-                          :treeData="parent_dep_id"
-                          clearable
-                          placeholder="请选择上级部门">
-          </el-select-tree> -->
         </el-form-item>
         <el-form-item label="部门正职">
           <el-input v-model="form.dep_principal" ></el-input>
@@ -178,6 +174,7 @@ export default {
   components: {ElSelectTree},
   data () {
     return {
+      depName: undefined,
       showTable: false,
       props: {
         label: 'name',
@@ -276,10 +273,11 @@ export default {
     create(form) {
       this.loading = true
       if (form.dep_principal !== null || form.dep_principal !== '') {
-        form.dep_principal === 0
+        form.dep_principal = 0-0
       }
       if (form.dep_deputy !== null || form.dep_deputy !== '') {
-        form.dep_deputy === []
+        const deputy = []
+        form.dep_deputy = deputy
       }
       insertDepartment(form).then( () => {
         this.getList()
@@ -289,24 +287,28 @@ export default {
     getList() {
 			getAll().then(data => {
         console.log(data)
-        // const tree = []
-        // if(data.data.length !== 0) {
-
-        // }
-         this.treeData = data.data
-        // this.treeData.id = data.data.id
+        this.treeData = data.data.data
         console.log(data.data)
         console.log(this.treeData)
 			});
     },
     getNodeData(data) {
       //通过节点的数据传递给后台向其要求数据
+      this.depName = data.name
       console.log(data.id)
       console.log(data)
       fetchMessage(data.name).then(response => {
         this.showTable = true
         console.log(response)
-        this.tableData = response.data;
+        console.info(response.data.data.length)
+        console.info(response.data.data === null)
+        const table = []
+        if(response.data.data.length === 1 || response.data.data.length === undefined) {
+          table.push(response.data.data)
+          this.tableData = table
+        } else {
+          this.tableData = response.data
+        }
         console.log(this.tableData)
       });
       this.currentId = data.id;
@@ -320,15 +322,15 @@ export default {
       this.formEdit = false
     },
     handleDelete () {
-      const id = this.currentId
-      if(id !== -1) {
+      if(this.currentId !== -1) {
         this.$confirm('此操作将永久删除, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
+          console.info(this.currentId)
           this.loading = true
-          delectDepartment(id).then(() => {
+          delectDepartment(this.currentId).then(() => {
             this.loading = false
             this.getList()
             this.$notify({
@@ -350,12 +352,36 @@ export default {
     },
     update(form) {
       this.$refs[form].validate(valid => {
+        const id = this.currentId
+        let id1
+        let ids
         if(valid) {
           this.loading = true
-          updateDepartment(this.form).then(() => {
+          if (form.dep_principal == null || form.dep_principal == '') {
+              form.dep_principal = 0
+              id1 = 0
+            }else {
+              id1 = form.dep_principal
+            }
+          if (form.dep_deputy == null || form.dep_deputy == '') {
+              form.dep_deputy = []
+              ids = []
+          }else {
+            ids = dep_deputy
+          }
+          updateDepartment(id, id1 ,ids, this.form).then(() => {
             this.loading = false
             this.dialogFormVisible = false
             this.getList()
+            fetchMessage(this.depName).then( response => {
+              const table = []
+              if(response.data.data.length === 1 || response.data.data.length === undefined) {
+                table.push(response.data.data)
+                this.tableData = table
+              } else {
+                this.tableData = response.data
+              }
+            })
             this.$notify({
               title: '成功',
               message: '创建成功',
@@ -374,13 +400,9 @@ export default {
       if(id !== -1) {
         this.dialogFormVisible = true
         this.dialogStatus = 'update'
-        getMessage(id).then( data => {
-          console.log(data.data)
-          this.form = Object.assign({}, data.data[0])
-          console.log(this.form)
-          // this.treeData = data.data.upLeader
-          // console.log(data.data.upLeader)
-        })
+        console.log(data.data)
+        this.form = Object.assign({}, data.data[0])
+        console.log(this.form)
         this.formEdit = true
       }else {
         this.$notify({

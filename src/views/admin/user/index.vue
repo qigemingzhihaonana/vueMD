@@ -3,10 +3,12 @@
     <div class="file-edit">
       <el-input placeholder="请输入员工工号或姓名" 
       v-model="searchUser" 
-      style="width: 200px;" 
-      @keyup.enter.native="handleFilter"/>
+      ref="searchUser"
+      style="width: 230px;" 
+      @keyup.enter.native="handleFilter">
+      <el-button slot="append" icon="el-icon-search" @click="handleFilter"></el-button>
+      </el-input>
       <el-button-group>
-        <el-button v-waves type="primary" icon="el-icon-search" @click="handleFilter">人员搜索</el-button>
         <el-button v-waves type="primary" icon="plus" @click="handlerAdd">添加人员</el-button>
         <el-button v-waves type="primary" icon="plus" @click="handlerAddMore">批量导入</el-button>
       </el-button-group>
@@ -18,14 +20,13 @@
           :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
           height="390px"
           border
+          fit
           stripe>
             <el-table-column
+            sortable
+            :sort-method="sort"
             label="员工账号"
             prop="user_name"
-            align='center'></el-table-column>
-            <el-table-column
-            label="员工密码"
-            prop="user_password"
             align='center'></el-table-column>
             <el-table-column
             label="员工真实姓名"
@@ -69,11 +70,20 @@
             width="120">
             <template slot-scope="scope">
               <el-button
+                v-if="leavue"
                 v-waves
                 @click.native.prevent="handlerEdit(scope.row)"
                 type="text"
                 size="small">
-                编辑
+                删除
+              </el-button>
+              <el-button
+                v-else
+                v-waves
+                @click.native.prevent="handler(scope.row)"
+                type="text"
+                size="small">
+                启用
               </el-button>
             </template>
           </el-table-column>
@@ -95,7 +105,7 @@
     </div>
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" 
     lock-scroll @close="close">
-      <el-form :model="form" ref="form" :rules="rules">
+      <el-form :model="form" ref="form" :rules="rules" label-position="left">
         <el-form-item label="员工账号:" prop="user_name">
           <el-input v-model="form.user_name" ></el-input>
         </el-form-item>
@@ -111,7 +121,7 @@
         <el-form-item label="是否在职:">
           <el-select v-model="form.user_level" placeholder="请选择">
             <el-option
-              v-for="item in optionLevel"
+              v-for="item in user_level"
               :key="item.value"
               :label="item.label"
               :value="item.value">
@@ -121,7 +131,7 @@
         <el-form-item label="是否公司领导:">
           <el-select v-model="form.is_company_leader" placeholder="请选择">
             <el-option
-              v-for="item in optionLeader"
+              v-for="item in is_company_leader"
               :key="item.value"
               :label="item.label"
               :value="item.value">
@@ -140,7 +150,7 @@
         <el-form-item label="是否有效:">
           <el-select v-model="form.status" placeholder="请选择">
             <el-option
-              v-for="item in optionStatus"
+              v-for="item in status"
               :key="item.value"
               :label="item.label"
               :value="item.value">
@@ -159,7 +169,7 @@
 </template>
 <script>
 import excle from "./components/excle"
-import { fetchUser, addUser, updateUser } from '@/api/admin/user/index'
+import { fetchUser, addUser, updateUser, deleteUser, select } from '@/api/admin/user/index'
 import waves from '@/directive/waves' // 水波纹指令
 export default {
   directives: {
@@ -170,21 +180,22 @@ export default {
   },
   data() {
     return {
-      optionStatus: [{
+      leavue: this.tableData.status,
+      status: [{
           value: '0',
           label: '是'
         }, {
           value: '1',
           label: '否'
         }],
-      optionLeader: [{
+      is_company_leader: [{
           value: '0',
           label: '是'
         }, {
           value: '1',
           label: '否'
         }],
-      optionLevel: [{
+      user_level: [{
           value: '0',
           label: '是'
         }, {
@@ -235,11 +246,28 @@ export default {
     this.fetch()
   },
   methods: {
+    sort() {
+
+    },
     close() {
       this.loading = false
     },
     handleFilter() {
-      this.fetch()
+      this.$refs[searchUser].validate( valid => {
+        if(valid) {
+          select(searchUser).then( data => {
+            this.tableData
+            fgfgjdgnfn
+          })
+        }else {
+          this.$notify({
+              title: '错误',
+              message: '用户名或账户为空',
+              type: 'error',
+              duration: 2000
+            })
+        }
+      })
     },
     handleSizeChange(size) {
         this.pagesize = size;
@@ -256,6 +284,9 @@ export default {
         }, 1.5 * 1000)
       })
     },
+    handler(form) {
+
+    },
     handlerAddMore() {
       this.show = true
     },
@@ -270,34 +301,43 @@ export default {
     },
     handlerEdit(row) {
       this.form = Object.assign({}, row)
-      // this.form.updateTime = new Date()
-      // this.form.updateOper = '123'
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
       this.$nextTick(() => {
         this.$refs['form'].clearValidate()
       })
     },
+    // update(form) {
+    //   this.$refs[form].validate(valid => {
+    //     if(valid) {
+    //       this.loading = true
+    //       updateUser(this.form).then(() => {
+    //         console.info("成功")
+    //         this.loading = false
+    //         this.dialogFormVisible = false
+    //         this.fetch()
+    //         this.$notify({
+    //           title: '成功',
+    //           message: '创建成功',
+    //           type: 'success',
+    //           duration: 2000
+    //         })
+    //       })
+    //     } else {
+    //       this.loading = false
+    //       return false
+    //     }
+    //   })
+    // },
     update(form) {
-      this.$refs[form].validate(valid => {
-        if(valid) {
-          this.loading = true
-          updateUser(this.form).then(() => {
-            console.info("成功")
-            this.loading = false
-            this.dialogFormVisible = false
-            this.fetch()
-            this.$notify({
+      const level = form.user_level
+      deleteUser(level).then(() => {
+        this.$notify({
               title: '成功',
-              message: '创建成功',
+              message: '删除成功',
               type: 'success',
               duration: 2000
             })
-          })
-        } else {
-          this.loading = false
-          return false
-        }
       })
     },
     create(form) {

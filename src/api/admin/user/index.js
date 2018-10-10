@@ -24,14 +24,13 @@ export function fetchUser () {
 }
 
 /**
- * 更新用户
+ * 删除用户
  * @param {*} data
  */
-export function updateUser (data) {
+export function deleteUser (id) {
   return axios({
-    url: '/updateUser',
-    method: 'post',
-    data
+    url: '/deleteUser/' + id,
+    method: 'post'
   })
 }
 /**
@@ -41,6 +40,18 @@ export function updateUser (data) {
 export function up (data) {
   return axios({
     url: '/MangImportUser',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 通过名字或账户查询用户具体信息
+ * @param {*} data
+ */
+export function select (data) {
+  return axios({
+    url: '/selectUserByRealUsername',
     method: 'post',
     data
   })

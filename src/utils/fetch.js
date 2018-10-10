@@ -6,7 +6,7 @@ import { getToken } from '@/utils/auth'
 // create an axios instance
 const service = axios.create({
   baseURL: process.env.BASE_API, // api 的 base_url
-  timeout: 2000 // request timeout
+  timeout: 5000 // request timeout
 })
 
 // request interceptor
@@ -57,7 +57,8 @@ service.interceptors.response.use(
           })
         })
       }
-      return Promise.reject(new Error('error'))
+      const error = new Error('error')
+      return Promise.reject(error)
     } else {
       return response
     }

@@ -24,6 +24,7 @@
           <el-row>
             <el-card shadow="always">
               <el-table
+              fit
               :data="tableModule"
               style="width: 100%"
               border>
@@ -76,6 +77,7 @@
           <el-row>
             <el-card shadow="always">
               <el-table
+              fit
               :data="tableModuleRole"
               style="width: 100%"
               border>
@@ -98,25 +100,6 @@
                 label="查询范围"
                 prop="role">
                 </el-table-column>
-                <!-- <el-table-column
-                fixed="right"
-                label="操作"
-                width="160">
-                <template slot-scope="scope">
-                  <el-button
-                    @click.native.prevent="handlerEditRole(scope.row)"
-                    type="text"
-                    size="small">
-                    编辑
-                  </el-button>
-                  <el-button
-                    @click.native.prevent="handleDeleteRole(scope.row)"
-                    type="text"
-                    size="small">
-                    删除
-                  </el-button>
-                </template>
-              </el-table-column> -->
               </el-table>
             </el-card>
           </el-row>
@@ -155,7 +138,7 @@
         <el-form-item label="默认查询范围:">
           <el-select v-model="form.default_query_scope" placeholder="请选择">
             <el-option
-              v-for="item in options"
+              v-for="item in default_query_scope"
               :key="item.value"
               :label="item.label"
               :value="item.value">
@@ -210,7 +193,7 @@ export default {
       formData: [],
       model: "transfer",
       toData:[],
-      options: [{
+      default_query_scope: [{
           value: '全省(全区)',
           label: '全省(全区)'
         }, {
@@ -295,7 +278,7 @@ export default {
     fetch() {
       fetchRoleModule().then((data) => {
         console.log(data.data)
-        this.treeData =  data.data
+        this.treeData =  data.data.data
       })
     },
     restform() {
@@ -345,8 +328,9 @@ export default {
           this.loading = true
           delModule(row.code).then(() => {
             this.loading = false
-            const id = this.currentId
-            this.fetchModule(id)
+            const ids = []
+            ids.push(this.currentId)
+            this.fetchModule(ids)
             this.$notify({
               title: '成功',
               message: '删除成功',
@@ -422,7 +406,6 @@ export default {
         this.showTable = true
         this.tableModule = data.data
         this.moduleId = this.tableModule.code
-        
         this.currentId = data.id;
       });
       // this.moduleId = this.tableModule.code
