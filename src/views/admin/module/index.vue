@@ -30,11 +30,11 @@
               border>
                 <el-table-column
                 label="模块代码"
-                prop="code"
+                prop="module_code"
                 align="center"></el-table-column>
                 <el-table-column
                 label="模块名称"
-                prop="name"
+                prop="module_name"
                 align="center">
                 </el-table-column>
                 <el-table-column
@@ -44,12 +44,12 @@
                 </el-table-column>
                 <el-table-column
                 label="默认查询范围"
-                prop="area"
+                prop="default_query_scope"
                 align="center">
                 </el-table-column>
                 <el-table-column
                 label="默认权限类型"
-                prop="role"
+                prop="default_auth_type"
                 align="center">
                 </el-table-column>
                 <el-table-column
@@ -318,7 +318,7 @@ export default {
       }
       this.dialogFormVisible = true
       this.$nextTick(() => {
-      this.$refs['form'].clearValidate()
+        this.$refs['form'].clearValidate()
     })
     },
     /**删除 */
@@ -347,6 +347,7 @@ export default {
     handleClose() {
       this.loading = false
       this.dialogFormVisible = false
+      this.restform()
     },
     // 监听穿梭框组件添加
     add(fromData,toData,obj){
@@ -408,8 +409,9 @@ export default {
     /**获取模块详细信息 */
     getNodeData(data) {
       fetchModule(data.id).then(response => {
-        console.info(data)
+        console.info(response)
         const table = []
+        console.log(response.data.data.length === undefined)
         if(response.data.data.length === 1 || response.data.data.length === undefined) {
           table.push(response.data.data)
           this.tableModule = table

@@ -1,12 +1,13 @@
 <template>
   <el-dialog title="人员分配" 
   :visible="dialogFormVisibleAdd"
+  :before-close="close"
   @close="$emit('update:show', false)"
   height="100%"
   width="100%"
   class="user_set">
   <el-row>
-    <el- class="left" :span="24" style='margin-top:15px;'>
+    <el-col class="left" :span="12" style='margin-top:15px;'>
       <el-card shadow="always">
         <div slot="header" class="clearfix">
           <span>角色成员</span>
@@ -45,7 +46,8 @@
           <el-button @click="toggleSelection">取消</el-button>
         </div>
       </el-card>
-    <el-col class="right" :span="24" style='margin-top:15px;'>
+    </el-col>
+    <el-col class="right" :span="12" style='margin-top:15px;'>
       <el-card shadow="always">
         <div slot="header" class="clearfix">
           <span>待分配成员</span>
@@ -151,15 +153,17 @@ export default {
     /**当table选项改变时触发 */
     handleLeftSelectionChange(val) {
       this.multipleLeftSelection = val;
-      this.multipleLeftSelection.map((item)=> {
-      this.idsLeft.push(item.key)
+      this.multipleLeftSelection.map((val)=> {
+      console.log(val)
+      this.idsLeft.push(val)
       })
     },
     /**当table选项改变时触发 */
     handleRightSelectionChange(val) {
       this.multipleRightSelection = val;
-      this.multipleRightSelection.map((item)=> {
-      this.idsRight.push(item.key)
+      console.log(val)
+      this.multipleRightSelection.map((val)=> {
+      this.idsRight.push(val)
       })
     },
     handleClose() {
@@ -170,6 +174,9 @@ export default {
     toggleSelection() {
       this.$refs.multipleTable.clearSelection();
     },
+    close() {
+      this.$refs.multipleTable.clearSelection();
+    }
   }
 }
 </script>

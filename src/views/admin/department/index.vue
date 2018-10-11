@@ -77,7 +77,7 @@
         </el-card>
       </el-col>
     </el-row>
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="60%">
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="60%" :before-close="handleClose">
       <el-form label-position=left :model="form" :rules="rules" ref="form" >
         <el-form-item label="部门名称:" prop="dep_name">
     			<el-input v-model="form.dep_name"></el-input>
@@ -276,8 +276,7 @@ export default {
         form.dep_principal = 0-0
       }
       if (form.dep_deputy !== null || form.dep_deputy !== '') {
-        const deputy = []
-        form.dep_deputy = deputy
+        form.dep_deputy = new Array()
       }
       insertDepartment(form).then( () => {
         this.getList()
@@ -320,6 +319,11 @@ export default {
       this.dialogStatus = 'create'
       this.restForm()
       this.formEdit = false
+    },
+    /**弹窗关闭时 */
+    handleClose() {
+      this.loading = false
+      this.dialogFormVisible = false
     },
     handleDelete () {
       if(this.currentId !== -1) {
@@ -398,12 +402,15 @@ export default {
     handlerEdit () {
       const id = this.currentId
       if(id !== -1) {
+        this.formEdit = true
         this.dialogFormVisible = true
         this.dialogStatus = 'update'
         console.log(this.tableData)
-        this.form = Object.assign({}, this.tableData)
+        this.form = Object.assign({}, this.tableData[0])
+        this.$nextTick(() => {
+          this.$refs['form'].clearValidate()
+        })
         console.log(this.form)
-        this.formEdit = true
       }else {
         this.$notify({
               title: '错误',

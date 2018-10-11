@@ -70,7 +70,7 @@
             width="120">
             <template slot-scope="scope">
               <el-button
-                v-if="leavue"
+                v-if="scope.row.status"
                 v-waves
                 @click.native.prevent="handlerEdit(scope.row)"
                 type="text"
@@ -180,7 +180,6 @@ export default {
   },
   data() {
     return {
-      leavue: this.tableData.status,
       status: [{
           value: '0',
           label: '是'
