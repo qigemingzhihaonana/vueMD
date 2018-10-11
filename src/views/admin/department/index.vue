@@ -307,7 +307,7 @@ export default {
           table.push(response.data.data)
           this.tableData = table
         } else {
-          this.tableData = response.data
+          this.tableData = response.data.data
         }
         console.log(this.tableData)
       });
@@ -400,8 +400,8 @@ export default {
       if(id !== -1) {
         this.dialogFormVisible = true
         this.dialogStatus = 'update'
-        console.log(data.data)
-        this.form = Object.assign({}, data.data[0])
+        console.log(this.tableData)
+        this.form = Object.assign({}, this.tableData)
         console.log(this.form)
         this.formEdit = true
       }else {

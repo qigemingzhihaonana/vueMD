@@ -278,7 +278,7 @@ export default {
             table.push(response.data.data)
             this.tableData = table
           } else {
-            this.tableData = response.data
+            this.tableData = response.data.data
           }
           console.log(this.tableData)
         });

@@ -87,11 +87,11 @@ export function addModule (data) {
  * 获取模块详细信息
  * @param {*} data
  */
-export function fetchModule (data) {
+export function fetchModule (id) {
   return axios({
-    url: '/fetchData',
-    method: 'post',
-    data
+    url: '/selectModuleInformation/' + id,
+    method: 'get'
+
   })
 }
 
@@ -110,10 +110,9 @@ export function getMenu (data) {
  * 删除模块
  * @param {*} data
  */
-export function delModule (data) {
+export function delModule (id) {
   return axios({
-    url: '/delModule',
-    method: 'post',
-    data
+    url: '/deleteModule/' + id,
+    method: 'get'
   })
 }

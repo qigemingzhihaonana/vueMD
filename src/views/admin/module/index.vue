@@ -109,10 +109,10 @@
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" 
     :before-close="handleClose">
       <el-form :model="form" ref="form" :rules="rules">
-        <el-form-item label="模块名称:" prop="name">
+        <el-form-item label="模块名称:" prop="module_name">
           <el-input v-model="form.module_name" ></el-input>
         </el-form-item>
-        <el-form-item label="模块代码:" prop="code">
+        <el-form-item label="模块代码:" prop="module_code">
           <el-input v-model="form.module_code" ></el-input>
         </el-form-item>
         <el-form-item label="对应控制菜单:">
@@ -294,10 +294,17 @@ export default {
     ModuleAdd() {
       this.dialogFormVisible = true
       this.restform()
-      getMenu(this.moduleId).then( data => {
-        this.fromData = data.data.fromData
-      })
       this.dialogStatus = 'create'
+    },
+    /**
+     * 查看模块的控制菜单
+     */
+    getmenu() {
+      getMenu(this.moduleId).then( data => {
+          console.log(data.data)
+          this.fromData = data.data.fromData
+          this.toData = data.data.toData
+        })
     },
     /**编辑 */
     handlerEdit(row) {
@@ -309,10 +316,6 @@ export default {
       } else {
         this.form.sysRole = '1'
       }
-      getMenu(this.moduleId).then( (data) => {
-        this.fromData = data.data.fromData
-        this.toData = data.data.toData
-      })
       this.dialogFormVisible = true
       this.$nextTick(() => {
       this.$refs['form'].clearValidate()
@@ -350,7 +353,8 @@ export default {
       // 树形穿梭框模式transfer时，返回参数为左侧树移动后数据、右侧树移动后数据、移动的{keys,nodes,halfKeys,halfNodes}对象
       // 通讯录模式addressList时，返回参数为右侧收件人列表、右侧抄送人列表、右侧密送人列表
       console.log('obj.nodes',obj.nodes);
-      addMenuModule(obj).then((data) => {
+      addMenuModule({obj}).then((data) => {
+        console.info(data)
         if (data.code === 200) {
           getMenu(this.moduleId).then((data) => {
             this.toData = data.data[1]
@@ -378,7 +382,8 @@ export default {
       // 树形穿梭框模式transfer时，返回参数为左侧树移动后数据、右侧树移动后数据、移动的{keys,nodes,halfKeys,halfNodes}对象
       // 通讯录模式addressList时，返回参数为右侧收件人列表、右侧抄送人列表、右侧密送人列表
       console.log('obj.nodes',obj.nodes);
-      delMenuModule(obj).then((data) => {
+      delMenuModule({obj}).then((data) => {
+        console.info(data)
         if(data.code === 200) {
           getMenu(this.moduleId).then((data) => {
             this.toData = data.data[1]
@@ -402,15 +407,20 @@ export default {
     },
     /**获取模块详细信息 */
     getNodeData(data) {
-      fetchModule(data.id).then(data => {
+      fetchModule(data.id).then(response => {
+        console.info(data)
+        const table = []
+        if(response.data.data.length === 1 || response.data.data.length === undefined) {
+          table.push(response.data.data)
+          this.tableModule = table
+        } else {
+          this.tableModule = response.data.data
+        }
+        console.log(this.tableData)
         this.showTable = true
-        this.tableModule = data.data
-        this.moduleId = this.tableModule.code
+        this.moduleId = this.tableModule.id
         this.currentId = data.id;
       });
-      // this.moduleId = this.tableModule.code
-      // console.log(this.tableModule)
-      // this.currentId = data.id;
     },
     /**取消 */
     cancel(form) {
