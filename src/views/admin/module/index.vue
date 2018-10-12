@@ -37,16 +37,41 @@
                 prop="module_name"
                 align="center">
                 </el-table-column>
-                <el-table-column
+                <!-- <el-table-column
                 label="对应控制菜单"
                 prop="menu"
-                align="center">
-                </el-table-column>
+                align="center"> 
+                </el-table-column> -->
                 <el-table-column
                 label="默认查询范围"
                 prop="default_query_scope"
                 align="center">
                 </el-table-column>
+                  <template slot-scope="scope">
+                    <span v-if="scope.row.default_query_scope === '0'"> 
+                      全省(全区)
+                    </span>
+                  </template>
+                  <template slot-scope="scope">
+                    <span v-if="scope.row.default_query_scope === '1'"> 
+                      本公司
+                    </span>
+                  </template>
+                  <template slot-scope="scope">
+                    <span v-if="scope.row.default_query_scope === '2'"> 
+                      本部门(一级部门)
+                    </span>
+                  </template>
+                  <template slot-scope="scope">
+                    <span v-if="scope.row.default_query_scope === '3'"> 
+                      本人相关
+                    </span>
+                  </template>
+                  <template slot-scope="scope">
+                    <span v-if="scope.row.default_query_scope === '4'"> 
+                      指定范围的
+                    </span>
+                  </template>
                 <el-table-column
                 label="默认权限类型"
                 prop="default_auth_type"
@@ -146,8 +171,13 @@
           </el-select>
         </el-form-item>
         <el-form-item label="默认权限类型:">
-          <el-radio v-model="form.default_auth_type" label="0">管理</el-radio>
-          <el-radio v-model="form.default_auth_type" label="1">查询</el-radio>
+          <el-select v-model="form.default_auth_type" placeholder="请选择">
+            <el-option
+              v-for="item in default_auth_type"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -193,20 +223,27 @@ export default {
       formData: [],
       model: "transfer",
       toData:[],
+      default_auth_type: [{
+        value: '0',
+        label: '查询'
+      },{
+        value: '1',
+        label: '管理'
+      }],
       default_query_scope: [{
-          value: '全省(全区)',
+          value: '0',
           label: '全省(全区)'
         }, {
-          value: '本公司',
+          value: '1',
           label: '本公司'
         }, {
-          value: '本部门(一级部门)',
+          value: '2',
           label: '本部门(一级部门)'
         }, {
-          value: '本人相关',
+          value: '3',
           label: '本人相关'
         }, {
-          value: '指定范围的',
+          value: '4',
           label: '指定范围的'
         }],
       tableData: [],
@@ -244,7 +281,7 @@ export default {
           updateModule(this.form).then(() => {
             this.loading = false
             this.dialogFormVisible = false
-            this.getList()
+            this.fetch()
             this.$notify({
               title: '成功',
               message: '创建成功',
@@ -283,11 +320,11 @@ export default {
     },
     restform() {
       this.from = {
-        name: undefined,
-        code: undefined,
+        module_code: undefined,
+        module_name: undefined,
         menu: undefined,
-        sysArea: undefined,
-        sysRole: '0'
+        default_query_scope: undefined,
+        default_auth_type: '0'
       }
     },
     /**添加模块 */
@@ -309,13 +346,7 @@ export default {
     /**编辑 */
     handlerEdit(row) {
       this.dialogStatus = 'update'
-      const id = row.role
-      if(id === "管理") {
-        this.form = Object.assign({}, row)
-        this.form.sysRole = '0'
-      } else {
-        this.form.sysRole = '1'
-      }
+      this.form = Object.assign({}, row)
       this.dialogFormVisible = true
       this.$nextTick(() => {
         this.$refs['form'].clearValidate()
@@ -329,7 +360,8 @@ export default {
           type: 'warning'
         }).then(() => {
           this.loading = true
-          delModule(row.code).then(() => {
+          const id = parseInt(row.code)
+          delModule(id).then(() => {
             this.loading = false
             const ids = []
             ids.push(this.currentId)
@@ -437,13 +469,13 @@ export default {
           addModule(this.form).then(() => {
             this.loading = false
             this.dialogFormVisible = false;
-            this.getList()
             this.$notify({
               title: '成功',
               message: '创建成功',
               type: 'success',
               duration: 2000
             })
+            this.fetch()
           })
         } else {
           this.loading = false

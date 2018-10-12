@@ -47,7 +47,18 @@
             <el-table-column
             label="所属部门"
             prop="dep_id"
-            align='center'></el-table-column>
+            align='center'>
+              <template>
+                <span v-if="scope.row.dep_id === 0">
+                  
+                </span>
+              </template>
+              <template>
+                <span v-if="scope.row.dep_id === 1">
+                  
+                </span>
+              </template>
+            </el-table-column>
             <el-table-column
             label="是否公司领导"
             prop="is_company_leader"

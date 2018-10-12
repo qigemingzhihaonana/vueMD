@@ -33,10 +33,10 @@
             border
             style="width: 100%"
             row-click="handleClick(scope.row)">
-            <el-table-column
+            <!-- <el-table-column
             type="selection"
             align="center">
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column
               fixed
               prop="dep_name"
@@ -119,7 +119,7 @@
       <el-form-item label="是否显示:">
         <el-select v-model="form.is_display" >
           <el-option
-          v-for="item in optionx"
+          v-for="item in is_display"
           :key="item.key"
           :label="item.label"
           :value="item.value">
@@ -129,7 +129,7 @@
       <el-form-item label="部门级别:">
         <el-select v-model="form.dep_type" prop="dep_type" >
           <el-option
-          v-for="item in option"
+          v-for="item in dep_type"
           :key="item.key"
           :label="item.label"
           :value="item.value">
@@ -151,7 +151,7 @@
         <el-form-item label="正副职同时传阅">
           <el-select v-model="form.is_same_look" >
             <el-option
-            v-for="item in optionx"
+            v-for="item in is_same_look"
             :key="item.key"
             :label="item.label"
             :value="item.value">
@@ -181,7 +181,17 @@ export default {
         id: 'id'
       },
       loading: false,
-      optionx: [
+      is_same_look: [
+        {
+          label: '是',
+          value: '0'
+        },
+        {
+          label: '是',
+          value: '0'
+        }
+      ],
+      is_display: [
         {
           label: '是',
           value: '0'
@@ -191,14 +201,14 @@ export default {
           value: '1'
         }
       ],
-      option: [
+      dep_type: [
         {
           label: '1',
-          value: '1'
+          value: '0'
         },
         {
           label: '2',
-          value: '2'
+          value: '1'
         }
       ],
       textMap: {
@@ -373,7 +383,7 @@ export default {
           }else {
             ids = dep_deputy
           }
-          updateDepartment(id, id1 ,ids, this.form).then(() => {
+          updataDepartment(id, id1 ,ids, this.form).then(() => {
             this.loading = false
             this.dialogFormVisible = false
             this.getList()

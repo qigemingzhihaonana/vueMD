@@ -4,7 +4,7 @@
   width="70%"
   @close="close">
     <el-row class="role_menu">
-      <el-col class="left" :span="24" style='margin-top:15px;'>
+      <el-col class="left" :span="12" style='margin-top:15px;'>
         <el-card shadow="always">
           <div slot="header" class="clearfix">
             <span>已分配角色信息</span>
@@ -40,8 +40,7 @@
           </div>
         </el-card>
       </el-col>
-    </el-row>
-      <el-row class="right" :span="24" style='margin-top:15px;'>
+      <el-col class="right" :span="12" style='margin-top:15px;'>
         <el-card shadow="always">
           <div slot="header" class="clearfix">
             <span>未分配角色信息</span>
@@ -79,7 +78,8 @@
           <el-button @click="toggleSelection">取消</el-button>
         </div>
         </el-card>
-      </el-row>
+      </el-col>
+    </el-row>
   </el-dialog>
 </template>
 <script>
@@ -147,15 +147,15 @@ export default {
     /**当table选项改变时触发 */
     handleLeftSelectionChange(val) {
       this.multipleLeftSelection = val;
-      this.multipleLeftSelection.map((item)=> {
-      idsLeft.push(item.key)
+      this.multipleLeftSelection.map((val)=> {
+      this.idsLeft.push(val.key)
       })
     },
     /**当table选项改变时触发 */
     handleRightSelectionChange(val) {
       this.multipleRightSelection = val;
-      this.multipleRightSelection.map((item)=> {
-      idsRight.push(item.key)
+      this.multipleRightSelection.map((val)=> {
+      this.idsRight.push(val.key)
       })
     },
     toggleSelection() {

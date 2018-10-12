@@ -46,7 +46,13 @@
             prop="create_oper"></el-table-column>
             <el-table-column
             label="菜单图标"
-            prop="menu_icon"></el-table-column>
+            prop="menu_icon">
+            <template slot-scope="scope">
+              <span>
+                <svg-icon :icon-class="scope.row.menu_icon.icon" />
+              </span>
+            </template>
+            </el-table-column>
             <el-table-column
             label="更新人员"
             prop="update_oper"></el-table-column>
@@ -55,10 +61,12 @@
             prop="update_time"></el-table-column>
             <el-table-column
             label="是否显示"
-            prop="is_display"></el-table-column>
-            <el-table-column
-            label="上级菜单"
-            prop="menu_parent_id"></el-table-column>
+            prop="is_display">
+              <template slot-scope="scope">
+                <span v-if="scope.row.is_display === '0'">是</span>
+                <span v-if="scope.row.is_display === '1'">否</span>
+              </template>
+            </el-table-column>
             <el-table-column
             fixed="right"
             label="操作"
@@ -203,8 +211,11 @@ export default {
           if(this.currentId === -1) {
             let i = 0
             this.form.menu_parent_id = i
+          }else {
+            this.form.menu_parent_id = this.currentId
           }
           const SysMenu = this.form
+          console.log(SysMenu)
           addMenu(SysMenu).then( response => {
             if(response.data.code === 200) {
               this.loading = false

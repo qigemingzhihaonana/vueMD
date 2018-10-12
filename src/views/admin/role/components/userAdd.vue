@@ -1,7 +1,6 @@
 <template>
   <el-dialog title="人员分配" 
   :visible="dialogFormVisibleAdd"
-  :before-close="close"
   @close="$emit('update:show', false)"
   height="100%"
   width="100%"
@@ -25,15 +24,15 @@
             width="55">
           </el-table-column>
           <el-table-column
-          label="用户ID"
+          label="员工ID"
           prop="user_name"
           align="center"></el-table-column>
           <el-table-column
-          label="用户名称"
+          label="员工名称"
           prop="real_name"
           align="center"></el-table-column>
           <el-table-column
-          label="部门"
+          label="所属部门"
           prop="dep_name"
           align="center"></el-table-column>
           <el-table-column
@@ -123,7 +122,10 @@ export default {
       this.loading = true
       addRoleUser(this.roleid, this.idsRight).then( () => {
         this.loading = false
-        this.fetchUser()
+        console.log(this.tableData)
+        this.tableData.push(this.idsRight)
+        this.tableDataAdd.pop(this.idsRight)
+        console.log(this.idsRight)
         this.$notify({
           title: '成功',
           message: '提交成功',
@@ -137,12 +139,14 @@ export default {
       this.loading = true
       removeRoleUser(this.roleid, this.idsLeft).then( () => {
         this.loading = false
-        this.fetchUser()
-        this.$notify({
-          title: '成功',
-          message: '提交成功',
-          type: 'success',
-          duration: 2000
+        this.idsRight.push(this.idsLeft)
+        this.fetchUser(this.idsRight).then( () => {
+          this.$notify({
+            title: '成功',
+            message: '跟新成功',
+            type: 'success',
+            duration: 2000
+          })
         })
       })
     },
@@ -174,9 +178,6 @@ export default {
     toggleSelection() {
       this.$refs.multipleTable.clearSelection();
     },
-    close() {
-      this.$refs.multipleTable.clearSelection();
-    }
   }
 }
 </script>
