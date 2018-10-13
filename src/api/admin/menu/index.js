@@ -31,7 +31,7 @@ export function addMenu (data) {
 export function delMenu (data) {
   return axios({
     url: '/deleteMenu2/' + data,
-    method: 'post'
+    method: 'get'
   })
 }
 

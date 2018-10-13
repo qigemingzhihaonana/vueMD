@@ -94,7 +94,7 @@
       </el-col>
     </el-row>
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible"
-    :before-close="handleClose">
+    :before-close="handleClose" >
       <el-form :model="form" ref="form" inline :rules="rules" style="height: 50%">
         <el-form-item label="角色ID:" prop="role_code">
           <el-input v-model="form.role_code" ></el-input>
@@ -114,18 +114,6 @@
               :value="item.value">
             </el-option>
           </el-select>
-        </el-form-item>
-        <el-form-item label="创建时间:" v-show="false" >
-          <el-input v-model="form.createTime" ></el-input>
-        </el-form-item>
-        <el-form-item label="最后更新时间:" v-show="false" >
-          <el-input v-model="form.updateTime" ></el-input>
-        </el-form-item>
-        <el-form-item label="创建人员:" v-show="false">
-          <el-input v-model="form.createOper" ></el-input>
-        </el-form-item>
-        <el-form-item label="最后更新人员:" v-show="false">
-          <el-input v-model="form.updateOper" ></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -153,11 +141,11 @@ export default {
   },
   data () {
     return {
-      optionBuild: [{
-          value: '0',
+      is_builtin: [{
+          value: 0,
           label: '是'
         }, {
-          value: '1',
+          value: 1,
           label: '否'
         }],
       tableDataRole: [],
@@ -172,7 +160,7 @@ export default {
         role_code: '',
         role_name: '',
         role_desc: '',
-        is_builtin: '1',
+        is_builtin: 1,
         createTime: '',
         createOper: '',
         updateTime: '',
@@ -210,8 +198,8 @@ export default {
       const id = row.id
       fetchUser(id).then(data => {
         console.log(data.data)
-        this.tableDataAddRole = data.data.data
-        console.log(this.tableDataRole)
+        this.tableDataAddRole = data.data.data.selectUser
+        this.tableDataRole = data.data.data.noselectUser
       })
     },
     getTableList() {

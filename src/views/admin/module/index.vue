@@ -46,36 +46,32 @@
                 label="默认查询范围"
                 prop="default_query_scope"
                 align="center">
-                </el-table-column>
                   <template slot-scope="scope">
                     <span v-if="scope.row.default_query_scope === '0'"> 
                       全省(全区)
                     </span>
-                  </template>
-                  <template slot-scope="scope">
                     <span v-if="scope.row.default_query_scope === '1'"> 
                       本公司
                     </span>
-                  </template>
-                  <template slot-scope="scope">
                     <span v-if="scope.row.default_query_scope === '2'"> 
                       本部门(一级部门)
                     </span>
-                  </template>
-                  <template slot-scope="scope">
                     <span v-if="scope.row.default_query_scope === '3'"> 
                       本人相关
                     </span>
-                  </template>
-                  <template slot-scope="scope">
                     <span v-if="scope.row.default_query_scope === '4'"> 
                       指定范围的
                     </span>
                   </template>
+                </el-table-column>
                 <el-table-column
                 label="默认权限类型"
                 prop="default_auth_type"
                 align="center">
+                <template slot-scope="scope">
+                  <span v-if="scope.row.default_auth_type === 0">管理</span>
+                  <span v-if="scope.row.default_auth_type === 1">查询</span>
+                </template>
                 </el-table-column>
                 <el-table-column
                 fixed="right"
@@ -129,10 +125,10 @@
             </el-card>
           </el-row>
         </el-col>
-        </el-row>
+      </el-row>
     </div>
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" 
-    :before-close="handleClose">
+    :before-close="handleClose" >
       <el-form :model="form" ref="form" :rules="rules">
         <el-form-item label="模块名称:" prop="module_name">
           <el-input v-model="form.module_name" ></el-input>
@@ -140,7 +136,7 @@
         <el-form-item label="模块代码:" prop="module_code">
           <el-input v-model="form.module_code" ></el-input>
         </el-form-item>
-        <el-form-item label="对应控制菜单:">
+        <el-form-item v-show="this.dialogStatus !== 'create'" label="对应控制菜单:">
           <el-popover
           placement="right"
           width="800px"
@@ -148,8 +144,10 @@
           trigger="click">
             <tree-transfer 
             :title="title"
+            :defaultProps= "{ label: 'name'}"
             :from_data='fromData'
             :to_data='toData'
+            :pid="menu_parent_id"
             width="800px"
             height="400px"
             @addBtn='add'
@@ -157,7 +155,7 @@
             :model='modeMenu'
             filter openAll>
             </tree-transfer>
-          <el-button slot="reference">查看</el-button>
+          <el-button slot="reference" @click="getmenu">查看</el-button>
         </el-popover>
         </el-form-item>
         <el-form-item label="默认查询范围:">
@@ -178,6 +176,7 @@
               :label="item.label"
               :value="item.value">
             </el-option>
+          </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -198,19 +197,19 @@
 import  Role from './components/role'
 import{ fetchRoleModule, delRoleModule, addRoleModule, addUserModule,
  delMenuModule, addModule, fetchModule, delModule, fetchUserMessage, ModuleRole,
- getMenu, addMenuModule} from '@/api/admin/module/index'
+ getMenu, addMenuModule, updateModule, fetchRole} from '@/api/admin/module/index'
 import treeTransfer from 'el-tree-transfer'
 export default {
   data() {
     return {
+      menu_parent_id: 'menu_parent_id',
       props: {
         label: 'module_name',
         id: 'id'
       },
       showTable: false,
-      modeMenu: [],
+      modeMenu: "transfer",
       loading: false,
-      fromData: [],
       treeData: [],
       show: false,
       moduleId: undefined,
@@ -218,16 +217,20 @@ export default {
       tableDataAddRole: [],
       title: ["待分配", "已分配"],
       tableModuleRole: [],
-      tableModule: [],
+      tableModule: [
+        {
+          module_code: 'fff'
+        }
+      ],
       currentId: -1,
       formData: [],
       model: "transfer",
       toData:[],
       default_auth_type: [{
-        value: '0',
+        value: 0,
         label: '查询'
       },{
-        value: '1',
+        value: 1,
         label: '管理'
       }],
       default_query_scope: [{
@@ -256,9 +259,8 @@ export default {
       form: {
         module_name: undefined,
         module_code: undefined,
-        menu: undefined,
         default_query_scope: undefined,
-        default_auth_type: '0'
+        default_auth_type: undefined
       },
       rules: {
           module_code: [
@@ -275,7 +277,7 @@ export default {
   },
   methods: {
     update(form) {
-      this.$refs[form].validate(valid => {
+      this.$refs['form'].validate(valid => {
         if(valid) {
           this.loading = true
           updateModule(this.form).then(() => {
@@ -299,9 +301,11 @@ export default {
     RoleModuleAdd() {
       if (this.currentId !== -1) {
         this.show = true
-        ModuleRole(this.moduleId).then( (data) => {
-          this.tableModuleRole = data.data[0]
-          this.tableModule = data.data[1]
+        this.moduleId = this.currentId
+        fetchRole(this.moduleId).then( (data) => {
+          console.log(data)
+          this.tableDataRole = data.data.data.noselect
+          this.tableDataAddRole = data.data.data.select
         })
       } else {
         this.$notify({
@@ -318,50 +322,51 @@ export default {
         this.treeData =  data.data.data
       })
     },
-    restform() {
-      this.from = {
+    restForm() {
+      this.form = {
         module_code: undefined,
         module_name: undefined,
-        menu: undefined,
         default_query_scope: undefined,
-        default_auth_type: '0'
+        default_auth_type: 0
       }
     },
     /**添加模块 */
     ModuleAdd() {
-      this.dialogFormVisible = true
-      this.restform()
+      //this.$refs['form'].resetFields()
       this.dialogStatus = 'create'
+      this.dialogFormVisible = true
+      this.restForm()
+      console.log(this.form)
     },
     /**
      * 查看模块的控制菜单
      */
     getmenu() {
-      getMenu(this.moduleId).then( data => {
-          console.log(data.data)
-          this.fromData = data.data.fromData
-          this.toData = data.data.toData
+      getMenu(this.currentId).then( response => {
+          this.fromData = response.data.data.noselect
+          this.toData = response.data.data.select
         })
     },
     /**编辑 */
     handlerEdit(row) {
-      this.dialogStatus = 'update'
       this.form = Object.assign({}, row)
+      this.dialogStatus = 'update'
       this.dialogFormVisible = true
+      console.log(this.form)
       this.$nextTick(() => {
-        this.$refs['form'].clearValidate()
-    })
-    },
+          this.$refs['form'].clearValidate()
+        })
+      },
     /**删除 */
     handleDelete(row) {
+      console.log(row.id)
       this.$confirm('此操作将永久删除, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
           this.loading = true
-          const id = parseInt(row.code)
-          delModule(id).then(() => {
+          delModule(row.id).then(() => {
             this.loading = false
             const ids = []
             ids.push(this.currentId)
@@ -379,67 +384,37 @@ export default {
     handleClose() {
       this.loading = false
       this.dialogFormVisible = false
-      this.restform()
     },
     // 监听穿梭框组件添加
     add(fromData,toData,obj){
       // 树形穿梭框模式transfer时，返回参数为左侧树移动后数据、右侧树移动后数据、移动的{keys,nodes,halfKeys,halfNodes}对象
       // 通讯录模式addressList时，返回参数为右侧收件人列表、右侧抄送人列表、右侧密送人列表
-      console.log('obj.nodes',obj.nodes);
-      addMenuModule({obj}).then((data) => {
-        console.info(data)
-        if (data.code === 200) {
-          getMenu(this.moduleId).then((data) => {
-            this.toData = data.data[1]
-            this.formData = data.data[0]
-            this.$notify({
-              title: '成功',
-              message: '更新成功',
-              type: 'success',
-              duration: 2000
-            })
-          })
-        }else {
-          this.$notify({
-              title: '失败',
-              message: '更新失败，请稍后再试',
-              type: 'error',
-              duration: 2000
-            })
-        }
+      console.log('fromData',fromData)
+      console.log('toData',toData)
+      console.log('obj',obj)
+      addMenuModule(obj.nodes).then(() => {
+        this.getmenu()
       })
-      
     },
       // 监听穿梭框组件移除
     remove(fromData,toData,obj){
+      console.log('fromData',fromData)
+      console.log('toData',toData)
+      console.log('obj',obj)
       // 树形穿梭框模式transfer时，返回参数为左侧树移动后数据、右侧树移动后数据、移动的{keys,nodes,halfKeys,halfNodes}对象
       // 通讯录模式addressList时，返回参数为右侧收件人列表、右侧抄送人列表、右侧密送人列表
-      console.log('obj.nodes',obj.nodes);
-      delMenuModule({obj}).then((data) => {
+      delMenuModule(obj.nodes).then( () => {
         console.info(data)
-        if(data.code === 200) {
-          getMenu(this.moduleId).then((data) => {
-            this.toData = data.data[1]
-            this.formData = data.data[0]
-            this.$notify({
-              title: '成功',
-              message: '更新成功',
-              type: 'error',
-              duration: 2000
-            })
-          })
-        }else {
-          this.$notify({
-              title: '失败',
-              message: '更新失败，请稍后再试',
-              type: 'success',
-              duration: 2000
-            })
-        }
+        this.getmenu()
       })
     },
     /**获取模块详细信息 */
     getNodeData(data) {
+      console.log(data)
+      ModuleRole(data.id).then(data => {
+        console.log(data.data)
+        this.tableModuleRole = data.data.data
+      })
       fetchModule(data.id).then(response => {
         console.info(response)
         const table = []
@@ -463,7 +438,7 @@ export default {
     },
     /**创建新的模块 */
     create(form) {
-      this.$refs[form].validate(valid => {
+      this.$refs['form'].validate(valid => {
         if(valid) {
           this.loading = true
           addModule(this.form).then(() => {

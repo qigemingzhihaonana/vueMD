@@ -31,7 +31,7 @@ export function addRole (data) {
 export function delRole (data) {
   return axios({
     url: '/deleteRole/' + data,
-    method: 'post'
+    method: 'get'
   })
 }
 /**

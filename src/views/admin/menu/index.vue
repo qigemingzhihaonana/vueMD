@@ -48,9 +48,10 @@
             label="菜单图标"
             prop="menu_icon">
             <template slot-scope="scope">
-              <span>
+              <span v-if="scope.row.menu_icon !== null">
                 <svg-icon :icon-class="scope.row.menu_icon.icon" />
               </span>
+              <span v-if="scope.row.menu_icon === null">未配置菜单图标</span>
             </template>
             </el-table-column>
             <el-table-column
@@ -63,8 +64,8 @@
             label="是否显示"
             prop="is_display">
               <template slot-scope="scope">
-                <span v-if="scope.row.is_display === '0'">是</span>
-                <span v-if="scope.row.is_display === '1'">否</span>
+                <span v-if="scope.row.is_display === 0">是</span>
+                <span v-if="scope.row.is_display === 1">否</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -91,7 +92,7 @@
       </el-col>
     </el-row>
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" 
-    :before-close="handleClose">
+    :before-close="handleClose" >
       <el-form label-position=left :model="form" ref="form" :rules="rules">
         <el-form-item label="菜单名称:" prop="menu_name">
           <el-input v-model="form.menu_name" ></el-input>
@@ -145,11 +146,11 @@ export default {
     return {
       is_display: [
         {
-          value: '0',
+          value: 0,
           label: '是'
         },
         {
-          value: '1',
+          value: 1,
           label: '否'
         }
       ],
@@ -257,7 +258,7 @@ export default {
               this.getList()
               this.$notify({
                 title: '成功',
-                message: '创建成功',
+                message: '更新成功',
                 type: 'success',
                 duration: 2000
               })
@@ -265,7 +266,7 @@ export default {
             } else {
               this.$notify({
                 title: '失败',
-                message: '创建失败',
+                message: '更新失败',
                 type: 'error',
                 duration: 2000
               })
@@ -332,8 +333,8 @@ export default {
           menu_english_name: undefined,
           menu_parent_id: undefined,
           menu_url: undefined,
-          is_auth_check: '0',
-          is_display: '0',
+          is_auth_check: 0,
+          is_display: 0,
         }
       },
       /**添加菜单 */

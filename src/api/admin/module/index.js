@@ -39,11 +39,10 @@ export function addRoleModule (id, data) {
  * 获取模块对应的角色
  * @param {*} data
  */
-export function ModuleRole (data) {
+export function ModuleRole (id) {
   return axios({
-    url: '/fetchModuleRole',
-    method: 'post',
-    data
+    url: '/selectRole/' + id,
+    method: 'get'
   })
 }
 
@@ -53,7 +52,7 @@ export function ModuleRole (data) {
  */
 export function addMenuModule (data) {
   return axios({
-    url: '/addMenuModule',
+    url: '/insertMenuModule',
     method: 'post',
     data
   })
@@ -63,9 +62,12 @@ export function addMenuModule (data) {
  * 删除模块与菜单的关联
  * @param {*} data
  */
-export function delMenuModule (data) {
+export function delMenuModule (sysMenuModule) {
+  const data = {
+    sysMenuModule
+  }
   return axios({
-    url: '/delMenuModule',
+    url: '/deleteModuleMenuDate',
     method: 'post',
     data
   })
@@ -99,11 +101,10 @@ export function fetchModule (id) {
  * 获取模块关联的菜单
  * @param {*} data
  */
-export function getMenu (data) {
+export function getMenu (id) {
   return axios({
-    url: '/getMenu',
-    method: 'post',
-    data
+    url: '/selectMenuList/' + id,
+    method: 'get'
   })
 }
 /**
@@ -114,5 +115,29 @@ export function delModule (id) {
   return axios({
     url: '/deleteModule/' + id,
     method: 'get'
+  })
+}
+
+export function fetchRole (id) {
+  return axios ({
+    url: '/selectAllRole/' + id,
+    method: 'get'
+  })
+}
+
+
+/**
+ * 更新模块基本信息
+ * @param {*} id 
+ */
+export function updateModule (id, ) {
+  const data = {
+    id,
+
+  }
+  return axios({
+    url: '/',
+    method: 'post',
+    params: data
   })
 }

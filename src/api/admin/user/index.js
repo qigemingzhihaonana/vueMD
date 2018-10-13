@@ -27,10 +27,11 @@ export function fetchUser () {
  * 删除用户
  * @param {*} data
  */
-export function deleteUser (id) {
+export function deleteUser (sysUsers) {
   return axios({
-    url: '/deleteUser/' + id,
-    method: 'post'
+    url: '/deleteUser' ,
+    method: 'post',
+    sysUsers
   })
 }
 /**

@@ -39,7 +39,12 @@
             <el-table-column
             label="是否在职"
             prop="user_level"
-            align='center'></el-table-column>
+            align='center'>
+            <template slot-scope="scope">
+              <span v-if="scope.row.user_level === 0">是</span>
+              <span v-if="scope.row.user_level === 1">否</span>
+            </template>
+            </el-table-column>
             <el-table-column
             label="员工职位"
             prop="user_position"
@@ -47,22 +52,16 @@
             <el-table-column
             label="所属部门"
             prop="dep_id"
-            align='center'>
-              <template>
-                <span v-if="scope.row.dep_id === 0">
-                  
-                </span>
-              </template>
-              <template>
-                <span v-if="scope.row.dep_id === 1">
-                  
-                </span>
-              </template>
-            </el-table-column>
+            align='center'></el-table-column>
             <el-table-column
             label="是否公司领导"
             prop="is_company_leader"
-            align='center'></el-table-column>
+            align='center'>
+            <template slot-scope="scope">
+              <span v-if="scope.row.is_company_leader === 0">是</span>
+              <span v-if="scope.row.is_company_leader === 1">否</span>
+            </template>
+            </el-table-column>
             <el-table-column
             label="排序"
             prop="order_number"
@@ -74,14 +73,19 @@
             <el-table-column
             label="是否有效"
             prop="status"
-            align='center'></el-table-column>
+            align='center'>
+            <template slot-scope="scope">
+              <span v-if="scope.row.status === 0">有效</span>
+              <span v-if="scope.row.status === 1">无效</span>
+            </template>
+            </el-table-column>
             <el-table-column
             fixed="right"
             label="操作"
             width="120">
             <template slot-scope="scope">
               <el-button
-                v-if="scope.row.status"
+                v-if="scope.row.user_level === 0"
                 v-waves
                 @click.native.prevent="handlerEdit(scope.row)"
                 type="text"
@@ -89,7 +93,7 @@
                 删除
               </el-button>
               <el-button
-                v-else
+                v-if="scope.row.user_level === 1"
                 v-waves
                 @click.native.prevent="handler(scope.row)"
                 type="text"
@@ -191,25 +195,18 @@ export default {
   },
   data() {
     return {
-      status: [{
-          value: '0',
-          label: '是'
-        }, {
-          value: '1',
-          label: '否'
-        }],
       is_company_leader: [{
-          value: '0',
+          value: 0,
           label: '是'
         }, {
-          value: '1',
+          value: 1,
           label: '否'
         }],
       user_level: [{
-          value: '0',
+          value: 0,
           label: '是'
         }, {
-          value: '1',
+          value: 1,
           label: '否'
         }],
       searchUser: undefined,
@@ -310,16 +307,7 @@ export default {
       this.dialogFormVisible = true
     },
     handlerEdit(row) {
-      this.form = Object.assign({}, row)
-      this.dialogStatus = 'update'
-      this.dialogFormVisible = true
-      this.$nextTick(() => {
-        this.$refs['form'].clearValidate()
-      })
-    },
-    update(form) {
-      const level = form.user_level
-      deleteUser(level).then(() => {
+      deleteUser(row).then(() => {
         this.$notify({
               title: '成功',
               message: '删除成功',

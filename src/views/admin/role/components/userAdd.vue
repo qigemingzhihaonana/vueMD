@@ -4,12 +4,13 @@
   @close="$emit('update:show', false)"
   height="100%"
   width="100%"
-  class="user_set">
+  class="user_set"
+  >
   <el-row>
     <el-col class="left" :span="12" style='margin-top:15px;'>
       <el-card shadow="always">
         <div slot="header" class="clearfix">
-          <span>角色成员</span>
+          <span>待分配角色成员</span>
         </div>
         <el-table
         ref="multipleTable"
@@ -42,14 +43,14 @@
         </el-table>
         <div style="margin-top: 20px">
           <el-button @click="Selection">清空</el-button>
-          <el-button @click="toggleSelection">取消</el-button>
+          <el-button @click="toggleSelection1">取消</el-button>
         </div>
       </el-card>
     </el-col>
     <el-col class="right" :span="12" style='margin-top:15px;'>
       <el-card shadow="always">
         <div slot="header" class="clearfix">
-          <span>待分配成员</span>
+          <span>已有成员</span>
         </div>
       <el-table
         ref="multipleTable"
@@ -81,7 +82,7 @@
       </el-table>
       <div style="margin-top: 20px">
         <el-button @click="toggleAdd">确定</el-button>
-        <el-button @click="toggleSelection">取消</el-button>
+        <el-button @click="toggleSelection2">取消</el-button>
       </div>
       </el-card>
     </el-col>
@@ -123,9 +124,10 @@ export default {
       addRoleUser(this.roleid, this.idsRight).then( () => {
         this.loading = false
         console.log(this.tableData)
-        this.tableData.push(this.idsRight)
-        this.tableDataAdd.pop(this.idsRight)
         console.log(this.idsRight)
+        console.log(this.tableData)
+        console.log(this.idsRight)
+        this.$emit('addUser')
         this.$notify({
           title: '成功',
           message: '提交成功',
@@ -139,14 +141,12 @@ export default {
       this.loading = true
       removeRoleUser(this.roleid, this.idsLeft).then( () => {
         this.loading = false
-        this.idsRight.push(this.idsLeft)
-        this.fetchUser(this.idsRight).then( () => {
-          this.$notify({
-            title: '成功',
-            message: '跟新成功',
-            type: 'success',
-            duration: 2000
-          })
+        this.$emit('addUser')
+        this.$notify({
+          title: '成功',
+          message: '提交成功',
+          type: 'success',
+          duration: 2000
         })
       })
     },
@@ -175,9 +175,12 @@ export default {
       this.show = false
       console.log(this.tableData)
     },
-    toggleSelection() {
+    toggleSelection1() {
       this.$refs.multipleTable.clearSelection();
     },
+    toggleSelection2() {
+      this.$refs.multipleTable.clearSelection();
+    }
   }
 }
 </script>

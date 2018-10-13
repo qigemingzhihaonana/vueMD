@@ -48,9 +48,15 @@ export function delectDepartment (ids) {
  * 修改部门信息
  * @param {id,message} data
  */
-export function updataDepartment (id, id1, ids, data) {
+export function updataDepartment (id, id1, ids, sysDepartment) {
+  const data = {
+    id,
+    id1,
+    ids,
+    sysDepartment
+  }
   return axios({
-    url: '/updateDepartment2/' + id + id1 + ids,
+    url: '/updateDepartment2',
     method: 'post',
     data
   })

@@ -7,7 +7,7 @@
       <el-col class="left" :span="12" style='margin-top:15px;'>
         <el-card shadow="always">
           <div slot="header" class="clearfix">
-            <span>已分配角色信息</span>
+            <span>未分配角色信息</span>
           </div>
           <el-table
           ref="multipleTable"
@@ -43,7 +43,7 @@
       <el-col class="right" :span="12" style='margin-top:15px;'>
         <el-card shadow="always">
           <div slot="header" class="clearfix">
-            <span>未分配角色信息</span>
+            <span>已分配角色信息</span>
           </div>
         <el-table
           ref="multipleTable"

@@ -33,10 +33,6 @@
             border
             style="width: 100%"
             row-click="handleClick(scope.row)">
-            <!-- <el-table-column
-            type="selection"
-            align="center">
-            </el-table-column> -->
             <el-table-column
               fixed
               prop="dep_name"
@@ -78,7 +74,7 @@
       </el-col>
     </el-row>
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="60%" :before-close="handleClose">
-      <el-form label-position=left :model="form" :rules="rules" ref="form" >
+      <el-form label-position="left" :model="form"  inline :rules="rules" ref="form" >
         <el-form-item label="部门名称:" prop="dep_name">
     			<el-input v-model="form.dep_name"></el-input>
     		</el-form-item>
@@ -97,9 +93,9 @@
         <el-form-item label="排序:">
           <el-input v-model="form.dep_number" ></el-input>
         </el-form-item>
-        <el-form-item label="上级部门:" >
+        <!-- <el-form-item label="上级部门:" >
           <el-input v-model="form.parent_dep_id" ></el-input>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="部门正职">
           <el-input v-model="form.dep_principal" ></el-input>
         </el-form-item>
@@ -109,7 +105,7 @@
         <el-form-item label="部门状态:">
           <el-select v-model="form.dep_status" >
             <el-option
-            v-for="item in option"
+            v-for="item in dep_status"
             :key="item.key"
             :label="item.label"
             :value="item.value">
@@ -184,11 +180,11 @@ export default {
       is_same_look: [
         {
           label: '是',
-          value: '0'
+          value: 0
         },
         {
-          label: '是',
-          value: '0'
+          label: '否',
+          value: 1
         }
       ],
       is_display: [
@@ -198,6 +194,16 @@ export default {
         },
         {
           label: '否',
+          value: '1'
+        }
+      ],
+      dep_status: [
+        {
+          label: '有效',
+          value: '0'
+        },
+        {
+          label: '无效',
           value: '1'
         }
       ],
@@ -221,14 +227,14 @@ export default {
       treeData: [],
       formEdit: true,
       formAdd: true,
-			options:[{
-				value: "true",
-				label: "是"
-			},
-			{
-				value: "false",
-				label: "否"
-			}],
+			// options:[{
+			// 	value: "true",
+			// 	label: "是"
+			// },
+			// {
+			// 	value: "false",
+			// 	label: "否"
+			// }],
 			listQuery: {
         name: undefined
       },
@@ -282,13 +288,19 @@ export default {
     },
     create(form) {
       this.loading = true
-      if (form.dep_principal !== null || form.dep_principal !== '') {
-        form.dep_principal = 0-0
+      if(this.currentId !== -1 && this.dialogStatus === 'create') {
+        this.form.parent_dep_id = this.currentId
       }
-      if (form.dep_deputy !== null || form.dep_deputy !== '') {
-        form.dep_deputy = new Array()
+      console.log(this.form)
+      if (this.form.dep_principal === null || this.form.dep_principal === '' || this.form.dep_principal === undefined) {
+        let i = 0
+        this.form.dep_principal = i
       }
-      insertDepartment(form).then( () => {
+      if (this.form.dep_deputy === null || this.form.dep_deputy === '' || this.form.dep_deputy === undefined) {
+        this.form.dep_deputy = []
+        console.log(this.form.dep_deputy)
+      }
+      insertDepartment(this.form).then( () => {
         this.getList()
         this.loading = false
       })
@@ -365,48 +377,35 @@ export default {
       }
     },
     update(form) {
-      this.$refs[form].validate(valid => {
-        const id = this.currentId
-        let id1
-        let ids
-        if(valid) {
-          this.loading = true
-          if (form.dep_principal == null || form.dep_principal == '') {
-              form.dep_principal = 0
-              id1 = 0
-            }else {
-              id1 = form.dep_principal
-            }
-          if (form.dep_deputy == null || form.dep_deputy == '') {
-              form.dep_deputy = []
-              ids = []
-          }else {
-            ids = dep_deputy
-          }
-          updataDepartment(id, id1 ,ids, this.form).then(() => {
-            this.loading = false
-            this.dialogFormVisible = false
-            this.getList()
-            fetchMessage(this.depName).then( response => {
-              const table = []
-              if(response.data.data.length === 1 || response.data.data.length === undefined) {
-                table.push(response.data.data)
-                this.tableData = table
-              } else {
-                this.tableData = response.data
-              }
-            })
-            this.$notify({
-              title: '成功',
-              message: '创建成功',
-              type: 'success',
-              duration: 2000
-            })
-          })
-        } else {
-          this.loading = false
-          return false
+      const id = this.currentId
+      let id1
+      let ids
+      this.loading = true
+      if (this.form.dep_principal === null || this.form.dep_principal === '' || this.form.dep_principal === undefined) {
+          this.form.dep_principal = 0
         }
+      if (this.form.dep_deputy === null || this.form.dep_deputy === '' || this.form.dep_deputy === undefined) {
+          this.form.dep_deputy = []
+      }
+      updataDepartment(id, this.form.dep_principal ,this.form.dep_deputy, this.form).then(() => {
+        this.loading = false
+        this.dialogFormVisible = false
+        this.getList()
+        fetchMessage(this.depName).then( response => {
+          const table = []
+          if(response.data.data.length === 1 || response.data.data.length === undefined) {
+            table.push(response.data.data)
+            this.tableData = table
+          } else {
+            this.tableData = response.data
+          }
+        })
+        this.$notify({
+          title: '成功',
+          message: '创建成功',
+          type: 'success',
+          duration: 2000
+        })
       })
     },
     handlerEdit () {
