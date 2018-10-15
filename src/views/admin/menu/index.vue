@@ -251,27 +251,7 @@ export default {
         if(valid) {
           this.loading = true
           updateMenu(this.form).then(response => {
-
-            if(response.data.code === 200) {
-              this.loading = false
-              this.dialogFormVisible = false;
-              this.getList()
-              this.$notify({
-                title: '成功',
-                message: '更新成功',
-                type: 'success',
-                duration: 2000
-              })
-              this.loading = false
-            } else {
-              this.$notify({
-                title: '失败',
-                message: '更新失败',
-                type: 'error',
-                duration: 2000
-              })
-              this.loading = false
-            }
+            this.getNodeData(this.currentId)
           })
         } else {
           this.loading = false

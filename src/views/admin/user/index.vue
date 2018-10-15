@@ -37,12 +37,15 @@
             prop="user_code"
             align='center'></el-table-column>
             <el-table-column
-            label="是否在职"
+            label="员工级别"
             prop="user_level"
             align='center'>
             <template slot-scope="scope">
-              <span v-if="scope.row.user_level === 0">是</span>
-              <span v-if="scope.row.user_level === 1">否</span>
+              <span v-if="scope.row.user_level === 0">一级</span>
+              <span v-if="scope.row.user_level === 1">二级</span>
+              <span v-if="scope.row.user_level === 2">三级</span>
+              <span v-if="scope.row.user_level === 3">四级</span>
+              <span v-if="scope.row.user_level === 4">五级</span>
             </template>
             </el-table-column>
             <el-table-column
@@ -71,12 +74,12 @@
             prop="user_email"
             align='center'></el-table-column>
             <el-table-column
-            label="是否有效"
-            prop="status"
+            label="是否在职"
+            prop="stauts"
             align='center'>
             <template slot-scope="scope">
-              <span v-if="scope.row.status === 0">有效</span>
-              <span v-if="scope.row.status === 1">无效</span>
+              <span v-if="scope.row.stauts === 0">是</span>
+              <span v-if="scope.row.stauts === 1">否</span>
             </template>
             </el-table-column>
             <el-table-column
@@ -85,7 +88,7 @@
             width="120">
             <template slot-scope="scope">
               <el-button
-                v-if="scope.row.user_level === 0"
+                v-if="scope.row.stauts === 0"
                 v-waves
                 @click.native.prevent="handlerEdit(scope.row)"
                 type="text"
@@ -93,7 +96,7 @@
                 删除
               </el-button>
               <el-button
-                v-if="scope.row.user_level === 1"
+                v-if="scope.row.stauts === 1"
                 v-waves
                 @click.native.prevent="handler(scope.row)"
                 type="text"
@@ -133,7 +136,7 @@
         <el-form-item label="员工工号:" prop="user_code">
           <el-input v-model="form.user_code" ></el-input>
         </el-form-item>
-        <el-form-item label="是否在职:">
+        <el-form-item label="员工级别:">
           <el-select v-model="form.user_level" placeholder="请选择">
             <el-option
               v-for="item in user_level"
@@ -162,7 +165,7 @@
         <el-form-item label="员工email:" >
           <el-input v-model="form.user_email"></el-input>
         </el-form-item>
-        <el-form-item label="是否有效:">
+        <el-form-item label="是否在职:">
           <el-select v-model="form.status" placeholder="请选择">
             <el-option
               v-for="item in status"
@@ -195,14 +198,33 @@ export default {
   },
   data() {
     return {
-      is_company_leader: [{
+      stauts: [{
+        value: 0,
+        label: '是'
+      },{
+        value: 1,
+        label: '否'
+      }],
+      user_level: [{
           value: 0,
-          label: '是'
+          label: '一级'
         }, {
           value: 1,
-          label: '否'
+          label: '二级'
+        },
+        {
+          value: 2,
+          label: '三级'
+        },
+        {
+          value: 3,
+          label: '四级'
+        },
+        {
+          value: 4,
+          label: '五级'
         }],
-      user_level: [{
+        is_company_leader: [{
           value: 0,
           label: '是'
         }, {
@@ -226,12 +248,12 @@ export default {
         user_password: undefined,
         user_code: undefined,
         real_name: undefined,
-        user_level: '1',
-        is_company_leader: '1',
+        user_level: 1,
+        is_company_leader: 1,
         user_position: undefined,
         order_number: undefined,
         user_email: undefined,
-        status: '0'
+        status: 0
       },
       rules: {
         user_name: [
@@ -307,7 +329,10 @@ export default {
       this.dialogFormVisible = true
     },
     handlerEdit(row) {
-      deleteUser(row).then(() => {
+      const data = []
+      data.push(row)
+      deleteUser(data).then(() => {
+        this.fetch()
         this.$notify({
               title: '成功',
               message: '删除成功',

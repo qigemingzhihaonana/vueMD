@@ -93,14 +93,25 @@
         <el-form-item label="排序:">
           <el-input v-model="form.dep_number" ></el-input>
         </el-form-item>
-        <!-- <el-form-item label="上级部门:" >
-          <el-input v-model="form.parent_dep_id" ></el-input>
-        </el-form-item> -->
-        <el-form-item label="部门正职">
-          <el-input v-model="form.dep_principal" ></el-input>
+        <el-form-item v-show="this.dialogStatus === 'update'" label="部门正职">
+          <el-select v-model="form.dep_principal" placeholder="请选择">
+            <el-option
+              v-for="item in dep_principal"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="部门副职">
-          <el-input v-model="form.dep_deputy" ></el-input>
+        <el-form-item v-show="this.dialogStatus === 'update'" label="部门副职">
+          <el-select v-model="form.dep_deputy" multiple placeholder="请选择">
+            <el-option
+              v-for="item in dep_deputy"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="部门状态:">
           <el-select v-model="form.dep_status" >
@@ -170,6 +181,10 @@ export default {
   components: {ElSelectTree},
   data () {
     return {
+      dep_deputy: [],
+      dep_principal: [],
+      id1: undefined,
+      ids: undefined,
       depName: undefined,
       showTable: false,
       props: {
@@ -190,11 +205,11 @@ export default {
       is_display: [
         {
           label: '是',
-          value: '0'
+          value: 0
         },
         {
           label: '否',
-          value: '1'
+          value: 1
         }
       ],
       dep_status: [
@@ -227,14 +242,6 @@ export default {
       treeData: [],
       formEdit: true,
       formAdd: true,
-			// options:[{
-			// 	value: "true",
-			// 	label: "是"
-			// },
-			// {
-			// 	value: "false",
-			// 	label: "否"
-			// }],
 			listQuery: {
         name: undefined
       },
@@ -291,21 +298,19 @@ export default {
       if(this.currentId !== -1 && this.dialogStatus === 'create') {
         this.form.parent_dep_id = this.currentId
       }
-      console.log(this.form)
-      if (this.form.dep_principal === null || this.form.dep_principal === '' || this.form.dep_principal === undefined) {
-        let i = 0
-        this.form.dep_principal = i
-      }
-      if (this.form.dep_deputy === null || this.form.dep_deputy === '' || this.form.dep_deputy === undefined) {
-        this.form.dep_deputy = []
-        console.log(this.form.dep_deputy)
-      }
       insertDepartment(this.form).then( () => {
         this.getList()
         this.loading = false
+        this.dialogFormVisible = false
       })
     },
     getList() {
+      getDepdeputy(this.currentId).then( data => {
+        this.dep_deputy = data.data.data
+      }),
+      getDepPrincipal(this.currentId).then( data => {
+        this.dep_principal = data.data.data
+      }),
 			getAll().then(data => {
         console.log(data)
         this.treeData = data.data.data
@@ -382,23 +387,19 @@ export default {
       let ids
       this.loading = true
       if (this.form.dep_principal === null || this.form.dep_principal === '' || this.form.dep_principal === undefined) {
-          this.form.dep_principal = 0
+          id1 = 0
+        }else {
+          id1 = this.form.dep_principal
         }
       if (this.form.dep_deputy === null || this.form.dep_deputy === '' || this.form.dep_deputy === undefined) {
-          this.form.dep_deputy = []
+          ids = []
+      } else {
+         ids = this.form.dep_deputy
       }
-      updataDepartment(id, this.form.dep_principal ,this.form.dep_deputy, this.form).then(() => {
+      updataDepartment(id, id1, ids, this.form).then(() => {
         this.loading = false
         this.dialogFormVisible = false
         this.getList()
-        fetchMessage(this.depName).then( response => {
-          const table = []
-          if(response.data.data.length === 1 || response.data.data.length === undefined) {
-            table.push(response.data.data)
-            this.tableData = table
-          } else {
-            this.tableData = response.data
-          }
         })
         this.$notify({
           title: '成功',
@@ -406,7 +407,7 @@ export default {
           type: 'success',
           duration: 2000
         })
-      })
+      // })
     },
     handlerEdit () {
       const id = this.currentId

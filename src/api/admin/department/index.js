@@ -26,9 +26,9 @@ export function fetchMessage (name) {
  * 添加部门（必须添加部门级别的字段）
  * @param {data} data
  */
-export function insertDepartment (data, id1) {
+export function insertDepartment (data) {
   return axios({
-    url: '/insertDepartment/' + id1,
+    url: '/insertDepartment',
     method: 'post',
     data
   })

@@ -50,9 +50,9 @@ export function ModuleRole (id) {
  * 添加模块与菜单的关联
  * @param {*} data
  */
-export function addMenuModule (data) {
+export function addMenuModule (data, id2) {
   return axios({
-    url: '/insertMenuModule',
+    url: '/insertMenuModule/' + id2,
     method: 'post',
     data
   })
@@ -62,12 +62,9 @@ export function addMenuModule (data) {
  * 删除模块与菜单的关联
  * @param {*} data
  */
-export function delMenuModule (sysMenuModule) {
-  const data = {
-    sysMenuModule
-  }
+export function delMenuModule (data, id) {
   return axios({
-    url: '/deleteModuleMenuDate',
+    url: '/deleteModuleMenuDate/' + id,
     method: 'post',
     data
   })

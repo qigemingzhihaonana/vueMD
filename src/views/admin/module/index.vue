@@ -37,11 +37,6 @@
                 prop="module_name"
                 align="center">
                 </el-table-column>
-                <!-- <el-table-column
-                label="对应控制菜单"
-                prop="menu"
-                align="center"> 
-                </el-table-column> -->
                 <el-table-column
                 label="默认查询范围"
                 prop="default_query_scope"
@@ -104,22 +99,22 @@
               border>
                 <el-table-column
                 label="角色编码"
-                prop="code"></el-table-column>
+                prop="role_code"></el-table-column>
                 <el-table-column
                 label="角色名称"
-                prop="name">
+                prop="role_name">
                 </el-table-column>
                 <el-table-column
                 label="角色描述"
-                prop="menu">
+                prop="role_desc">
                 </el-table-column>
                 <el-table-column
-                label="权限模块"
-                prop="area">
-                </el-table-column>
-                <el-table-column
-                label="查询范围"
-                prop="role">
+                label="是否系统内置角色"
+                prop="is_builtin">
+                  <template slot-scope="scope">
+                    <span v-if="scope.row.is_builtin === 1">否</span>
+                    <span v-if="scope.row.is_builtin === 0">是</span>
+                  </template>
                 </el-table-column>
               </el-table>
             </el-card>
@@ -144,7 +139,7 @@
           trigger="click">
             <tree-transfer 
             :title="title"
-            :defaultProps= "{ label: 'name'}"
+            :defaultProps= "{ label: 'name', id: 'id'}"
             :from_data='fromData'
             :to_data='toData'
             :pid="menu_parent_id"
@@ -187,9 +182,7 @@
     </el-dialog>
     <role
     :show.sync="show" 
-    :moduleId="moduleId" 
-    :tableLeft="tableDataRole"
-    :tableRight="tableDataAddRole"></role>
+    :moduleId="moduleId" ></role>
   </div>
 </template>
 
@@ -202,6 +195,8 @@ import treeTransfer from 'el-tree-transfer'
 export default {
   data() {
     return {
+      dataStoreL: [],
+      dataStoreR: [],
       menu_parent_id: 'menu_parent_id',
       props: {
         label: 'module_name',
@@ -300,13 +295,10 @@ export default {
     /**编辑角色 */
     RoleModuleAdd() {
       if (this.currentId !== -1) {
-        this.show = true
-        this.moduleId = this.currentId
-        fetchRole(this.moduleId).then( (data) => {
-          console.log(data)
-          this.tableDataRole = data.data.data.noselect
-          this.tableDataAddRole = data.data.data.select
+        this.$store.dispatch('GetRole',this.currentId).then( () => {
+          this.show = true
         })
+        this.moduleId = this.currentId
       } else {
         this.$notify({
               title: '错误',
@@ -354,7 +346,7 @@ export default {
       this.dialogFormVisible = true
       console.log(this.form)
       this.$nextTick(() => {
-          this.$refs['form'].clearValidate()
+          this.$refs.form.clearValidate()
         })
       },
     /**删除 */
@@ -368,9 +360,8 @@ export default {
           this.loading = true
           delModule(row.id).then(() => {
             this.loading = false
-            const ids = []
-            ids.push(this.currentId)
-            this.fetchModule(ids)
+            this.fetch()
+            this.showTable = false
             this.$notify({
               title: '成功',
               message: '删除成功',
@@ -389,22 +380,24 @@ export default {
     add(fromData,toData,obj){
       // 树形穿梭框模式transfer时，返回参数为左侧树移动后数据、右侧树移动后数据、移动的{keys,nodes,halfKeys,halfNodes}对象
       // 通讯录模式addressList时，返回参数为右侧收件人列表、右侧抄送人列表、右侧密送人列表
-      console.log('fromData',fromData)
-      console.log('toData',toData)
-      console.log('obj',obj)
-      addMenuModule(obj.nodes).then(() => {
+      (obj.nodes).forEach( row => {
+        this.dataStoreL.push(row.id)
+      })
+      console.log(this.dataStoreL)
+      addMenuModule(this.dataStoreL,this.currentId).then(() => {
         this.getmenu()
       })
     },
       // 监听穿梭框组件移除
     remove(fromData,toData,obj){
-      console.log('fromData',fromData)
-      console.log('toData',toData)
-      console.log('obj',obj)
       // 树形穿梭框模式transfer时，返回参数为左侧树移动后数据、右侧树移动后数据、移动的{keys,nodes,halfKeys,halfNodes}对象
       // 通讯录模式addressList时，返回参数为右侧收件人列表、右侧抄送人列表、右侧密送人列表
-      delMenuModule(obj.nodes).then( () => {
-        console.info(data)
+      (obj.nodes).forEach( row => {
+        this.dataStoreR.push(row.id)
+      })
+      console.log(this.dataStoreR)
+      delMenuModule(this.dataStoreR,this.currentId).then( () => {
+        console.info(this.dataStoreR)
         this.getmenu()
       })
     },
@@ -438,7 +431,7 @@ export default {
     },
     /**创建新的模块 */
     create(form) {
-      this.$refs['form'].validate(valid => {
+      this.$refs.form.validate(valid => {
         if(valid) {
           this.loading = true
           addModule(this.form).then(() => {

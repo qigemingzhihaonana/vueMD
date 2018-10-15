@@ -1,7 +1,7 @@
 <template>
   <el-dialog title="人员分配" 
   :visible="dialogFormVisibleAdd"
-  @close="$emit('update:show', false)"
+  @close="close"
   height="100%"
   width="100%"
   class="user_set"
@@ -14,7 +14,7 @@
         </div>
         <el-table
         ref="multipleTable"
-        :data="tableData"
+        :data="tableDataAdd"
         tooltip-effect="dark"
         style="width: 100%"
         height="300"
@@ -42,7 +42,7 @@
           align="center"></el-table-column>
         </el-table>
         <div style="margin-top: 20px">
-          <el-button @click="Selection">清空</el-button>
+          <el-button @click="Selection">添加</el-button>
           <el-button @click="toggleSelection1">取消</el-button>
         </div>
       </el-card>
@@ -55,7 +55,7 @@
       <el-table
         ref="multipleTable"
         height="300"
-        :data="tableDataAdd"
+        :data="tableData"
         tooltip-effect="dark"
         style="width: 100%"
         border
@@ -81,7 +81,7 @@
           </el-table-column>
       </el-table>
       <div style="margin-top: 20px">
-        <el-button @click="toggleAdd">确定</el-button>
+        <el-button @click="toggleAdd">去除</el-button>
         <el-button @click="toggleSelection2">取消</el-button>
       </div>
       </el-card>
@@ -91,8 +91,9 @@
 </template>
 <script>
 import { getRoleUser, addRoleUser, removeRoleUser } from '@/api/admin/role/index'
+import { mapGetters } from 'vuex'
 export default {
-  props: ['show','roleId','tableLeft', 'tableRight'],
+  props: ['show','roleId'],
   data () {
     return {
       loading: false,
@@ -100,34 +101,37 @@ export default {
       idsLeft: [],
       multipleLeftSelection: [],
       multipleRightSelection: [],
-      roleId: undefined
+      roleId: undefined,
     }
   },
   computed: {
+    ...mapGetters([
+      'tableData',
+      'tableDataAdd'
+    ]),
     dialogFormVisibleAdd: function() {
       return this.show
     },
     roleid: function() {
       return this.roleId
-    },
-    tableData: function() {
-      return this.tableLeft
-    },
-    tableDataAdd: function() {
-      return this.tableRight
     }
   },
   methods: {
+    close() {
+      this.$emit('update:show', false)
+      this.idsRight = []
+      this.idsLeft = []
+    },
     /**提交新增人员 */
-    toggleAdd() {
+    Selection() {
       this.loading = true
-      addRoleUser(this.roleid, this.idsRight).then( () => {
+      addRoleUser(this.roleid, this.idsLeft).then( () => {
+        this.idsLeft = []
         this.loading = false
         console.log(this.tableData)
-        console.log(this.idsRight)
+        console.log(this.idsLeft)
         console.log(this.tableData)
-        console.log(this.idsRight)
-        this.$emit('addUser')
+        this.$store.dispatch('GetUser',this.roleid)
         this.$notify({
           title: '成功',
           message: '提交成功',
@@ -137,11 +141,12 @@ export default {
       })
     },
     /**取消人员角色 */
-    Selection() {
+    toggleAdd() {
       this.loading = true
-      removeRoleUser(this.roleid, this.idsLeft).then( () => {
+      removeRoleUser(this.roleid, this.idsRight).then( () => {
+        this.idsRight = []
         this.loading = false
-        this.$emit('addUser')
+        this.$store.dispatch('GetUser',this.roleid)
         this.$notify({
           title: '成功',
           message: '提交成功',

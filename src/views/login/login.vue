@@ -58,7 +58,7 @@ export default {
 </script>
 <style>
 .login {
-  background-color: #ffffff;
+  background-color: #2d3a4b;
   position: fixed;
   height: 100%;
   width: 100%;

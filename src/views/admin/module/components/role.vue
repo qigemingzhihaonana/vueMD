@@ -10,8 +10,8 @@
             <span>未分配角色信息</span>
           </div>
           <el-table
-          ref="multipleTable"
-          :data="tableData"
+          ref="multipleTableL"
+          :data="tableDataAddRole"
           tooltip-effect="dark"
           style="width: 100%"
           height="300"
@@ -23,20 +23,20 @@
             </el-table-column>
             <el-table-column
             label="角色名称"
-            prop="id"
+            prop="role_name"
             align="center"></el-table-column>
             <el-table-column
             label="角色描述"
-            prop="name"
+            prop="role_desc"
             align="center"></el-table-column>
             <el-table-column
             label="角色编号"
-            prop="department"
+            prop="role_code"
             align="center"></el-table-column>
           </el-table>
           <div style="margin-top: 20px">
-            <el-button @click="Selection">清空</el-button>
-            <el-button @click="toggleSelection">取消</el-button>
+            <el-button @click="Selection">添加</el-button>
+            <el-button @click="toggleSelectionL">取消</el-button>
           </div>
         </el-card>
       </el-col>
@@ -46,9 +46,9 @@
             <span>已分配角色信息</span>
           </div>
         <el-table
-          ref="multipleTable"
+          ref="multipleTableR"
           height="300"
-          :data="tableDataAdd"
+          :data="tableDataRole"
           tooltip-effect="dark"
           style="width: 100%"
           border
@@ -58,24 +58,24 @@
               width="55">
             </el-table-column>
             <el-table-column
-              prop="name"
+              prop="role_name"
               label="角色名称"
               align="center">
             </el-table-column>
             <el-table-column
-              prop="code"
+              prop="role_desc"
               label="角色描述"
               align="center">
             </el-table-column>
             <el-table-column
-              prop="position"
+              prop="role_code"
               label="角色编号"
               align="center">
             </el-table-column>
         </el-table>
         <div style="margin-top: 20px">
-          <el-button @click="toggleAdd">确定</el-button>
-          <el-button @click="toggleSelection">取消</el-button>
+          <el-button @click="toggleAdd">清空</el-button>
+          <el-button @click="toggleSelectionR">取消</el-button>
         </div>
         </el-card>
       </el-col>
@@ -83,16 +83,18 @@
   </el-dialog>
 </template>
 <script>
-import { getRoleUser, addRoleUser, removeRoleUser } from '@/api/admin/role/index'
+import { delRoleModule, addRoleModule } from '@/api/admin/module/index'
+import { mapGetters } from 'vuex'
 export default {
-  props: ['show','moduleId','tableLeft', 'tableRight'],
+  props: ['show','moduleId'],
   data () {
     return {
       loading: false,
       idsLeft: [],
+      idsRight: [],
       multipleLeftSelection: [],
       multipleRightSelection: [],
-      moduleId: undefined
+      moduleId: undefined,
     }
   },
   computed: {
@@ -102,41 +104,48 @@ export default {
     moduleid: function() {
       return this.moduleId
     },
-    tableData: function() {
-      return this.tableLeft
-    },
-    tableDataAdd: function() {
-      return this.tableRight
-    }
+
+    ...mapGetters([
+      'tableDataAddRole',
+      'tableDataRole'
+    ])
   },
   methods: {
-    /**提交新增人员 */
-    toggleAdd() {
-      this.idsRight.push(this.moduleid)
+    /**提交新增角色 */
+    Selection() {
+      let id = this.moduleid
       this.loading = true
-      addRoleUser(this.idsRight).then( () => {
+      console.log(this.idsLeft)
+      addRoleModule(id, this.idsLeft).then( () => {
         this.loading = false
-        this.fetchUser()
-        this.$notify({
+        this.$store.dispatch('GetRole',id).then( () => {
+          this.idsLeft = []
+          this.$notify({
+            title: '成功',
+            message: '提交成功',
+            type: 'success',
+            duration: 2000
+          })
+        })
+      })
+    },
+    /**取消人员角色 */
+    toggleAdd() {
+      let id = this.moduleid
+      this.idsLeft.push(id, this.moduleid)
+      this.loading = true
+      console.log(id)
+      console.log(this.idsRight)
+      delRoleModule(id,this.idsRight).then( () => {
+        this.idsRight = []
+        this.loading = false
+        this.$store.dispatch('GetRole',id).then( () => {
+          this.$notify({
           title: '成功',
           message: '提交成功',
           type: 'success',
           duration: 2000
         })
-      })
-    },
-    /**取消人员角色 */
-    Selection() {
-      this.idsLeft.push(this.moduleid)
-      this.loading = true
-      removeRoleUser(this.idsLeft).then( () => {
-        this.loading = false
-        this.fetchUser()
-        this.$notify({
-          title: '成功',
-          message: '提交成功',
-          type: 'success',
-          duration: 2000
         })
       })
     },
@@ -148,21 +157,26 @@ export default {
     handleLeftSelectionChange(val) {
       this.multipleLeftSelection = val;
       this.multipleLeftSelection.map((val)=> {
-      this.idsLeft.push(val.key)
+      this.idsLeft.push(val)
       })
     },
     /**当table选项改变时触发 */
     handleRightSelectionChange(val) {
       this.multipleRightSelection = val;
       this.multipleRightSelection.map((val)=> {
-      this.idsRight.push(val.key)
+      this.idsRight.push(val)
       })
     },
-    toggleSelection() {
-      this.$refs.multipleTable.clearSelection();
+    toggleSelectionL() {
+      this.$refs.multipleTableL.clearSelection();
+    },
+    toggleSelectionR() {
+      this.$refs.multipleTableR.clearSelection();
     },
     close() {
       this.$emit('update:show', false)
+      this.idsRight = []
+      this.idsLeft = []
     }
   }
 }

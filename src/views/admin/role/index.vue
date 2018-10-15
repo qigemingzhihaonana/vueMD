@@ -70,19 +70,19 @@
           >
           <template slot-scope="scope">
             <el-button
-              @click.native.prevent="handlerEdit(scope.row)"
+              @click="handlerEdit(scope.row)"
               type="text"
               size="small">
               编辑
             </el-button>
             <el-button
-              @click.native.prevent="handleDelete(scope.row)"
+              @click="handleDelete(scope.row)"
               type="text"
               size="small">
               删除
             </el-button>
             <el-button
-              @click.native.prevent="addUser(scope.row)"
+              @click="addUser(scope.row.id)"
               type="text"
               size="small">
               配置人员
@@ -126,9 +126,7 @@
     <div class="roleuser">
       <role-user 
       :show.sync="show" 
-      :roleId="roleId" 
-      :tableLeft="tableDataRole"
-      :tableRight="tableDataAddRole"></role-user>
+      :roleId="roleId" ></role-user>
     </div>
   </div>
 </template>
@@ -191,16 +189,11 @@ export default {
     this.getTableList()
   },
   methods: {
-    addUser(row) {
-      console.log(row.id)
-      this.show = true
-      this.roleId = row.id
-      const id = row.id
-      fetchUser(id).then(data => {
-        console.log(data.data)
-        this.tableDataAddRole = data.data.data.selectUser
-        this.tableDataRole = data.data.data.noselectUser
+    addUser(id) {
+      this.$store.dispatch('GetUser', id).then(() => {
+        this.show = true
       })
+      this.roleId = id
     },
     getTableList() {
       getRoleTable().then(data => {
