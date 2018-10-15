@@ -230,7 +230,7 @@ export default {
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
       this.$nextTick(() => {
-        this.$refs['form'].clearValidate()
+        this.$refs.form.clearValidate()
       })
     },
     update(form) {
@@ -245,7 +245,7 @@ export default {
               this.getTableList()
               this.$notify({
                 title: '成功',
-                message: '创建成功',
+                message: '更新成功',
                 type: 'success',
                 duration: 2000
               })
@@ -253,7 +253,7 @@ export default {
             } else {
               this.$notify({
                 title: '失败',
-                message: '创建失败',
+                message: '更新失败',
                 type: 'error',
                 duration: 2000
               })

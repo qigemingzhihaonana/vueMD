@@ -1,7 +1,7 @@
 <template>
   <div class="menu">
   <label v-for="(navMenu, index) in navMenus" :key="index">
-    <el-menu-item v-if="navMenu.children===null || navMenu.children.length === 0"
+    <el-menu-item v-if="navMenu.children === null || navMenu.children.length === 0"
                   :key="navMenu.name"
                   :data="navMenu"
                   :index="navMenu.name"

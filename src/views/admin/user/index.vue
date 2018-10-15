@@ -96,6 +96,13 @@
                 删除
               </el-button>
               <el-button
+              v-waves 
+              type="text"
+              size="small"
+              @click="handlerEdit(scope.row)">
+                编辑
+              </el-button>
+              <el-button
                 v-if="scope.row.stauts === 1"
                 v-waves
                 @click.native.prevent="handler(scope.row)"
@@ -123,7 +130,7 @@
     </div>
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" 
     lock-scroll @close="close">
-      <el-form :model="form" ref="form" :rules="rules" label-position="left">
+      <el-form :model="form" inline ref="form" :rules="rules" label-position="left">
         <el-form-item label="员工账号:" prop="user_name">
           <el-input v-model="form.user_name" ></el-input>
         </el-form-item>
@@ -248,8 +255,8 @@ export default {
         user_password: undefined,
         user_code: undefined,
         real_name: undefined,
-        user_level: 1,
-        is_company_leader: 1,
+        user_level: undefined,
+        is_company_leader: undefined,
         user_position: undefined,
         order_number: undefined,
         user_email: undefined,
@@ -366,6 +373,38 @@ export default {
         }
       })
     },
+    handlerEdit(row) {
+      this.form = Object.assign({}, row)
+      this.dialogStatus = 'update'
+      this.dialogFormVisible = true
+      this.$nextTick(() => {
+        this.$refs.form.clearValidate()
+    })
+  },
+    update(form) {
+    this.$refs.form.validate(valid => {
+      if(valid) {
+        this.loading = true
+        (this.form).then(response => {
+          console.log(response)
+          
+            this.loading = false
+            this.dialogFormVisible = false
+            this.getTableList()
+            this.$notify({
+              title: '成功',
+              message: '更新成功',
+              type: 'success',
+              duration: 2000
+            })
+            this.loading = false
+          }
+        )} else {
+        this.loading = false
+        return false
+      }
+    })
+  },
     cancel(form) {
       this.dialogFormVisible = false;
       this.$refs[form].resetFields();
@@ -376,8 +415,8 @@ export default {
         user_password: undefined,
         user_code: undefined,
         real_name: undefined,
-        user_level: '1',
-        is_company_leader: '1',
+        user_level: 1,
+        is_company_leader: 1,
         user_position: undefined,
         order_number: undefined,
         user_email: undefined,

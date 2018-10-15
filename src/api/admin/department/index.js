@@ -61,11 +61,36 @@ export function updataDepartment (id, id1, ids, sysDepartment) {
     data
   })
 }
-
+/**
+ * 获取信息
+ * @param {*} data 
+ */
 export function getMessage (data) {
   return axios({
     url: '/getmeMessage',
     method: 'post',
     data
+  })
+}
+
+/**
+ * 查找部门副职人员
+ * @param {*} id 
+ */
+export function getDepdeputy(id) {
+  return axios({
+    url: '/selectDeputy/' + id,
+    method: 'get'
+  })
+}
+
+/**
+ * 查找部门正职人员
+ * @param {*} id 
+ */
+export function getDepPrincipal(id) {
+  return axios({
+    url: '/selectPrincipal/' + id,
+    method: 'get'
   })
 }

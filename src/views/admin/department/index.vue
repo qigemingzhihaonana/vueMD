@@ -94,22 +94,22 @@
           <el-input v-model="form.dep_number" ></el-input>
         </el-form-item>
         <el-form-item v-show="this.dialogStatus === 'update'" label="部门正职">
-          <el-select v-model="form.dep_principal" placeholder="请选择">
+          <el-select v-model="dep_principal1" value-key="dep_principal.id" placeholder="请选择">
             <el-option
               v-for="item in dep_principal"
               :key="item.value"
-              :label="item.label"
-              :value="item.value">
+              :label="item.real_name"
+              :value="item.id">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item v-show="this.dialogStatus === 'update'" label="部门副职">
-          <el-select v-model="form.dep_deputy" multiple placeholder="请选择">
+          <el-select v-model="dep_deputy1" value-key="dep_deputy.id" multiple placeholder="请选择">
             <el-option
               v-for="item in dep_deputy"
               :key="item.value"
-              :label="item.label"
-              :value="item.value">
+              :label="item.real_name"
+              :value="item.id">
             </el-option>
           </el-select>
         </el-form-item>
@@ -176,13 +176,15 @@
 </template>
 <script>
 import ElSelectTree from 'el-tree-select';
-import { getAll, getMessage, insertDepartment, delectDepartment, updataDepartment, fetchMessage } from '@/api/admin/department/index'
+import { getAll, getMessage, getDepPrincipal, getDepdeputy, insertDepartment, delectDepartment, updataDepartment, fetchMessage } from '@/api/admin/department/index'
 export default {
   components: {ElSelectTree},
   data () {
     return {
+      dep_principal:[],
       dep_deputy: [],
-      dep_principal: [],
+      dep_principal1: [],
+      dep_deputy1: [],
       id1: undefined,
       ids: undefined,
       depName: undefined,
@@ -298,6 +300,10 @@ export default {
       if(this.currentId !== -1 && this.dialogStatus === 'create') {
         this.form.parent_dep_id = this.currentId
       }
+      if(this.form.dep_deputy.length === null || this.form.dep_deputy.length === 0) {
+        this.form.dep_deputy = this.dep_deputy.join(',')
+      }
+      console.log(this.form)
       insertDepartment(this.form).then( () => {
         this.getList()
         this.loading = false
@@ -305,12 +311,6 @@ export default {
       })
     },
     getList() {
-      getDepdeputy(this.currentId).then( data => {
-        this.dep_deputy = data.data.data
-      }),
-      getDepPrincipal(this.currentId).then( data => {
-        this.dep_principal = data.data.data
-      }),
 			getAll().then(data => {
         console.log(data)
         this.treeData = data.data.data
@@ -338,6 +338,14 @@ export default {
         console.log(this.tableData)
       });
       this.currentId = data.id;
+      getDepdeputy(this.currentId).then( data => {
+        this.dep_deputy = data.data.data
+        console.log(this.dep_deputy)
+      }),
+      getDepPrincipal(this.currentId).then( data => {
+        this.dep_principal = data.data.data
+        console.log(this.dep_principal)
+      }),
       this.$refs.form = data.id;
       // this.$refs.menuElement.getList();
     },
@@ -383,20 +391,11 @@ export default {
     },
     update(form) {
       const id = this.currentId
-      let id1
-      let ids
       this.loading = true
-      if (this.form.dep_principal === null || this.form.dep_principal === '' || this.form.dep_principal === undefined) {
-          id1 = 0
-        }else {
-          id1 = this.form.dep_principal
-        }
-      if (this.form.dep_deputy === null || this.form.dep_deputy === '' || this.form.dep_deputy === undefined) {
-          ids = []
-      } else {
-         ids = this.form.dep_deputy
-      }
-      updataDepartment(id, id1, ids, this.form).then(() => {
+      this.form.dep_principal = [this.dep_principal1].join(',')
+      this.form.dep_deputy = [this.dep_deputy1].join(',')
+      console.log(this.form)
+      updataDepartment(id, this.form).then(() => {
         this.loading = false
         this.dialogFormVisible = false
         this.getList()
@@ -418,7 +417,7 @@ export default {
         console.log(this.tableData)
         this.form = Object.assign({}, this.tableData[0])
         this.$nextTick(() => {
-          this.$refs['form'].clearValidate()
+          this.$refs.form.clearValidate()
         })
         console.log(this.form)
       }else {

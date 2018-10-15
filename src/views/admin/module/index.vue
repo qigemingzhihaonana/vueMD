@@ -272,7 +272,7 @@ export default {
   },
   methods: {
     update(form) {
-      this.$refs['form'].validate(valid => {
+      this.$refs.form.validate(valid => {
         if(valid) {
           this.loading = true
           updateModule(this.form).then(() => {
@@ -375,6 +375,7 @@ export default {
     handleClose() {
       this.loading = false
       this.dialogFormVisible = false
+      this.fetch()
     },
     // 监听穿梭框组件添加
     add(fromData,toData,obj){

@@ -57,3 +57,15 @@ export function select (data) {
     data
   })
 }
+
+/**
+ * 修改用户
+ * @param {*} data
+ */
+export function update (data) {
+  return axios({
+    url: '/',
+    method: 'post',
+    data
+  })
+}

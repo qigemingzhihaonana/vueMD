@@ -112,9 +112,15 @@
             <el-option label="/87445" value="/87445"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="???:">
-          <el-radio v-model="form.is_auth_check" label="0">是</el-radio>
-          <el-radio v-model="form.is_auth_check" label="1">否</el-radio>
+        <el-form-item label="是否权限控制:">
+          <el-select v-model="form.is_auth_check" placeholder="请选择">
+            <el-option
+              v-for="item in is_auth_check"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="是否显示:">
           <el-select v-model="form.is_display" placeholder="请选择">
@@ -144,13 +150,23 @@ import { addMenu, delMenu, fetchMenu, updateMenu, getMenuMessage } from '@/api/a
 export default {
   data () {
     return {
-      is_display: [
+      is_auth_check: [
+        {
+          value: 1,
+          label: '控制'
+        },
         {
           value: 0,
+          label: '不控制'
+        }
+      ],
+      is_display: [
+        {
+          value: 1,
           label: '是'
         },
         {
-          value: 1,
+          value: 0,
           label: '否'
         }
       ],

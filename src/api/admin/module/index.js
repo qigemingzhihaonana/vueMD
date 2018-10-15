@@ -15,9 +15,9 @@ export function fetchRoleModule () {
  * 删除角色与模块的关联
  * @param {*} data
  */
-export function delRoleModule (data) {
+export function delRoleModule (id,data) {
   return axios({
-    url: '/',
+    url: '/deleteModuleRole/' + id,
     method: 'post',
     data
   })
@@ -127,14 +127,10 @@ export function fetchRole (id) {
  * 更新模块基本信息
  * @param {*} id 
  */
-export function updateModule (id, ) {
-  const data = {
-    id,
-
-  }
+export function updateModule (data) {
   return axios({
-    url: '/',
+    url: '/updateModule',
     method: 'post',
-    params: data
+    data
   })
 }
