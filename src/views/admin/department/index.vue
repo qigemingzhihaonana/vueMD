@@ -25,7 +25,7 @@
           >
         </el-tree>
       </el-col>
-      <el-col :span="16" style='margin-top:15px;' v-show="showTable">
+      <el-col class="col" :span="16" style='margin-top:15px;' v-show="showTable">
         <el-card class="box-card">
           <el-table
             fit
@@ -293,16 +293,16 @@ export default {
      /**取消 */
     cancel(form) {
         this.dialogFormVisible = false;
-        this.$refs[form].resetFields();
+        this.$refs.form.resetFields();
     },
     create(form) {
       this.loading = true
       if(this.currentId !== -1 && this.dialogStatus === 'create') {
         this.form.parent_dep_id = this.currentId
       }
-      if(this.form.dep_deputy.length === null || this.form.dep_deputy.length === 0) {
-        this.form.dep_deputy = this.dep_deputy.join(',')
-      }
+      // if(this.form.dep_deputy.length === null || this.form.dep_deputy.length === 0) {
+      //   this.form.dep_deputy = this.dep_deputy.join(',')
+      // }
       console.log(this.form)
       insertDepartment(this.form).then( () => {
         this.getList()
@@ -332,6 +332,12 @@ export default {
         if(response.data.data.length === 1 || response.data.data.length === undefined) {
           table.push(response.data.data)
           this.tableData = table
+          console.log([...table[0].dep_deputy])
+          this.dep_deputy1 = [...table[0].dep_deputy.split(',')].map(Number)
+          this.dep_principal = [...table[0].dep_principal.split(',')].map(Number)
+          console.log(this.dep_deputy1)
+          console.log(this.dep_principal)
+          console.log(table)
         } else {
           this.tableData = response.data.data
         }
@@ -392,10 +398,10 @@ export default {
     update(form) {
       const id = this.currentId
       this.loading = true
-      this.form.dep_principal = [this.dep_principal1].join(',')
+      this.form.dep_principal = [this.dep_principal1].toString()
       this.form.dep_deputy = [this.dep_deputy1].join(',')
       console.log(this.form)
-      updataDepartment(id, this.form).then(() => {
+      updataDepartment(this.form).then(() => {
         this.loading = false
         this.dialogFormVisible = false
         this.getList()

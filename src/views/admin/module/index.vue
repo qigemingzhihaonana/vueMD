@@ -387,6 +387,7 @@ export default {
       console.log(this.dataStoreL)
       addMenuModule(this.dataStoreL,this.currentId).then(() => {
         this.getmenu()
+        this.dataStoreL = []
       })
     },
       // 监听穿梭框组件移除
@@ -400,6 +401,7 @@ export default {
       delMenuModule(this.dataStoreR,this.currentId).then( () => {
         console.info(this.dataStoreR)
         this.getmenu()
+        this.dataStoreR = []
       })
     },
     /**获取模块详细信息 */

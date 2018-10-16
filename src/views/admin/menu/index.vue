@@ -64,8 +64,8 @@
             label="是否显示"
             prop="is_display">
               <template slot-scope="scope">
-                <span v-if="scope.row.is_display === 0">是</span>
-                <span v-if="scope.row.is_display === 1">否</span>
+                <span v-if="scope.row.is_display === 1">是</span>
+                <span v-if="scope.row.is_display === 0">否</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -138,8 +138,8 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="cancel('form')">取 消</el-button>
-        <el-button :loading="loading" v-if="dialogStatus=='create'" type="primary" @click="create('form')">确 定</el-button>
-        <el-button :loading="loading" v-else type="primary" @click="update('form')">确 定</el-button>
+        <el-button  v-if="dialogStatus=='create'" type="primary" @click="create('form')">确 定</el-button>
+        <el-button  v-else type="primary" @click="update('form')">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -234,26 +234,16 @@ export default {
           const SysMenu = this.form
           console.log(SysMenu)
           addMenu(SysMenu).then( response => {
-            if(response.data.code === 200) {
-              this.loading = false
-              this.dialogFormVisible = false;
-              this.getList()
-              this.$notify({
-                title: '成功',
-                message: '创建成功',
-                type: 'success',
-                duration: 2000
-              })
-              this.loading = false
-            } else {
-              this.$notify({
-                title: '失败',
-                message: '创建失败',
-                type: 'error',
-                duration: 2000
-              })
-              this.loading = false
-            }
+            this.loading = false
+            this.dialogFormVisible = false;
+            this.getList()
+            this.$notify({
+              title: '成功',
+              message: '创建成功',
+              type: 'success',
+              duration: 2000
+            })
+            this.loading = false
           })
         } else {
           this.loading = false

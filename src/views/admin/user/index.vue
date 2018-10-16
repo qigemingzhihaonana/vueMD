@@ -90,7 +90,7 @@
               <el-button
                 v-if="scope.row.stauts === 0"
                 v-waves
-                @click.native.prevent="handlerEdit(scope.row)"
+                @click.native.prevent="handl(scope.row)"
                 type="text"
                 size="small">
                 删除
@@ -163,6 +163,16 @@
             </el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="所属部门:">
+          <el-select v-model="form.dep_id" placeholder="请选择">
+            <el-option
+              v-for="item in dep_id"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="员工职位:">
           <el-input v-model="form.user_position"></el-input>
         </el-form-item>
@@ -194,8 +204,9 @@
 </template>
 <script>
 import excle from "./components/excle"
-import { fetchUser, addUser, updateUser, deleteUser, select } from '@/api/admin/user/index'
+import { fetchUser, addUser, updateUser, deleteUser, select, upd } from '@/api/admin/user/index'
 import waves from '@/directive/waves' // 水波纹指令
+import { getAll } from '@/api/admin/department/index'
 export default {
   directives: {
     waves
@@ -205,6 +216,7 @@ export default {
   },
   data() {
     return {
+      dep_id: [],
       stauts: [{
         value: 0,
         label: '是'
@@ -312,6 +324,9 @@ export default {
         this.currentPage = currentPage;
     },
     fetch() {
+      getAll().then(data => {
+        this.dep_id = data.data.data
+      }),
       fetchUser().then(data => {
         this.tableData = data.data.data
         console.info(this.tableData)
@@ -335,7 +350,7 @@ export default {
       this.restForm()
       this.dialogFormVisible = true
     },
-    handlerEdit(row) {
+    handl(row) {
       const data = []
       data.push(row)
       deleteUser(data).then(() => {
@@ -352,6 +367,7 @@ export default {
       this.$refs[form].validate(valid => {
         if(valid) {
           this.loading = true
+          this.form.dep_id = this.form.dep_id.toString()
           addUser(this.form).then(() => {
             console.info("成功")
             this.loading = false
@@ -385,12 +401,13 @@ export default {
     this.$refs.form.validate(valid => {
       if(valid) {
         this.loading = true
-        (this.form).then(response => {
+        this.form.dep_id = this.form.dep_id.toString()
+        upd(this.form).then(response => {
           console.log(response)
           
             this.loading = false
             this.dialogFormVisible = false
-            this.getTableList()
+            this.fetch()
             this.$notify({
               title: '成功',
               message: '更新成功',

@@ -3,6 +3,7 @@
     <div class="main-head" >
       <Nav class="nav"></Nav>
     </div>
+     <bread-crumd class="bred"></bread-crumd>
     <div class="main" :style="{margin: '88px 20px 0', background: '#fff', minHeight: '500px'}">
       <app-main></app-main>
     </div>
@@ -15,11 +16,12 @@
 <script>
 import Nav from './components/Nav'
 import AppMain from './components/AppMain'
-
+import BreadCrumd from '@/components/breadcrumd/index'
 export default {
   components: {
     Nav,
-    AppMain
+    AppMain,
+    BreadCrumd
   },
 }
 </script>

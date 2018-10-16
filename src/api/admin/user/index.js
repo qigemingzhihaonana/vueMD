@@ -62,9 +62,9 @@ export function select (data) {
  * 修改用户
  * @param {*} data
  */
-export function update (data) {
+export function upd (data) {
   return axios({
-    url: '/',
+    url: '/updateUser',
     method: 'post',
     data
   })
