@@ -1,12 +1,12 @@
-// import Mock from 'mockjs'
-// // import loginAPI from './login'
+import Mock from 'mockjs'
+import loginAPI from './login'
 // // import roleAPI from './admin/role'
 // import departmentAPI from './admin/department'
 // import moduleApi from './admin/module'
 // // import userApi from './admin/user'
 
 // // // 登录相关
-// // Mock.mock(/\/selectUserMenuList/, 'post', loginAPI.fetch)
+Mock.mock(/\/selectUserMenuList/, 'post', loginAPI.fetch)
 
 // // // 角色相关
 // // Mock.mock(/\/selectRoleConfigure1/, 'get', roleAPI.getRoleTable)

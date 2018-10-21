@@ -5,6 +5,7 @@ import role from './modules/role'
 import module from './modules/module'
 import getters from './getters'
 import createPersistedState from 'vuex-persistedstate'
+import tagsView from './modules/tagsView'
 
 Vue.use(Vuex)
 
@@ -12,7 +13,8 @@ const store = new Vuex.Store({
   modules: {
     user,
     role,
-    module
+    module,
+    tagsView,
   },
   getters,
   plugins: [createPersistedState()]

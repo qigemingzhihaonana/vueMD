@@ -8,10 +8,12 @@ import 'element-ui/lib/theme-chalk/index.css'
 import Cookies from 'js-cookie'
 import store from './store'
 import './icon'
+import 'normalize.css/normalize.css' // 优美的css
+import '@/styles/index.scss'
 import NProgress from 'nprogress' // Progress 进度条
 import 'nprogress/nprogress.css'// Progress 进度条 样式
 import 'element-ui/lib/theme-chalk/display.css'
-// import './mock'
+import './mock'
 
 Vue.use(Element)
 

@@ -134,6 +134,7 @@
 import { getRole, getRoleTable , addRole, delRole, updateRole, fetchUser } from '@/api/admin/role/index'
 import RoleUser from './components/userAdd'
 export default {
+  name: 'role',
   components: {
     RoleUser
   },

@@ -208,6 +208,7 @@ import { fetchUser, addUser, updateUser, deleteUser, select, upd } from '@/api/a
 import waves from '@/directive/waves' // 水波纹指令
 import { getAll } from '@/api/admin/department/index'
 export default {
+  name: 'user',
   directives: {
     waves
   },

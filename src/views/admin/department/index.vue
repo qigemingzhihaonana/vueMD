@@ -178,6 +178,7 @@
 import ElSelectTree from 'el-tree-select';
 import { getAll, getMessage, getDepPrincipal, getDepdeputy, insertDepartment, delectDepartment, updataDepartment, fetchMessage } from '@/api/admin/department/index'
 export default {
+  name: 'department',
   components: {ElSelectTree},
   data () {
     return {

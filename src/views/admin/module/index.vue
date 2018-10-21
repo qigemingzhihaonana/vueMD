@@ -193,6 +193,7 @@ import{ fetchRoleModule, delRoleModule, addRoleModule, addUserModule,
  getMenu, addMenuModule, updateModule, fetchRole} from '@/api/admin/module/index'
 import treeTransfer from 'el-tree-transfer'
 export default {
+  name: 'module',
   data() {
     return {
       dataStoreL: [],
@@ -218,7 +219,7 @@ export default {
         }
       ],
       currentId: -1,
-      formData: [],
+      fromData: [],
       model: "transfer",
       toData:[],
       default_auth_type: [{

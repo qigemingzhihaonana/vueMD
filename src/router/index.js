@@ -9,10 +9,14 @@ export default new Router({
     {
       path: '/redirect',
       component: Layout,
+      hidden: true,
       children: [
         {
           path: '/redirect/:path*',
-          component: () => import('@/views/redirect/index')
+          component: () => import('@/views/dashboard/index'),
+          meta: {
+            title: '首页'
+          }
         }
       ]
     },
@@ -24,12 +28,14 @@ export default new Router({
     {
       path: '/',
       component: Layout,
-      redirect: 'dashboard',
       children: [
         {
           path: 'dashboard',
-          name: '首页',
-          component: () => import('@/views/dashboard/index')
+          name: 'dashboard',
+          component: () => import('@/views/dashboard/index'),
+          meta: {
+            title: '首页'
+          }
         }
       ]
     },
@@ -37,12 +43,15 @@ export default new Router({
       path: '/system',
       component: Layout,
       redirect: '/system/department',
+      meta: {
+        title: '系统管理'
+      },
       children: [
         {
-          path: '/system/department',
-          name: '部门管理',
+          path: 'department',
+          name: 'department',
           component: () => import('@/views/admin/department/index'),
-          meta: {title: 'deparement'}
+          meta: {title: '部门管理'}
         }
       ]
     },
@@ -50,11 +59,17 @@ export default new Router({
       path: '/system',
       component: Layout,
       redirect: '/system/user',
+      meta: {
+        title: '系统管理'
+      },
       children: [
         {
-          path: '/system/user',
-          name: '用户管理',
-          component: () => import('@/views/admin/user/index')
+          path: 'user',
+          name: 'user',
+          component: () => import('@/views/admin/user/index'),
+          meta: {
+            title: '用户管理'
+          }
         }
       ]
     },
@@ -62,35 +77,53 @@ export default new Router({
       path: '/system',
       component: Layout,
       redirect: '/system/role',
+      meta: {
+        title: '系统管理'
+      },
       children: [
         {
-          path: '/system/role',
-          name: '角色管理',
-          component: () => import('@/views/admin/role/index')
+          path: 'role',
+          name: 'role',
+          component: () => import('@/views/admin/role/index'),
+          meta: {
+            title: '角色管理'
+          }
         }
       ]
     },
     {
       path: '/system',
       component: Layout,
-      redirect: '',
+      redirect: '/system/menu',
+      meta: {
+        title: '系统管理'
+      },
       children: [
         {
-          path: '/system/menu',
-          name: '菜单管理',
-          component: () => import('@/views/admin/menu/index')
+          path: 'menu',
+          name: 'menu',
+          component: () => import('@/views/admin/menu/index'),
+          meta: {
+            title: '菜单管理'
+          }
         }
       ]
     },
     {
       path: '/system',
       component: Layout,
-      redirect: '',
+      redirect: '/system/module',
+      meta: {
+        title: '系统管理'
+      },
       children: [
         {
-          path: '/system/module',
-          name: '模块配置',
-          component: () => import('@/views/admin/module/index')
+          path: 'module',
+          name: 'module',
+          component: () => import('@/views/admin/module/index'),
+          meta: {
+            title: '模块管理'
+          }
         }
       ]
     }

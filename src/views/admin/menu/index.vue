@@ -148,6 +148,7 @@
 <script>
 import { addMenu, delMenu, fetchMenu, updateMenu, getMenuMessage } from '@/api/admin/menu/index'
 export default {
+  name: 'menu',
   data () {
     return {
       is_auth_check: [

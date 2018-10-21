@@ -5,7 +5,9 @@ const getters = {
   tableData: state => state.role.tableData,
   tableDataAdd: state=> state.role.tableDataAdd,
   tableDataAddRole: state => state.module.tableDataAddRole,
-  tableDataRole: state => state.module.tableDataRole
+  tableDataRole: state => state.module.tableDataRole,
+  visitedViews: state => state.tagsView.visitedViews,
+  cachedViews: state => state.tagsView.cachedViews
 }
 
 export default getters
